@@ -50,9 +50,7 @@ public class GalleryActivity extends Activity {
     final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID };
     final String orderBy = MediaStore.Images.Media._ID;
 
-    // AQUI HAY UN ERROR DURISIMO!
-    @SuppressWarnings("deprecation")
-    Cursor imagecursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
+    Cursor imagecursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
 
     int image_column_index = imagecursor.getColumnIndex(MediaStore.Images.Media._ID);
 
