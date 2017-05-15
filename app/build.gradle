@@ -35,5 +35,8 @@ dependencies {
   compile 'com.android.volley:volley:1.0.0'
   compile ('org.apache.httpcomponents:httpmime:4.3.5') { exclude group: 'org.apache.httpcomponents', module: 'httpclient' }
   compile 'org.apache.httpcomponents:httpcore:4.4.1'
+  compile 'com.jakewharton:butterknife:8.5.1'
+  annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+  compile 'com.github.bumptech.glide:glide:3.7.0'
   testCompile 'junit:junit:4.12'
 }

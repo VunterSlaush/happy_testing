@@ -5,13 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import mota.dev.happytesting.managers.PermissionManager;
 import mota.dev.happytesting.Views.GalleryActivity;
+import mota.dev.happytesting.utils.CustomMultipartRequest;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,13 +57,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_MULTIPLE) {
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_MULTIPLE)
+        {
             ArrayList<String> imagesPathList = new ArrayList<String>();
             String[] imagesPath = data.getStringExtra("data").split("\\|");
             ((TextView) findViewById(R.id.textView)).setText(data.getStringExtra("data"));
+            sendImagesToServer(imagesPath);
         }
+    }
+
+    // ESTO ES PARA PROBAR !
+    private void sendImagesToServer(String[] imagesPath)
+    {
+        CustomMultipartRequest multiPartRequest = new CustomMultipartRequest(Request.Method.POST,
+                MainActivity.this, "http://192.168.2.101:1234/upload", new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                Log.d("REQUEST",response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.d("REQUEST",error.toString());
+            }
+        });
+        for (int i = 0; i<imagesPath.length; i++)
+        {
+            multiPartRequest.addFile("file"+i,imagesPath[i]);
+        }
+        multiPartRequest.send();
     }
 
     @Override

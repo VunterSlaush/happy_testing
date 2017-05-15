@@ -30,10 +30,14 @@ public class PermissionManager {
 
     public void requestPermission(Activity activity, String permission, int constant, PermisionResult callback)
     {
-        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED)
+        {
             callbacks.put(constant,callback);
             ActivityCompat.requestPermissions(activity, new String[]{permission}, constant);
-
+        }
+        else
+        {
+            callback.onGranted();
         }
     }
 

@@ -5,22 +5,21 @@
   android:gravity="center"
   android:orientation="vertical">
   <GridView
-    android:id="@+id/grdImages"
+    android:id="@+id/grid_photos"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:numColumns="auto_fit"
-    android:verticalSpacing="10dp"
-    android:horizontalSpacing="10dp"
-    android:columnWidth="90dp"
-    android:stretchMode="columnWidth"
+    android:numColumns="3"
+      android:columnWidth="120dp"
+    android:verticalSpacing="1dp"
+    android:horizontalSpacing="1dp"
     android:gravity="center"/>
 
   <Button
-    android:id="@+id/btnSelect"
+    android:id="@+id/select_images"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Select"
+    android:text="Seleccionar"
     android:layout_marginTop="5dp"/>
 
 </LinearLayout>
