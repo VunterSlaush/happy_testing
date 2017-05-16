@@ -62,7 +62,7 @@ public class RouterManager
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[0]);
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[1]);
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[2]);
-            parallelSearch(IP_FIRST_NUMBER[1],IP_SECOND_NUMBER[1],IP_THIRD_NUMBER[1]);
+            parallelSearch(IP_FIRST_NUMBER[1],IP_SECOND_NUMBER[1],IP_THIRD_NUMBER[0]);
         }
         else 
             tryToAutoConnect(urlOnPref);
