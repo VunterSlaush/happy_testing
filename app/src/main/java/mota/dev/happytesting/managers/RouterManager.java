@@ -184,4 +184,9 @@ public class RouterManager
         });
         timeout.start();
     }
+
+    public String getUrlBase()
+    {
+        return urlBase;
+    }
 }

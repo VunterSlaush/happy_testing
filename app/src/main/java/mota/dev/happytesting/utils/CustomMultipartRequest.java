@@ -16,6 +16,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,10 +39,12 @@ public class CustomMultipartRequest extends Request<JSONObject> {
   private final Map<String, File> mFilePartData;
   private final Map<String, String> mStringPart;
   private final Map<String, String> mHeaderPart;
+  private final Map<String, String> mJsonPart;
 
   private MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
   private HttpEntity mHttpEntity;
   private Context mContext;
+
 
 
   public CustomMultipartRequest(int method, Context mContext, String url, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
@@ -50,6 +53,7 @@ public class CustomMultipartRequest extends Request<JSONObject> {
     this.mFilePartData = new HashMap<>();
     this.mStringPart = new HashMap<>();
     this.mHeaderPart = new HashMap<>();
+    this.mJsonPart = new HashMap<>();
     this.mContext = mContext;
 
   }
@@ -91,6 +95,16 @@ public class CustomMultipartRequest extends Request<JSONObject> {
       String value = entry.getValue();
       if (key != null && value != null)
         mEntityBuilder.addTextBody(key, value);
+    }
+  }
+
+  private void buildMultipartJsonEntity()
+  {
+    for (Map.Entry<String, String> entry : mJsonPart.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      if (key != null && value != null)
+        mEntityBuilder.addBinaryBody(key, value.getBytes());
     }
   }
 
@@ -153,11 +167,22 @@ public class CustomMultipartRequest extends Request<JSONObject> {
     this.mHeaderPart.put(key,value);
   }
 
+  public void addJson(String key, JSONObject value)
+  {
+    this.mJsonPart.put(key,value.toString());
+  }
+
+  public void addJsonArray(String key, JSONArray value)
+  {
+    this.mJsonPart.put(key,value.toString());
+  }
+
   public void send()
   {
     mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
     buildMultipartFileEntity();
     buildMultipartTextEntity();
+    buildMultipartJsonEntity();
     mHttpEntity = mEntityBuilder.build();
     SingletonRequester.getInstance(mContext).addToRequestQueue(this);
   }
