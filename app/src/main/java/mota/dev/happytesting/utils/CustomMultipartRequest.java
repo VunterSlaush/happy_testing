@@ -177,13 +177,13 @@ public class CustomMultipartRequest extends Request<JSONObject> {
     this.mJsonPart.put(key,value.toString());
   }
 
-  public void send()
+  public void build()
   {
     mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
     buildMultipartFileEntity();
     buildMultipartTextEntity();
     buildMultipartJsonEntity();
     mHttpEntity = mEntityBuilder.build();
-    SingletonRequester.getInstance(mContext).addToRequestQueue(this);
+
   }
 }

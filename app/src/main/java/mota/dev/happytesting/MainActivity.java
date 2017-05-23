@@ -19,10 +19,17 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.managers.PermissionManager;
 import mota.dev.happytesting.Views.GalleryActivity;
 import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.utils.CustomMultipartRequest;
+import mota.dev.happytesting.utils.RxRequestAdapter;
+import mota.dev.happytesting.utils.SingletonRequester;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -75,20 +82,10 @@ public class MainActivity extends AppCompatActivity {
     // ESTO ES PARA PROBAR !
     private void sendImagesToServer(String[] imagesPath)
     {
+        RxRequestAdapter<JSONObject> adapter = new RxRequestAdapter<>();
         CustomMultipartRequest multiPartRequest = new CustomMultipartRequest(Request.Method.POST,
-                MainActivity.this, RouterManager.getInstance().getUrlBase()+"/reportes/create", new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response)
-            {
-                Log.d("REQUEST_RESPONSE",response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                Log.d("REQUEST_RESPONSE",error.toString());
-            }
-        });
+                MainActivity.this, RouterManager.getInstance().getUrlBase()+"/reportes/create",
+                adapter,adapter);
         for (int i = 0; i<imagesPath.length; i++)
         {
             multiPartRequest.addFile("file"+i,imagesPath[i]);
@@ -97,7 +94,29 @@ public class MainActivity extends AppCompatActivity {
         multiPartRequest.addData("aplicacion","10");
         multiPartRequest.addJsonArray("images",generateImages(imagesPath));
         multiPartRequest.addJsonArray("observaciones",generateObservations(imagesPath));
-        multiPartRequest.send();
+        multiPartRequest.build();
+        SingletonRequester.getInstance(MainActivity.this).addToRequestQueue(multiPartRequest);
+        adapter.getObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<JSONObject>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull JSONObject jsonObject) {
+                Log.d(getClass().getName(),"JSON RESPONSE:"+jsonObject);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     @Override

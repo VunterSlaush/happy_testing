@@ -189,4 +189,9 @@ public class RouterManager
     {
         return urlBase;
     }
+
+    public boolean isConnected()
+    {
+        return connected && confirmed;
+    }
 }

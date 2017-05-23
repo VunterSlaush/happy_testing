@@ -19,7 +19,7 @@ public class PermissionManager {
     private HashMap<Integer,PermisionResult> callbacks;
 
     private PermissionManager() {
-
+        callbacks = new HashMap<>();
     }
 
     public static PermissionManager getInstance() {

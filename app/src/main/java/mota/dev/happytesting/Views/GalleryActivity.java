@@ -41,7 +41,6 @@ public class GalleryActivity extends Activity
     Button btnSelect;
 
     private ImageAdapter imageAdapter;
-    private Uri[] mUrls = null;
     private String[] strUrls = null;
     private String[] mNames = null;
     private int count;
@@ -72,25 +71,26 @@ public class GalleryActivity extends Activity
     {
         Cursor cursor = generateGalleryCursor();
         cursor.moveToFirst();
-
+        Log.d(getClass().getName(),"Column Count:"+cursor.getColumnCount());
         count = cursor.getCount();
-        mUrls = new Uri[count];
         strUrls = new String[count];
         mNames = new String[count];
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             cursor.moveToPosition(i);
-            mUrls[i] = Uri.parse(cursor.getString(1));
             strUrls[i] = cursor.getString(1);
             mNames[i] = cursor.getString(3);
-            //Log.e("mNames[i]",mNames[i]+":"+cc.getColumnCount()+ " : " +cc.getString(3));
         }
     }
 
     private Cursor generateGalleryCursor()
     {
         final String orderBy = MediaStore.Images.Media._ID;
-        return getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, orderBy);
+        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, orderBy);
+        if(cursor == null)
+            Log.d(getClass().getName(),"CURSOR NULO!");
+        return cursor;
     }
 
     @OnClick(R.id.select_images)
