@@ -1,16 +1,16 @@
 package mota.dev.happytesting.Repositories.implementations;
 
-
 import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+
 import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.Models.User;
 import mota.dev.happytesting.Repositories.UserRepository;
+import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.RequestManager;
 
 /**
@@ -39,13 +39,19 @@ public class UserRequestImplementation implements UserRepository
                             User user = createUserFromJSON(jsonObject);
                             observer.onNext(user);
                             observer.onComplete();
-                        }else
-                            observer.onError(new Exception("User Not Found"));
+                        }
+                        else
+                        {
+                            Throwable throwable = new Throwable("Credenciales Invalidas");
+                            observer.onError(throwable);
+                        }
+
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-                        observer.onError(e);
+                    public void onError(@NonNull Throwable e)
+                    {
+                       observer.onError(ErrorManager.getInstance().handleLoginError(e));
                     }
 
                     @Override

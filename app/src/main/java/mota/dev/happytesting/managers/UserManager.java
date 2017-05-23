@@ -24,30 +24,21 @@ import mota.dev.happytesting.utils.PreferencesHelper;
 public class UserManager
 {
     private static UserManager instance;
-    private UserRepository repository;
-    private Context context;
 
-    private UserManager(Context context)
+    private UserManager()
     {
-        repository = new UserRequestImplementation();
-        this.context = context;
+
     }
 
-    public static UserManager getInstance(Context context)
+    public static UserManager getInstance()
     {
-        if(instance == null || !instance.context.equals(context))
-            instance = new UserManager(context);
+        if(instance == null )
+            instance = new UserManager();
         return  instance;
     }
 
-    private void loginSuccess(Context context, User user)
-    {
-        saveUserCredentials(context,user);
-        Intent i = new Intent(context, MainActivity.class);
-        context.startActivity(i);
-    }
 
-    private void saveUserCredentials(Context context,User user)
+    public void saveUserCredentials(Context context,User user)
     {
         PreferencesHelper.writeString(context, Consts.USERNAME, user.getUsername());
         PreferencesHelper.writeString(context, Consts.PASSWORD, user.getPassword());
@@ -57,60 +48,18 @@ public class UserManager
 
     public User getUserIfExist(Context context)
     {
-        User user = new User();
         String username = PreferencesHelper.readString(context,Consts.USERNAME,"");
         String password = PreferencesHelper.readString(context,Consts.PASSWORD,"");
+
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+
         if(!username.isEmpty() && !password.isEmpty())
             return user;
         else
             return null;
     }
 
-    public void login(final String username, final String password)
-    {
-        repository.login(username,password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(@io.reactivex.annotations.NonNull User user)
-                    {
-                        user.setUsername(username);
-                        user.setPassword(password);
-                        loginSuccess(context,user);
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e)
-                    {
-                        VolleyError error = (VolleyError)e;
-                        Log.d(getClass().getName(),"ERROR:"+error.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    public void tryAutoLogin()
-    {
-        User user = getUserIfExist(context);
-        if(RouterManager.getInstance().isConnected() && user != null)
-        {
-            login(user.getUsername(),user.getPassword());
-        }
-        else if(user != null)
-        {
-            loginSuccess(context,user);
-        }
-    }
 }

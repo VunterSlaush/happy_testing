@@ -19,6 +19,15 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.error}"
+
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
+
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"

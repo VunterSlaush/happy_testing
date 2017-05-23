@@ -25,7 +25,7 @@ public class RouterManager
     private static RouterManager instance;
     private static String TAG = "ROUTER";
 
-    private static final int MAX_IP_ON_FOUR_NUMBER = 20;
+    private static final int MAX_IP_ON_FOUR_NUMBER = 25;
     private static final int TIMEOUT = 5;
     private static final int [] IP_FIRST_NUMBER = {192,10};
     private static final int [] IP_SECOND_NUMBER = {168,0};
@@ -192,6 +192,18 @@ public class RouterManager
 
     public boolean isConnected()
     {
+        return connected;
+    }
+
+    public boolean isConnectedAndConfirmed()
+    {
         return connected && confirmed;
+    }
+
+
+    public void disconnect()
+    {
+        confirmed = false;
+        connected = false;
     }
 }

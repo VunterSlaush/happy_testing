@@ -1,5 +1,7 @@
 package mota.dev.happytesting.utils;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -37,7 +39,8 @@ public class RxRequestAdapter<T> implements Response.Listener<T>, Response.Error
                     mVolleyError = new VolleyError(ex);
                 }
 
-                if (mVolleyError != null) {
+                if (mVolleyError != null)
+                {
                     e.onError(mVolleyError);
                 } else {
                     e.onNext(mResponse);
