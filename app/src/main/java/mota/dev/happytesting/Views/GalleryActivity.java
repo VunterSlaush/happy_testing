@@ -1,32 +1,20 @@
 package mota.dev.happytesting.Views;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mota.dev.happytesting.R;
-import mota.dev.happytesting.Views.Adapters.ImageAdapter;
+import mota.dev.happytesting.Views.adapters.ImageAdapter;
 
 /**
  * Created by Slaush on 07/05/2017.

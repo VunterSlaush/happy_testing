@@ -1,7 +1,7 @@
-package mota.dev.happytesting.Repositories;
+package mota.dev.happytesting.repositories;
 
 import io.reactivex.Observable;
-import mota.dev.happytesting.Models.User;
+import mota.dev.happytesting.models.User;
 
 /**
  * Created by Slaush on 22/05/2017.

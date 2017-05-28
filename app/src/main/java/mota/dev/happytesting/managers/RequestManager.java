@@ -1,22 +1,13 @@
 package mota.dev.happytesting.managers;
 
-import android.util.Log;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import mota.dev.happytesting.Models.User;
 import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.Urls;
 import mota.dev.happytesting.utils.RxRequestAdapter;

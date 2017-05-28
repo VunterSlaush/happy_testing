@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Repositories.implementations;
+package mota.dev.happytesting.repositories.implementations;
 
 import org.json.JSONObject;
 
@@ -8,8 +8,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 import mota.dev.happytesting.Consts;
-import mota.dev.happytesting.Models.User;
-import mota.dev.happytesting.Repositories.UserRepository;
+import mota.dev.happytesting.models.User;
+import mota.dev.happytesting.repositories.UserRepository;
 import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.RequestManager;
 

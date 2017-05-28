@@ -58,7 +58,7 @@ public class RouterManager
         String urlOnPref = PreferencesHelper.readString(MyApplication.getInstance(),Consts.URL_BASE_PREF,"");
         if(urlOnPref.isEmpty())
         {
-            Log.d(TAG,"INIT TO FIND URL:"+System.currentTimeMillis());
+            Log.d(TAG,"Iniciando Busqueda Paralela:"+System.currentTimeMillis());
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[0]);
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[1]);
             parallelSearch(IP_FIRST_NUMBER[0],IP_SECOND_NUMBER[0],IP_THIRD_NUMBER[2]);
@@ -87,10 +87,10 @@ public class RouterManager
                 {
                     if (connected)
                         return;
-                    else if(i < MAX_IP_ON_FOUR_NUMBER)
+                    else if(i <= MAX_IP_ON_FOUR_NUMBER)
                         tryToConnectSocket(makeUrl(first,second,third,i));
                     else
-                        tryToConnectSocket(makeUrl(first,second,third,80 + i));
+                        tryToConnectSocket(makeUrl(first,second,third,75 + i));
 
                     try {
                         Thread.sleep(50);
@@ -105,6 +105,7 @@ public class RouterManager
 
     private void tryToConnectSocket(String url)
     {
+        Log.d(TAG,"Conectando a:"+url);
         try
         {
             Socket socket = IO.socket(url,opts);

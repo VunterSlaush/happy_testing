@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Models;
+package mota.dev.happytesting.models;
 
 /**
  * Created by Slaush on 22/05/2017.

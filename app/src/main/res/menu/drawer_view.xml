@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/apps"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="Aplicaciones"
+            android:checked="true"/>
+        <item
+            android:id="@+id/create_app"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="Crear Aplicacion" />
+        <item
+            android:id="@+id/my_account"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="Mi Cuenta" />
+        <item
+            android:id="@+id/sign_out"
+            android:icon="@android:drawable/ic_delete"
+            android:title="Cerrar Sesion" />
+    </group>
+</menu>

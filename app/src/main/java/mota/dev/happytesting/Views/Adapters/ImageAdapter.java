@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Views.Adapters;
+package mota.dev.happytesting.Views.adapters;
 
 import android.content.Context;
 import android.util.Log;

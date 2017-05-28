@@ -1,20 +1,9 @@
 package mota.dev.happytesting.managers;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
-import com.android.volley.VolleyError;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Consts;
-import mota.dev.happytesting.MainActivity;
-import mota.dev.happytesting.Models.User;
-import mota.dev.happytesting.Repositories.UserRepository;
-import mota.dev.happytesting.Repositories.implementations.UserRequestImplementation;
+import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.utils.PreferencesHelper;
 
 /**

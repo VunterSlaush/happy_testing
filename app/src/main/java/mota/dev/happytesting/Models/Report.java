@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Models;
+package mota.dev.happytesting.models;
 
 import java.util.Collection;
 
