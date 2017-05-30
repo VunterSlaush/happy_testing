@@ -3,6 +3,7 @@ package mota.dev.happytesting.managers;
 import android.content.Context;
 
 import mota.dev.happytesting.Consts;
+import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.utils.PreferencesHelper;
 
@@ -50,5 +51,16 @@ public class UserManager
             return null;
     }
 
+    public String getUserId()
+    {
+        return PreferencesHelper.readString(MyApplication.getInstance(),Consts.USER_ID,"");
+    }
 
+    public void logout() // esto es todo lo que hay que borrar para cerrar la sesion!
+    {
+        PreferencesHelper.deleteKey(MyApplication.getInstance(),Consts.USERNAME);
+        PreferencesHelper.deleteKey(MyApplication.getInstance(),Consts.PASSWORD);
+        PreferencesHelper.deleteKey(MyApplication.getInstance(), Consts.NAME);
+        PreferencesHelper.deleteKey(MyApplication.getInstance(), Consts.USER_ID);
+    }
 }

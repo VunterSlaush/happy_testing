@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.Urls;
 import mota.dev.happytesting.utils.RxRequestAdapter;
@@ -35,23 +36,35 @@ public class RequestManager
 
     public Observable<JSONObject> login(String username, String password)
     {
-        JSONObject obj = null;
+        JSONObject obj = generateLoginJson(username,password);
+        return request(Request.Method.POST,urlBase + Urls.URL_LOGIN,obj);
+    }
+
+    private JSONObject generateLoginJson(String username, String password)
+    {
+        JSONObject obj = new JSONObject();
         try {
-            obj = generateLoginJson(username,password);
+            obj.put(Consts.USERNAME,username);
+            obj.put(Consts.PASSWORD,password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return request(Request.Method.POST,urlBase + Urls.URL_LOGIN,obj);
 
-    }
-
-    private JSONObject generateLoginJson(String username, String password) throws JSONException
-    {
-        JSONObject obj = new JSONObject();
-        obj.put("username",username);
-        obj.put("password",password);
         return obj;
     }
+
+    private JSONObject generateJSONCreateApp(String app_name)
+    {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(Consts.NAME,app_name);
+            obj.put(Consts.OWNER, UserManager.getInstance().getUserId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
 
     private Observable<JSONObject> request(int method, String url, JSONObject obj)
     {
@@ -74,4 +87,9 @@ public class RequestManager
         }
     }
 
+    public Observable<JSONObject> createApp(String name)
+    {
+        JSONObject o = generateJSONCreateApp(name);
+        return request(Request.Method.POST,urlBase + Urls.URL_CREATE_APP,o);
+    }
 }

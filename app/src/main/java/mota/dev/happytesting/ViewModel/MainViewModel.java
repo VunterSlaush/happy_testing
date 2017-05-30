@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import java.util.Observable;
 
+import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.Views.fragments.AccountFragment;
 import mota.dev.happytesting.Views.fragments.AppsFragment;
@@ -59,8 +60,8 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
     public void selectDrawerItem(MenuItem menuItem)
     {
 
-        Class fragmentClass;
-        String tag;
+        Class fragmentClass = null;
+        String tag = null;
         switch(menuItem.getItemId())
         {
             case R.id.apps:
@@ -75,18 +76,21 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
                 fragmentClass = AccountFragment.class;
                 tag = AccountFragment.TAG;
                 break;
-            /*case R.id.sign_out:
-                // Aqui Cierro Session !
-                break;*/
+            case R.id.sign_out:
+                MyApplication.getInstance().logout(context);
+                break;
             default:
                 fragmentClass = AppsFragment.class;
                 tag = AppsFragment.TAG;
         }
-        changeFragment(tag,fragmentClass);
-        menuItem.setChecked(true);
-        // Set action bar title
-        ((AppCompatActivity)context).setTitle(menuItem.getTitle());
-        // Close the navigation drawer
+
+        if(tag != null && fragmentClass != null)
+        {
+            changeFragment(tag,fragmentClass);
+            menuItem.setChecked(true);
+            ((AppCompatActivity)context).setTitle(menuItem.getTitle());
+        }
+
         mDrawer.closeDrawers();
     }
 

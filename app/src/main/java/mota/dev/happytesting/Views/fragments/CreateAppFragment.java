@@ -15,7 +15,6 @@ import java.util.Observer;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.CreateAppViewModel;
-import mota.dev.happytesting.Views.interfaces.BindeableActivity;
 import mota.dev.happytesting.Views.interfaces.FragmentInteractionListener;
 import mota.dev.happytesting.databinding.FragmentCreateAppBinding;
 

@@ -11,5 +11,6 @@ public class Consts
     public static final String PASSWORD = "password";
     public static final String NAME = "nombre";
     public static final String USER_ID = "id";
+    public static final String OWNER = "owner";
     public static String SHARED_PREF_NAME = "happy_testing_pref";
 }
