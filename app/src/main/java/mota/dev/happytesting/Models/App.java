@@ -18,6 +18,11 @@ public class App extends RealmObject
     private int id;
     private RealmList<Report> reports;
 
+    public App()
+    {
+        id = -1;
+    }
+
     public String getName() {
         return name;
     }
@@ -51,5 +56,19 @@ public class App extends RealmObject
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == null || getClass() != o.getClass()) return false;
 
+        App app = (App) o;
+
+        return name.equals(app.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

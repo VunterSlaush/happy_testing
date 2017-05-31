@@ -36,7 +36,6 @@ public class AppLocalImplementation implements AppRepository
                 realm.beginTransaction();
                 App app = realm.createObject(App.class, name);
                 realm.commitTransaction();
-
                 observer.onNext(app);
                 observer.onComplete();
             }
@@ -54,8 +53,7 @@ public class AppLocalImplementation implements AppRepository
             {
                 Realm realm = Realm.getDefaultInstance();
                 RealmResults<App> results = realm.where(App.class).findAll();
-                App [] apps = (App [])results.toArray();
-                List<App> list =  Arrays.asList(apps);
+                List<App> list =  realm.copyFromRealm(results);
                 observer.onNext(list);
                 observer.onComplete();
             }

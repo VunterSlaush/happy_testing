@@ -92,4 +92,9 @@ public class RequestManager
         JSONObject o = generateJSONCreateApp(name);
         return request(Request.Method.POST,urlBase + Urls.URL_CREATE_APP,o);
     }
+
+    public Observable<JSONObject> getApps()
+    {
+        return request(Request.Method.GET, urlBase + Urls.URL_APPS, null);
+    }
 }
