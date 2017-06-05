@@ -15,4 +15,5 @@ public interface AppRepository
     Observable<List<App>> getAll();
     Observable<App> modifiy(App app);
     Observable<Boolean> delete(App app);
+    void updateApps(List<App> apps);
 }

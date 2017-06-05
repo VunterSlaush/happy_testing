@@ -36,34 +36,46 @@ public class GetApps
             @Override
             protected void subscribeActual(final Observer<? super List<App>> observer)
             {
-                Observable<List<App>> localApps = localRepository.getAll();
+                final Observable<List<App>> localApps = localRepository.getAll();
                 Observable<List<App>> remoteApps = remoteRepository.getAll();
-                // QUE ARRECHO ..
-                merge(localApps,remoteApps).subscribe(new Consumer<List<App>>() {
+                remoteApps.subscribe(new Consumer<List<App>>() {
                     @Override
-                    public void accept(@NonNull List<App> apps) throws Exception
+                    public void accept(@NonNull List<App> appsRemote) throws Exception
                     {
-                        observer.onNext(apps);
-                        //observer.onComplete();
+                        insertRemoteAppsIfNeedAndSendLocal(appsRemote,localApps, observer);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception
                     {
-                        observer.onError(new Throwable("Error al Consultar Aplicaciones"));
+                       insertRemoteAppsIfNeedAndSendLocal(null,localApps, observer);
                     }
                 });
             }
         };
     }
 
-    private List<App> removeDuplicates(List<App> apps)
+    private void insertRemoteAppsIfNeedAndSendLocal(List<App> appsRemote, Observable<List<App>> localApps, final Observer<? super List<App>> observer)
     {
-        Log.d("APPS","size"+apps.size());
-        Set<App> hs = new HashSet<>();
-        hs.addAll(apps);
-        apps.clear();
-        apps.addAll(hs);
-        return apps;
+        if(appsRemote != null)
+            insertAllAppsToLocal(appsRemote);
+        localApps.subscribe(new Consumer<List<App>>() {
+            @Override
+            public void accept(@NonNull List<App> apps) throws Exception {
+                observer.onNext(apps);
+                observer.onComplete();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                observer.onError(new Throwable("Error Al Consultar las Aplicaciones"));
+            }
+        });
     }
+
+    private void insertAllAppsToLocal(List<App> apps)
+    {
+        localRepository.updateApps(apps);
+    }
+
 }

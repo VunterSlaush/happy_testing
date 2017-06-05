@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     public AppAdapter()
     {
-        appList = Collections.emptyList();
+        appList = new ArrayList<>();
     }
 
     @Override
@@ -54,9 +55,12 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     public void setAppList(List<App> apps)
     {
-        appList = apps;
+        appList.clear();
+        notifyDataSetChanged();
+        appList.addAll(apps);
         notifyDataSetChanged();
     }
+
 
     public class AppViewHolder extends RecyclerView.ViewHolder
     {

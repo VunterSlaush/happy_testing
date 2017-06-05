@@ -53,7 +53,7 @@ public class AppsViewModel extends Observable
                     public void accept(@NonNull List<App> apps) throws Exception
                     {
                         Log.d("APPS","ViewModel size:"+apps.size());
-                        changeAppsDate(apps);
+                        changeAppsData(apps);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -65,15 +65,13 @@ public class AppsViewModel extends Observable
                 });
     }
 
-    private void changeAppsDate(List<App> apps)
+    private void changeAppsData(List<App> apps)
     {
+        this.apps.clear();
         for (App app : apps)
         {
-            if(!this.apps.contains(app))
-                this.apps.add(app);
+           this.apps.add(app);
         }
-        Log.d("APPS","SIZE ON CHANGE:"+this.apps.size());
-        Log.d("APPS","LISTA"+apps.toString());
         setChanged();
         notifyObservers();
     }

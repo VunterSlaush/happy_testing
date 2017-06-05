@@ -1,5 +1,7 @@
 package mota.dev.happytesting.repositories.implementations;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +68,9 @@ public class AppLocalImplementation implements AppRepository
     {
         return new Observable<App>() {
             @Override
-            protected void subscribeActual(Observer<? super App> observer) {
+            protected void subscribeActual(Observer<? super App> observer)
+            {
+                Log.d("BINDEANDO","CREANDO APP!!");
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(app);
@@ -98,5 +102,25 @@ public class AppLocalImplementation implements AppRepository
 
             }
         };
+    }
+
+    @Override
+    public void updateApps(List<App> apps)
+    {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        for(App app: apps)
+        {
+            try
+            {
+                realm.copyToRealmOrUpdate(app);
+            }
+            catch(Exception e)
+            {
+
+            }
+
+        }
+        realm.commitTransaction();
     }
 }

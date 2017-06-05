@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,11 +99,14 @@ public class AppsFragment extends Fragment implements Observer {
     @Override
     public void update(Observable observable, Object o)
     {
-        if (observable instanceof AppsViewModel) {
+
+        if (observable instanceof AppsViewModel)
+        {
+            Log.d("UPDATE","UPDATEANDO!");
+            binding.swipeContainer.setRefreshing(false);
             AppAdapter adapter = (AppAdapter) binding.appsList.getAdapter();
             AppsViewModel appViewModel = (AppsViewModel) observable;
             adapter.setAppList(appViewModel.getAppList());
-            binding.swipeContainer.setRefreshing(false);
         }
     }
 }

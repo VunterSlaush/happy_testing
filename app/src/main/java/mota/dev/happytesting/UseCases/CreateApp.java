@@ -2,6 +2,7 @@ package mota.dev.happytesting.useCases;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import io.reactivex.Observer;
@@ -50,7 +51,6 @@ public class CreateApp
 
         @Override
         public void onNext(@NonNull App app) {
-            System.out.println("MODIFICANDO");
             saveAppToLocalStorage(app);
         }
 

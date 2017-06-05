@@ -101,6 +101,11 @@ public class AppRemoteImplementation implements AppRepository {
         return null;
     }
 
+    @Override
+    public void updateApps(List<App> apps) {
+        //
+    }
+
 
     private App jsonToApp(JSONObject jsonObject) throws Exception
     {
