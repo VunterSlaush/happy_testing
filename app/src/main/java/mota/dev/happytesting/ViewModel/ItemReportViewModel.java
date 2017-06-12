@@ -50,7 +50,6 @@ public class ItemReportViewModel extends Observable {
         appName.set(report.getAppName());
         name.set(report.getName());
         creado.set(report.getCreado());
-
     }
 
     public void enviar(View view)

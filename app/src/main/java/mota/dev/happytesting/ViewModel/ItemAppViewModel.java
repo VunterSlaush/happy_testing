@@ -1,6 +1,7 @@
 package mota.dev.happytesting.ViewModel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -14,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import mota.dev.happytesting.Views.DetailAppActivity;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
@@ -70,6 +72,8 @@ public class ItemAppViewModel extends Observable {
 
     public void abrir(View view)
     {
-        Toast.makeText(context,"name:"+appName.get()+" ID:"+appId.get(),Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(context, DetailAppActivity.class);
+        i.putExtra("app_id",appId.get());
+        context.startActivity(i);
     }
 }
