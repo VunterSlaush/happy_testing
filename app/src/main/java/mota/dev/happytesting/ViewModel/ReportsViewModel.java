@@ -14,61 +14,63 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmList;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.useCases.GetApps;
+import mota.dev.happytesting.useCases.GetReports;
 
 /**
  * Created by Slaush on 28/05/2017.
  */
 
-public class AppsViewModel extends Observable
+public class ReportsViewModel extends Observable
 {
     private Context context;
-    private List<App> apps;
-    private GetApps useCase;
-    public AppsViewModel(Context context)
+    private List<Report> reports;
+    private GetReports useCase;
+
+    public ReportsViewModel(Context context)
     {
         this.context = context;
-        apps = new ArrayList<>();
-        useCase = new GetApps();
-        fetchApps();
+        reports = new ArrayList<>();
+        useCase = new GetReports();
+        fetchReports();
     }
 
-    public List<App> getAppList()
+    public List<Report> getReportList()
     {
-        return apps;
+        return reports;
     }
 
     public void refresh()
     {
-        fetchApps();
+        fetchReports();
     }
 
-    private void fetchApps()
+    private void fetchReports()
     {
-        useCase.fetchAllApps()
+        useCase.fetchReports()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<App>>() {
+                .subscribe(new Consumer<List<Report>>() {
                     @Override
-                    public void accept(@NonNull List<App> apps) throws Exception
+                    public void accept(@NonNull List<Report> reports) throws Exception
                     {
-                        Log.d("APPS","ViewModel size:"+apps.size());
-                        changeAppsData(apps);
+                        changeReportData(reports);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception
                     {
-                        apps.clear();
+                        reports.clear();
                         Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void changeAppsData(List<App> apps)
+    private void changeReportData(List<Report> reports)
     {
-        this.apps.clear();
-        this.apps.addAll(apps);
+        this.reports.clear();
+        this.reports.addAll(reports);
         setChanged();
         notifyObservers();
     }

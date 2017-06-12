@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.MainActivity;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.UserRepository;
-import mota.dev.happytesting.repositories.implementations.UserRequestImplementation;
+import mota.dev.happytesting.repositories.implementations.UserRemoteImplementation;
 import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.managers.UserManager;
 
@@ -57,7 +57,7 @@ public class Login
 
     public Login(Context context, LoginInterface loginInterface)
     {
-        repository = new UserRequestImplementation();
+        repository = new UserRemoteImplementation();
         this.context = context;
         this.loginInterface = loginInterface;
     }

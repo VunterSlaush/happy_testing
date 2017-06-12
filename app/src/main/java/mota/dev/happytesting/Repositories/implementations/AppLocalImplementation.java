@@ -12,6 +12,7 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 
 /**
@@ -27,7 +28,7 @@ public class AppLocalImplementation implements AppRepository
     }
 
     @Override
-    public Observable<App> create(final String name)
+    public Observable<App> create(final String name, final List<User> users)
     {
         return new Observable<App>()
         {
@@ -37,6 +38,7 @@ public class AppLocalImplementation implements AppRepository
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 App app = realm.createObject(App.class, name);
+                app.setUsers(users);
                 realm.commitTransaction();
                 observer.onNext(app);
                 observer.onComplete();
@@ -70,7 +72,6 @@ public class AppLocalImplementation implements AppRepository
             @Override
             protected void subscribeActual(Observer<? super App> observer)
             {
-                Log.d("BINDEANDO","CREANDO APP!!");
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(app);

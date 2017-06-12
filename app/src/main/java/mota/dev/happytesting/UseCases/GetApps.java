@@ -11,6 +11,9 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
@@ -75,7 +78,20 @@ public class GetApps
 
     private void insertAllAppsToLocal(List<App> apps)
     {
+        deleteAllAppsOnServer();
         localRepository.updateApps(apps);
     }
+
+    private void deleteAllAppsOnServer() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<App> rows = realm.where(App.class).greaterThanOrEqualTo("id",0).findAll();
+                rows.deleteAllFromRealm();
+            }
+        });
+    }
+
 
 }

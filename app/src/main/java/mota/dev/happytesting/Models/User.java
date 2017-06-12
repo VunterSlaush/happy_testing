@@ -1,19 +1,22 @@
 package mota.dev.happytesting.models;
 
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+
 /**
  * Created by Slaush on 22/05/2017.
  */
 
-public class User
-{
+public class User extends RealmObject {
+
     private String name;
     private String username;
     private String password;
     private int id;
 
     public String getName() {
-        return name;
+        return name != null ? name : "" ;
     }
 
     public void setName(String name) {

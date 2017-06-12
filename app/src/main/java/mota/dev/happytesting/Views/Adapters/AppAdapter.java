@@ -1,18 +1,12 @@
 package mota.dev.happytesting.Views.adapters;
 
-import android.database.DataSetObserver;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import mota.dev.happytesting.R;
@@ -56,7 +50,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     public void setAppList(List<App> apps)
     {
         appList.clear();
-        notifyDataSetChanged();
         appList.addAll(apps);
         notifyDataSetChanged();
     }
@@ -66,12 +59,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     {
         AppItemBinding binding;
 
-        public AppViewHolder(AppItemBinding binding) {
+        private AppViewHolder(AppItemBinding binding)
+        {
             super(binding.itemApp);
             this.binding = binding;
         }
 
-        public void bindApp(App app)
+        private void bindApp(App app)
         {
             if(binding.getViewModel() == null)
                 binding.setViewModel(new ItemAppViewModel(app, itemView.getContext()));

@@ -15,6 +15,7 @@ import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.RequestManager;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 
 /**
@@ -24,13 +25,13 @@ import mota.dev.happytesting.repositories.AppRepository;
 public class AppRemoteImplementation implements AppRepository {
 
     @Override
-    public Observable<App> create(final String name)
+    public Observable<App> create(final String name, final List<User> users)
     {
         Observable<App> response = new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer)
             {
-                Observable<JSONObject> ob = RequestManager.getInstance().createApp(name);
+                Observable<JSONObject> ob = RequestManager.getInstance().createApp(name,convertToUsersIdsArray(users));
                 ob.subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(@NonNull JSONObject jsonObject) throws Exception
@@ -56,6 +57,16 @@ public class AppRemoteImplementation implements AppRepository {
         };
 
         return response;
+    }
+
+    private int[] convertToUsersIdsArray(List<User> users)
+    {
+        int [] ids = new int [users.size()];
+        for (int i = 0; i<users.size(); i++)
+        {
+            ids[i] = users.get(i).getId();
+        }
+        return ids;
     }
 
     @Override

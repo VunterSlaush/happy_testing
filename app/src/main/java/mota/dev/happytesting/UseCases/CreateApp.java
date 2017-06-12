@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.List;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -13,6 +15,7 @@ import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.MainActivity;
 import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
@@ -26,6 +29,8 @@ public class CreateApp
     private AppRepository remoteRepository, localRepository;
     private String app_name;
     private Context context;
+    private List<User> selected_users;
+
     public CreateApp(Context context)
     {
         this.context = context;
@@ -33,10 +38,11 @@ public class CreateApp
         localRepository = new AppLocalImplementation();
     }
 
-    public void createApp(String name)
+    public void createApp(String name, List<User> selected)
     {
         this.app_name = name;
-        remoteRepository.create(name)
+        this.selected_users = selected;
+        remoteRepository.create(name,selected)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(remoteObserver);
@@ -105,6 +111,7 @@ public class CreateApp
 
     private void saveAppToLocalStorage(App app)
     {
+        app.setUsers(selected_users);
         localRepository.modifiy(app)
                        .subscribeOn(Schedulers.io())
                        .observeOn(AndroidSchedulers.mainThread())
@@ -113,7 +120,7 @@ public class CreateApp
 
     private void createAppOnLocalStorage()
     {
-        localRepository.create(app_name)
+        localRepository.create(app_name,this.selected_users)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(localObserver);

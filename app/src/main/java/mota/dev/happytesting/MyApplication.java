@@ -35,7 +35,7 @@ public class MyApplication extends android.app.Application
         goToLoginActivity(context);
     }
 
-    private void deleteAllDatabase()
+    public void deleteAllDatabase()
     {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

@@ -14,26 +14,26 @@ import java.util.Observable;
 import java.util.Observer;
 
 import mota.dev.happytesting.R;
-import mota.dev.happytesting.ViewModel.AppsViewModel;
+import mota.dev.happytesting.ViewModel.ReportsViewModel;
 import mota.dev.happytesting.Views.adapters.ReportAdapter;
 import mota.dev.happytesting.Views.interfaces.FragmentInteractionListener;
-import mota.dev.happytesting.databinding.FragmentAppsBinding;
+import mota.dev.happytesting.databinding.FragmentMyReportsBinding;
 
 
-public class AppsFragment extends Fragment implements Observer {
+public class MyReportsFragment extends Fragment implements Observer {
 
     private FragmentInteractionListener mListener;
-    public static final String TAG = "AppsFragment";
+    public static final String TAG = "MyReportsFragment";
 
-    private AppsViewModel viewModel;
-    FragmentAppsBinding binding;
+    private ReportsViewModel viewModel;
+    FragmentMyReportsBinding binding;
 
-    public AppsFragment() {
+    public MyReportsFragment() {
         // Required empty public constructor
     }
 
-    public static AppsFragment newInstance() {
-        AppsFragment fragment = new AppsFragment();
+    public static MyReportsFragment newInstance() {
+        MyReportsFragment fragment = new MyReportsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
 
@@ -50,8 +50,8 @@ public class AppsFragment extends Fragment implements Observer {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apps, container, false);
-        viewModel = new AppsViewModel(getContext());
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_reports, container, false);
+        viewModel = new ReportsViewModel(getContext());
         binding.setViewModel(viewModel);
         setupListView();
         setupObserver(viewModel);
@@ -60,10 +60,10 @@ public class AppsFragment extends Fragment implements Observer {
 
     private void setupListView()
     {
-        ReportAdapter appAdapter = new ReportAdapter();
-        appAdapter.setHasStableIds(true);
-        binding.appsList.setAdapter(appAdapter);
-        binding.appsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        ReportAdapter reportAdapter = new ReportAdapter();
+        reportAdapter.setHasStableIds(true);
+        binding.reportsList.setAdapter(reportAdapter);
+        binding.reportsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -98,13 +98,13 @@ public class AppsFragment extends Fragment implements Observer {
     @Override
     public void update(Observable observable, Object o)
     {
-        if (observable instanceof AppsViewModel)
+        if (observable instanceof ReportsViewModel)
         {
             binding.swipeContainer.setRefreshing(false);
-            ReportAdapter adapter = (ReportAdapter) binding.appsList.getAdapter();
-            AppsViewModel appViewModel = (AppsViewModel) observable;
-            binding.appsList.getItemAnimator().endAnimations();
-            adapter.setAppList(appViewModel.getAppList());
+            ReportAdapter adapter = (ReportAdapter) binding.reportsList.getAdapter();
+            ReportsViewModel reportsViewModel = (ReportsViewModel) observable;
+            binding.reportsList.getItemAnimator().endAnimations();
+            adapter.setReportList(reportsViewModel.getReportList());
         }
     }
 }

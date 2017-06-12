@@ -15,6 +15,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
@@ -23,53 +24,38 @@ import mota.dev.happytesting.repositories.implementations.AppRemoteImplementatio
  * Created by Slaush on 30/05/2017.
  */
 
-public class ItemAppViewModel extends Observable {
+public class ItemReportViewModel extends Observable {
 
-    public ObservableInt appId;
+    public ObservableInt reportId;
     public ObservableField<String> appName;
+    public ObservableField<String> name;
     public ObservableField<String> sendText;
     public ObservableBoolean enableButton;
+    public ObservableField<String> creado;
     private Context context;
 
-    public ItemAppViewModel(App app, Context context)
+    public ItemReportViewModel(Report report, Context context)
     {
         this.context = context;
-        appId = new ObservableInt(app.getId());
-        appName = new ObservableField<>(app.getName());
+        reportId = new ObservableInt(report.getId());
+        appName = new ObservableField<>(report.getAppName());
         sendText = new ObservableField<>("Enviar");
         enableButton = new ObservableBoolean(true);
     }
 
-    public void setApp(App app)
+    public void setReport(Report report)
     {
-        appId.set(app.getId());
-        appName.set(app.getName());
+
     }
 
     public void enviar(View view)
     {
         sendText.set("Enviando");
         enableButton.set(false);
-        AppRepository repo = new AppRemoteImplementation();
-        repo.create(appName.get(),new ArrayList<User>())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<App>() {
-                    @Override
-                    public void accept(@NonNull App app) throws Exception {
-                        appId.set(app.getId());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        sendText.set("Enviar");
-                        enableButton.set(true);
-                    }
-                });
+
     }
 
     public void abrir(View view)
     {
-        Toast.makeText(context,"name:"+appName.get()+" ID:"+appId.get(),Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="mota.dev.happytesting.ViewModel.ItemAppViewModel"/>
+            type="mota.dev.happytesting.ViewModel.ItemReportViewModel"/>
     </data>
 
     <LinearLayout
@@ -23,12 +23,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.appName}"
+                android:text="@{viewModel.name}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(viewModel.appId.get())}"/>
+                android:text="@{viewModel.appName}"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.creado}"/>
 
         </LinearLayout>
 
@@ -39,7 +43,7 @@
             android:padding="10dp"
             android:text="@{viewModel.sendText}"
             android:enabled="@{viewModel.enableButton}"
-            android:visibility="@{viewModel.appId != -1 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.reportId != -1 ? View.GONE : View.VISIBLE}"
             android:onClick="@{viewModel::enviar}"/>
 
     </LinearLayout>

@@ -1,6 +1,7 @@
 package mota.dev.happytesting.models;
 
 import java.util.Collection;
+import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -17,6 +18,8 @@ public class App extends RealmObject
 
     private int id;
     private RealmList<Report> reports;
+
+    private RealmList<User> modificar;
 
     public App()
     {
@@ -70,5 +73,13 @@ public class App extends RealmObject
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public void setUsers(List<User> users)
+    {
+        if(modificar == null)
+            modificar = new RealmList<>();
+
+        modificar.addAll(users);
     }
 }

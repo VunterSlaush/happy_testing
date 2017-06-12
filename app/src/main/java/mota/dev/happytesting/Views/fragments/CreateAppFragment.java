@@ -6,6 +6,8 @@ import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import java.util.Observer;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.CreateAppViewModel;
+import mota.dev.happytesting.Views.adapters.UserAdapter;
 import mota.dev.happytesting.Views.interfaces.FragmentInteractionListener;
 import mota.dev.happytesting.databinding.FragmentCreateAppBinding;
 
@@ -25,6 +28,8 @@ public class CreateAppFragment extends Fragment implements Observer
     private FragmentInteractionListener mListener;
     public static final String TAG = "CreateAppFragment";
     private CreateAppViewModel viewModel;
+    private FragmentCreateAppBinding binding;
+
     public CreateAppFragment() {
 
     }
@@ -43,19 +48,28 @@ public class CreateAppFragment extends Fragment implements Observer
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentCreateAppBinding binding = DataBindingUtil.inflate(inflater,
+         binding = DataBindingUtil.inflate(inflater,
                                            R.layout.fragment_create_app,container,false);
 
         viewModel = new CreateAppViewModel(getContext());
+        setupObserver(viewModel);
         binding.setViewModel(viewModel);
+        setupListView();
         return binding.getRoot();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+
+    private void setupListView()
+    {
+
+        binding.userList.setAdapter(viewModel.getAdapter());
+        binding.userList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.refresh();
+            }
+        });
     }
 
     @Override
@@ -76,8 +90,16 @@ public class CreateAppFragment extends Fragment implements Observer
     }
 
     @Override
-    public void update(Observable observable, Object o) {
-
+    public void update(Observable observable, Object o)
+    {
+        if (observable instanceof CreateAppViewModel)
+        {
+            binding.swipeContainer.setRefreshing(false);
+            UserAdapter adapter = (UserAdapter) binding.userList.getAdapter();
+            CreateAppViewModel viewModel = (CreateAppViewModel) observable;
+            binding.userList.getItemAnimator().endAnimations();
+            adapter.setUsersList(viewModel.getUsers());
+        }
     }
 
 

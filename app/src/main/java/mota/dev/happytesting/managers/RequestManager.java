@@ -3,6 +3,7 @@ package mota.dev.happytesting.managers;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,12 +54,16 @@ public class RequestManager
         return obj;
     }
 
-    private JSONObject generateJSONCreateApp(String app_name)
+    private JSONObject generateJSONCreateApp(String app_name, int[] ids)
     {
         JSONObject obj = new JSONObject();
+        JSONArray array = new JSONArray();
         try {
             obj.put(Consts.NAME,app_name);
             obj.put(Consts.OWNER, UserManager.getInstance().getUserId());
+            for (int i = 0; i< ids.length; i++)
+                array.put(ids[i]);
+            obj.put("users",array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -87,14 +92,19 @@ public class RequestManager
         }
     }
 
-    public Observable<JSONObject> createApp(String name)
+    public Observable<JSONObject> createApp(String name, int [] ids)
     {
-        JSONObject o = generateJSONCreateApp(name);
+        JSONObject o = generateJSONCreateApp(name, ids);
         return request(Request.Method.POST,urlBase + Urls.URL_CREATE_APP,o);
     }
 
     public Observable<JSONObject> getApps()
     {
         return request(Request.Method.GET, urlBase + Urls.URL_APPS, null);
+    }
+
+    public Observable<JSONObject> getUsers()
+    {
+        return request(Request.Method.GET,urlBase + Urls.URL_USERS, null);
     }
 }
