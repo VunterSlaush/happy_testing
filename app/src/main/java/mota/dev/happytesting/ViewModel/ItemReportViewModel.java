@@ -39,12 +39,17 @@ public class ItemReportViewModel extends Observable {
         this.context = context;
         reportId = new ObservableInt(report.getId());
         appName = new ObservableField<>(report.getAppName());
+        name = new ObservableField<>(report.getName());
+        creado = new ObservableField<>(report.getCreado());
         sendText = new ObservableField<>("Enviar");
         enableButton = new ObservableBoolean(true);
     }
 
     public void setReport(Report report)
     {
+        appName.set(report.getAppName());
+        name.set(report.getName());
+        creado.set(report.getCreado());
 
     }
 
@@ -52,7 +57,6 @@ public class ItemReportViewModel extends Observable {
     {
         sendText.set("Enviando");
         enableButton.set(false);
-
     }
 
     public void abrir(View view)

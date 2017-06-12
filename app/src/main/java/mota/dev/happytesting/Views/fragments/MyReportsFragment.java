@@ -64,7 +64,6 @@ public class MyReportsFragment extends Fragment implements Observer {
         reportAdapter.setHasStableIds(true);
         binding.reportsList.setAdapter(reportAdapter);
         binding.reportsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

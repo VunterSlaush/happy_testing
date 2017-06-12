@@ -15,7 +15,7 @@ import java.util.Observer;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.AppsViewModel;
-import mota.dev.happytesting.Views.adapters.ReportAdapter;
+import mota.dev.happytesting.Views.adapters.AppAdapter;
 import mota.dev.happytesting.Views.interfaces.FragmentInteractionListener;
 import mota.dev.happytesting.databinding.FragmentAppsBinding;
 
@@ -60,7 +60,7 @@ public class AppsFragment extends Fragment implements Observer {
 
     private void setupListView()
     {
-        ReportAdapter appAdapter = new ReportAdapter();
+        AppAdapter appAdapter = new AppAdapter();
         appAdapter.setHasStableIds(true);
         binding.appsList.setAdapter(appAdapter);
         binding.appsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -101,7 +101,7 @@ public class AppsFragment extends Fragment implements Observer {
         if (observable instanceof AppsViewModel)
         {
             binding.swipeContainer.setRefreshing(false);
-            ReportAdapter adapter = (ReportAdapter) binding.appsList.getAdapter();
+            AppAdapter adapter = (AppAdapter) binding.appsList.getAdapter();
             AppsViewModel appViewModel = (AppsViewModel) observable;
             binding.appsList.getItemAnimator().endAnimations();
             adapter.setAppList(appViewModel.getAppList());

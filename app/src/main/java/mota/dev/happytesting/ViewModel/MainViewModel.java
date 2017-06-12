@@ -18,6 +18,7 @@ import mota.dev.happytesting.R;
 import mota.dev.happytesting.Views.fragments.AccountFragment;
 import mota.dev.happytesting.Views.fragments.AppsFragment;
 import mota.dev.happytesting.Views.fragments.CreateAppFragment;
+import mota.dev.happytesting.Views.fragments.MyReportsFragment;
 
 /**
  * Created by Slaush on 28/05/2017.
@@ -76,6 +77,10 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
                 fragmentClass = AccountFragment.class;
                 tag = AccountFragment.TAG;
                 break;
+            case R.id.my_reports:
+                fragmentClass = MyReportsFragment.class;
+                tag = MyReportsFragment.TAG;
+                break;
             case R.id.sign_out:
                 MyApplication.getInstance().logout(context);
                 break;
@@ -84,7 +89,7 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
                 tag = AppsFragment.TAG;
         }
 
-        if(tag != null && fragmentClass != null)
+        if(tag != null)
         {
             changeFragment(tag,fragmentClass);
             menuItem.setChecked(true);

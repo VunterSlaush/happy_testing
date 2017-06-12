@@ -107,4 +107,9 @@ public class RequestManager
     {
         return request(Request.Method.GET,urlBase + Urls.URL_USERS, null);
     }
+
+    public Observable<JSONObject> getReports()
+    {
+        return request(Request.Method.GET,urlBase + Urls.URL_REPORTS, null);
+    }
 }
