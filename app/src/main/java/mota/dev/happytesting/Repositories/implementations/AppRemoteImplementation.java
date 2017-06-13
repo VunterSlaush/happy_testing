@@ -101,6 +101,11 @@ public class AppRemoteImplementation implements AppRepository {
         };
     }
 
+    @Override
+    public Observable<App> get(int id) {
+        return null;
+    }
+
 
     @Override
     public Observable<App> modifiy(App app) {

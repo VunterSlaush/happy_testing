@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import io.realm.Realm;
-import mota.dev.happytesting.Views.LoginActivity;
+import mota.dev.happytesting.Views.activities.LoginActivity;
 import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.managers.UserManager;
 

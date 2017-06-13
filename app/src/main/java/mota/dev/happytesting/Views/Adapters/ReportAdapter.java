@@ -10,11 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mota.dev.happytesting.R;
-import mota.dev.happytesting.ViewModel.ItemAppViewModel;
-import mota.dev.happytesting.ViewModel.ItemReportViewModel;
-import mota.dev.happytesting.databinding.AppItemBinding;
+import mota.dev.happytesting.ViewModel.items.ItemReportViewModel;
 import mota.dev.happytesting.databinding.ReportItemBinding;
-import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 
 /**

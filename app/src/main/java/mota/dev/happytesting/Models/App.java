@@ -15,10 +15,9 @@ public class App extends RealmObject
 {
     @PrimaryKey
     private String name;
-
     private int id;
+    private String app_owner;
     private RealmList<Report> reports;
-
     private RealmList<User> modificar;
 
     public App()
@@ -81,5 +80,21 @@ public class App extends RealmObject
             modificar = new RealmList<>();
 
         modificar.addAll(users);
+    }
+
+    public String getApp_owner() {
+        return app_owner;
+    }
+
+    public void setApp_owner(String app_owner) {
+        this.app_owner = app_owner;
+    }
+
+    public RealmList<User> getModificar() {
+        return modificar;
+    }
+
+    public void setModificar(RealmList<User> modificar) {
+        this.modificar = modificar;
     }
 }

@@ -1,4 +1,4 @@
-package mota.dev.happytesting.ViewModel;
+package mota.dev.happytesting.ViewModel.items;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;

@@ -66,6 +66,31 @@ public class AppLocalImplementation implements AppRepository
     }
 
     @Override
+    public Observable<App> get(final int id)
+    {
+        return new Observable<App>() {
+            @Override
+            protected void subscribeActual(Observer<? super App> observer)
+            {
+                Realm realm = Realm.getDefaultInstance();
+                Log.d("MOTA", "Consegui Realm?????");
+                RealmResults<App> results = realm.where(App.class).equalTo("id", id).findAll();
+                List<App> list =  realm.copyFromRealm(results);
+                App app = list.get(0);
+                if(app != null)
+                {
+                    observer.onNext(app);
+                    observer.onComplete();
+                }else
+                {
+                    observer.onError(new Throwable("Aplicacion no encontrada"));
+                }
+
+            }
+        };
+    }
+
+    @Override
     public Observable<App> modifiy(final App app)
     {
         return new Observable<App>() {

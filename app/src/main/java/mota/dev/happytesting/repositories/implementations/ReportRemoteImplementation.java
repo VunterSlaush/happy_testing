@@ -51,6 +51,11 @@ public class ReportRemoteImplementation implements ReportRepository
     }
 
     @Override
+    public Observable<Report> get(int id) {
+        return null;
+    }
+
+    @Override
     public Observable<Report> create(Report report) {
         return null;
     }

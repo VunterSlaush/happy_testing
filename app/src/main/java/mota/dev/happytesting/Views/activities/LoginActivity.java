@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Views;
+package mota.dev.happytesting.Views.activities;
 
 import android.app.Activity;
 import android.databinding.DataBindingUtil;

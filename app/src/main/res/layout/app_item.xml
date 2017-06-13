@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="mota.dev.happytesting.ViewModel.ItemAppViewModel"/>
+            type="mota.dev.happytesting.ViewModel.items.ItemAppViewModel"/>
     </data>
 
     <LinearLayout

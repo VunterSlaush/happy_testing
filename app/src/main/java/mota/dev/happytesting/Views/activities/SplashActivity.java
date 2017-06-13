@@ -1,4 +1,4 @@
-package mota.dev.happytesting.Views;
+package mota.dev.happytesting.Views.activities;
 
 import android.app.ActivityOptions;
 import android.content.Intent;

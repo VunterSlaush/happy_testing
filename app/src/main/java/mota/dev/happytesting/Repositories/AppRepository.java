@@ -14,6 +14,7 @@ public interface AppRepository
 {
     Observable<App> create(String name, List<User> users);
     Observable<List<App>> getAll();
+    Observable<App> get(int id);
     Observable<App> modifiy(App app);
     Observable<Boolean> delete(App app);
     void updateApps(List<App> apps);
