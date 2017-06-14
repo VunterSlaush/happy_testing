@@ -112,4 +112,9 @@ public class RequestManager
     {
         return request(Request.Method.GET,urlBase + Urls.URL_REPORTS, null);
     }
+
+    public Observable<JSONObject> getApp(int id)
+    {
+        return request(Request.Method.GET, urlBase + Urls.URL_APP + "/" + id,null);
+    }
 }

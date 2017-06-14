@@ -33,6 +33,7 @@ public class DetailAppViewModel extends Observable {
     public ObservableField<String> app_owner;
     private ObservableInt app_id;
     private AppDetail useCase;
+
     public DetailAppViewModel(Context context)
     {
         this.context = context;
@@ -44,7 +45,7 @@ public class DetailAppViewModel extends Observable {
 
     public void setApp(int id)
     {
-        Log.d("MOTA","App Id:"+id);
+        Log.d("MOTA--->","App Id:"+id);
         app_id.set(id);
         findAppDetails(id);
     }
@@ -63,18 +64,24 @@ public class DetailAppViewModel extends Observable {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
                 // Do Nothing ..
-                Log.d("MOTA","ERROR:"+throwable.getMessage());
+                Log.d("MOTA--->","ERROR:"+throwable.getMessage());
             }
         });
     }
 
     private void setApp(App app)
     {
+        Log.d("MOTA--->","Entre en el SET!");
         app_name.set(app.getName());
-        app_owner.set(app.getApp_owner());
+        if(app.getApp_owner() != null)
+        app_owner.set("@"+app.getApp_owner().getUsername()+" - "+app.getApp_owner().getName());
         editors = convertirEditorsToStringList(app.getModificar());
         reports = app.getReports();
+        if(reports != null)
+        Log.d("MOTA--->","Seteando Apps R:"+reports.size()+" E:"+editors.size());
+        setChanged();
         notifyObservers();
+
     }
 
     private List<String> convertirEditorsToStringList(RealmList<User> modificar)
@@ -110,5 +117,9 @@ public class DetailAppViewModel extends Observable {
     public void refreshReports()
     {
 
+    }
+
+    public List<String> getEditors() {
+        return editors;
     }
 }

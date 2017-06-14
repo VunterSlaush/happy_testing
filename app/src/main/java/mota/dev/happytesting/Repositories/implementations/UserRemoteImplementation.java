@@ -15,6 +15,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.models.User;
+import mota.dev.happytesting.parsers.UserParser;
 import mota.dev.happytesting.repositories.UserRepository;
 import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.RequestManager;
@@ -42,7 +43,7 @@ public class UserRemoteImplementation implements UserRepository
                     public void onNext(@NonNull JSONObject jsonObject) {
                         if(jsonObject.has("id"))
                         {
-                            User user = createUserFromJSON(jsonObject);
+                            User user = UserParser.getInstance().generateUserFromJson(jsonObject);
                             observer.onNext(user);
                             observer.onComplete();
                         }
@@ -86,7 +87,8 @@ public class UserRemoteImplementation implements UserRepository
                     @Override
                     public void accept(@NonNull JSONObject jsonObject) throws Exception
                     {
-                        observer.onNext(generateListOfUsers(jsonObject));
+                        List<User> users = UserParser.getInstance().generateUsersList(jsonObject);
+                        observer.onNext(users);
                         observer.onComplete();
                     }
                 }, new Consumer<Throwable>()
@@ -102,22 +104,7 @@ public class UserRemoteImplementation implements UserRepository
         return  observable;
     }
 
-    private List<User> generateListOfUsers(JSONObject jsonObject) throws Exception
-    {
-        ArrayList<User> users = new ArrayList<>();
-        JSONArray array = jsonObject.optJSONArray("users");
-        for (int i = 0; i <array.length(); i++)
-            users.add(createUserFromJSON(array.getJSONObject(i)));
 
-        return users;
-    }
 
-    private User createUserFromJSON(JSONObject jsonObject)
-    {
-        User user = new User();
-        user.setId(jsonObject.optInt(Consts.USER_ID));
-        user.setName(jsonObject.optString(Consts.NAME));
-        user.setUsername(jsonObject.optString(Consts.USERNAME));
-        return user;
-    }
+
 }

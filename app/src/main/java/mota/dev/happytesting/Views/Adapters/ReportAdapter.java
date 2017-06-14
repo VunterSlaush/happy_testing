@@ -38,7 +38,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     @Override
     public void onBindViewHolder(ReportViewHolder holder, int position)
     {
-        Log.d("APPS","BINDEANDO:"+reportList.get(position));
         holder.bindReport(reportList.get(position));
     }
 
@@ -54,6 +53,16 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         notifyDataSetChanged();
     }
 
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
     public class ReportViewHolder extends RecyclerView.ViewHolder
     {

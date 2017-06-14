@@ -1,5 +1,7 @@
 package mota.dev.happytesting.repositories.implementations;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +18,7 @@ import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.RequestManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
+import mota.dev.happytesting.parsers.AppParser;
 import mota.dev.happytesting.repositories.AppRepository;
 
 /**
@@ -27,7 +30,7 @@ public class AppRemoteImplementation implements AppRepository {
     @Override
     public Observable<App> create(final String name, final List<User> users)
     {
-        Observable<App> response = new Observable<App>() {
+        return new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer)
             {
@@ -38,7 +41,7 @@ public class AppRemoteImplementation implements AppRepository {
                     {
                         try
                         {
-                            App app = jsonToApp(jsonObject);
+                            App app = AppParser.getInstance().jsonToApp(jsonObject);
                             observer.onNext(app);
                             observer.onComplete();
                         }
@@ -56,7 +59,6 @@ public class AppRemoteImplementation implements AppRepository {
             }
         };
 
-        return response;
     }
 
     private int[] convertToUsersIdsArray(List<User> users)
@@ -82,7 +84,8 @@ public class AppRemoteImplementation implements AppRepository {
                                  {  
                                      try 
                                      {
-                                         observer.onNext(getAppsOfJson(jsonObject));
+                                         List<App> apps = AppParser.getInstance().getAppsOfJson(jsonObject);
+                                         observer.onNext(apps);
                                          observer.onComplete();
                                      }catch (Exception e)
                                      {
@@ -102,8 +105,41 @@ public class AppRemoteImplementation implements AppRepository {
     }
 
     @Override
-    public Observable<App> get(int id) {
-        return null;
+    public Observable<App> get(final int id) {
+        Log.d("MOTA--->","ENTRANDO EN GET");
+        return new Observable<App>() {
+            @Override
+            protected void subscribeActual(final Observer<? super App> observer)
+            {
+                Log.d("MOTA--->","LLAMANDO GET");
+                Observable<JSONObject> ob = RequestManager.getInstance().getApp(id);
+                ob.subscribe(new Consumer<JSONObject>() {
+                                 @Override
+                                 public void accept(@NonNull JSONObject jsonObject) throws Exception
+                                 {
+                                     Log.d("MOTA--->","ENTRANDO en ACCEPT del GET!");
+                                     try
+                                     {
+                                         App app = AppParser.getInstance().jsonToApp(jsonObject, "app");
+                                         observer.onNext(app);
+                                         observer.onComplete();
+                                     }catch (Exception e)
+                                     {
+                                         Log.d("MOTA--->","ENVIANDO EXCEPTION, QUIZAS DE PARSER!"+e.getMessage());
+                                         observer.onError(ErrorManager.getInstance().getError(jsonObject));
+                                     }
+
+                                 }
+                             },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                Log.d("MOTA--->","GET Error:"+throwable.getMessage());
+                                observer.onError(throwable);
+                            }
+                        });
+            }
+        };
     }
 
 
@@ -123,31 +159,5 @@ public class AppRemoteImplementation implements AppRepository {
     }
 
 
-    private App jsonToApp(JSONObject jsonObject) throws Exception
-    {
-        if(jsonObject.has("error"))
-            throw new Exception();
-        JSONObject appJson = jsonObject.getJSONObject("res");
-        App app = new App();
-        app.setId(appJson.optInt("id"));
-        app.setName(appJson.optString("name"));
-        return app;
-    }
 
-
-    private List<App> getAppsOfJson(JSONObject jsonObject) throws Exception
-    {
-        if(jsonObject.has("error"))
-            throw new Exception();
-        JSONArray array = jsonObject.getJSONArray("apps");
-        List<App> apps = new ArrayList<>();
-        for (int i = 0; i< array.length(); i++)
-        {
-            App app = new App();
-            app.setName(array.getJSONObject(i).optString(Consts.NAME));
-            app.setId(array.getJSONObject(i).optInt("id"));
-            apps.add(app);
-        }
-        return apps;
-    }
 }

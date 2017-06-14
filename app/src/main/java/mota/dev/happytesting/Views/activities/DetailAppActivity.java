@@ -5,7 +5,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,6 +22,7 @@ public class DetailAppActivity extends AppCompatActivity implements Observer, Bi
 {
     private DetailAppViewModel viewModel;
     private ActivityDetailAppBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +50,21 @@ public class DetailAppActivity extends AppCompatActivity implements Observer, Bi
     @Override
     public void update(Observable observable, Object o)
     {
+        Log.d("MOTA--->","UPDATEANDO"+o);
         if (observable instanceof DetailAppViewModel)
         {
             binding.swipeContainer.setRefreshing(false);
             ReportAdapter adapter = (ReportAdapter) binding.reportsList.getAdapter();
             DetailAppViewModel viewModel = (DetailAppViewModel) observable;
             binding.reportsList.getItemAnimator().endAnimations();
+
+
+            ArrayAdapter<String> adapt = (ArrayAdapter<String>) binding.editorsList.getAdapter();
+            adapt.clear();
+            adapt.addAll(viewModel.getEditors());
+            adapt.notifyDataSetChanged();
             adapter.setReportList(viewModel.getReports());
+            Log.d("MOTA--->","UPDATEADO TODO");
         }
     }
 

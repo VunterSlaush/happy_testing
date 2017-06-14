@@ -16,7 +16,7 @@ public class App extends RealmObject
     @PrimaryKey
     private String name;
     private int id;
-    private String app_owner;
+    private User app_owner;
     private RealmList<Report> reports;
     private RealmList<User> modificar;
 
@@ -45,6 +45,14 @@ public class App extends RealmObject
         return reports;
     }
 
+
+    public void setReports(List<Report> reports)
+    {
+        RealmList<Report> r = new RealmList<>();
+        r.addAll(reports);
+        this.reports = r;
+    }
+
     public void setReports(RealmList<Report> reports) {
         this.reports = reports;
     }
@@ -55,6 +63,7 @@ public class App extends RealmObject
                 "name='" + name + '\'' +
                 ", id=" + id +
                 ", reports=" + reports +
+                ", mod=" + modificar +
                 '}';
     }
 
@@ -62,11 +71,8 @@ public class App extends RealmObject
     public boolean equals(Object o)
     {
         if (o == null || getClass() != o.getClass()) return false;
-
         App app = (App) o;
-
         return name.equals(app.name);
-
     }
 
     @Override
@@ -82,11 +88,11 @@ public class App extends RealmObject
         modificar.addAll(users);
     }
 
-    public String getApp_owner() {
+    public User getApp_owner() {
         return app_owner;
     }
 
-    public void setApp_owner(String app_owner) {
+    public void setApp_owner(User app_owner) {
         this.app_owner = app_owner;
     }
 
@@ -96,5 +102,12 @@ public class App extends RealmObject
 
     public void setModificar(RealmList<User> modificar) {
         this.modificar = modificar;
+    }
+
+    public void setModificar(List<User> modificar)
+    {
+        RealmList<User> users = new RealmList<>();
+        users.addAll(modificar);
+        this.modificar = users;
     }
 }

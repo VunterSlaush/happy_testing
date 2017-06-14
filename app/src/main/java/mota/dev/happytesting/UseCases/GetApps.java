@@ -78,20 +78,6 @@ public class GetApps
 
     private void insertAllAppsToLocal(List<App> apps)
     {
-        deleteAllAppsOnServer();
         localRepository.updateApps(apps);
     }
-
-    private void deleteAllAppsOnServer() {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<App> rows = realm.where(App.class).greaterThanOrEqualTo("id",0).findAll();
-                rows.deleteAllFromRealm();
-            }
-        });
-    }
-
-
 }

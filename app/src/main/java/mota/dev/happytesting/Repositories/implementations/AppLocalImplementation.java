@@ -73,7 +73,6 @@ public class AppLocalImplementation implements AppRepository
             protected void subscribeActual(Observer<? super App> observer)
             {
                 Realm realm = Realm.getDefaultInstance();
-                Log.d("MOTA", "Consegui Realm?????");
                 RealmResults<App> results = realm.where(App.class).equalTo("id", id).findAll();
                 List<App> list =  realm.copyFromRealm(results);
                 App app = list.get(0);
@@ -100,6 +99,7 @@ public class AppLocalImplementation implements AppRepository
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(app);
+                Log.d("MOTA--->","Modify App :"+app.getModificar().size());
                 realm.commitTransaction();
                 observer.onNext(app);
                 observer.onComplete();
@@ -135,11 +135,16 @@ public class AppLocalImplementation implements AppRepository
     {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
+        deleteAppsIfNeeded(realm,apps);
         for(App app: apps)
         {
             try
             {
-                realm.copyToRealmOrUpdate(app);
+                App appSaved = realm.where(App.class).equalTo("name",app.getName()).findFirst();
+                if(appSaved != null)
+                    appSaved.setId(app.getId());
+                else
+                    realm.copyToRealmOrUpdate(app);
             }
             catch(Exception e)
             {
@@ -148,5 +153,18 @@ public class AppLocalImplementation implements AppRepository
 
         }
         realm.commitTransaction();
+    }
+
+    private void deleteAppsIfNeeded(Realm realm, List<App> apps)
+    {
+        if(realm.where(App.class).greaterThanOrEqualTo("id",0).count() != apps.size())
+        {
+            RealmResults<App> result = realm.where(App.class).greaterThanOrEqualTo("id",0).findAll();
+            for (int i = 0; i<result.size(); i++)
+            {
+                if(!apps.contains(result.get(i)))
+                    result.deleteFromRealm(i);
+            }
+        }
     }
 }

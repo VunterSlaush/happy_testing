@@ -14,6 +14,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.managers.RequestManager;
 import mota.dev.happytesting.models.Report;
+import mota.dev.happytesting.parsers.ReportParser;
 import mota.dev.happytesting.repositories.ReportRepository;
 
 /**
@@ -35,7 +36,8 @@ public class ReportRemoteImplementation implements ReportRepository
                     @Override
                     public void accept(@NonNull JSONObject jsonObject) throws Exception
                     {
-                        observer.onNext(generateReportList(jsonObject));
+                        List<Report> reports = ReportParser.getInstance().generateReportList(jsonObject);
+                        observer.onNext(reports);
                         observer.onComplete();
                     }
                 }, new Consumer<Throwable>()
@@ -71,26 +73,4 @@ public class ReportRemoteImplementation implements ReportRepository
     }
 
 
-    private List<Report> generateReportList(JSONObject jsonObject) throws JSONException {
-        JSONArray array = jsonObject.optJSONArray("reports");
-        if (array.length() > 0)
-        {
-           List<Report> reports = new ArrayList<>();
-            for (int i = 0; i<array.length(); i++)
-                reports.add(generateReportFromJson(array.getJSONObject(i)));
-
-            return reports;
-        }
-        return new ArrayList<>();
-    }
-
-    private Report generateReportFromJson(JSONObject jsonObject) throws JSONException
-    {
-        Report r = new Report();
-        r.setName(jsonObject.optString("nombre"));
-        r.setCreado(jsonObject.optString("createdAt"));
-        r.setId(jsonObject.optInt("id"));
-        r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
-        return r;
-    }
 }

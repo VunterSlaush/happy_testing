@@ -38,7 +38,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     @Override
     public void onBindViewHolder(AppViewHolder holder, int position)
     {
-        Log.d("APPS","BINDEANDO:"+appList.get(position));
         holder.bindApp(appList.get(position));
     }
 
@@ -46,6 +45,17 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     public int getItemCount() {
         return appList.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
 
     public void setAppList(List<App> apps)
     {

@@ -120,6 +120,7 @@ public class CreateApp
 
     private void createAppOnLocalStorage()
     {
+        Log.d("MOTA--->","CreateOnLocalStorage");
         localRepository.create(app_name,this.selected_users)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

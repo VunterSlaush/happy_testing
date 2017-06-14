@@ -3,6 +3,7 @@ package mota.dev.happytesting.ViewModel;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class CreateAppViewModel extends Observable
     {
 
         List<User> selected = adapter.getSelectedUsers();
+        Log.d("MOTA--->", "Selected Size:"+selected.size());
         useCase.createApp(name.get(),selected);
     }
 
