@@ -61,7 +61,7 @@ public class ReportParser
             //TODO agregar AUTOR !!
         }catch (Exception e)
         {
-
+            //Log.d("MOTA--->","OBSERVATIONS LIST EXception:"+jsonObject.toString() + " Ex:"+e.getMessage());
         }
 
         return r;

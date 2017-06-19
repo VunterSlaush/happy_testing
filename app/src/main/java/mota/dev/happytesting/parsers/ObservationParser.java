@@ -1,5 +1,7 @@
 package mota.dev.happytesting.parsers;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ public class ObservationParser
 
     public List<Observation> generateObservationList(JSONObject json) throws JSONException
     {
+        //Log.d("MOTA--->","OBSERVATIONS LIST:"+json.toString());
         JSONArray array = json.optJSONArray("Observations");
 
         if (array.length() > 0)
@@ -43,6 +46,7 @@ public class ObservationParser
     }
 
     private Observation generateObservationFromJson(JSONObject jsonObject) {
+        Log.d("MOTA--->","OBSERVATIONS ITEM:"+jsonObject.toString());
         Observation r = new Observation();
         r.setText(jsonObject.optString("texto"));
         r.setId(jsonObject.optInt("id"));
@@ -50,7 +54,7 @@ public class ObservationParser
             r.setImages(ImageParser.getInstance().generateImageList(jsonObject));
         }catch (Exception e)
         {
-
+            Log.d("MOTA--->","OBSERVATIONS ITEM EXCEPTION:"+e.getMessage());
         }
 
         return r;

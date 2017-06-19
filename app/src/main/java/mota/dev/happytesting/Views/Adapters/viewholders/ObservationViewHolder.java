@@ -3,8 +3,12 @@ package mota.dev.happytesting.Views.adapters.viewholders;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import mota.dev.happytesting.ViewModel.items.ItemObservationViewModel;
 import mota.dev.happytesting.Views.adapters.ImageAdapter;
+import mota.dev.happytesting.Views.adapters.ObservationAdapter;
 import mota.dev.happytesting.databinding.ObservationItemBinding;
 import mota.dev.happytesting.models.Observation;
 
@@ -13,7 +17,7 @@ import mota.dev.happytesting.models.Observation;
  */
 
 
-public class ObservationViewHolder extends BaseViewHolder<Observation>
+public class ObservationViewHolder extends BaseViewHolder<Observation> implements Observer
 {
     private ObservationItemBinding binding;
 
@@ -21,22 +25,39 @@ public class ObservationViewHolder extends BaseViewHolder<Observation>
     {
         super(binding.itemObservation);
         this.binding = binding;
+        setupAdapter();
     }
 
     public void setupAdapter()
     {
-        //ImageAdapter adapter = new ImageAdapter(itemView.getContext());
+        ImageAdapter adapter = new ImageAdapter();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 3);
         binding.mosaicoRecyclerView.setLayoutManager(gridLayoutManager);
-        //binding.mosaicoRecyclerView.setAdapter(adapter);
+        binding.mosaicoRecyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onBind()
     {
-        if(binding.getViewModel() == null)
-            binding.setViewModel(new ItemObservationViewModel(item, itemView.getContext()));
-        else
+        if(binding.getViewModel() == null) {
+            ItemObservationViewModel viewModel = new ItemObservationViewModel(item, itemView.getContext());
+            viewModel.addObserver(this);
+            binding.setViewModel(viewModel);
+        }else
+        {
             binding.getViewModel().setObservation(item);
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o)
+    {
+        if(observable instanceof ItemObservationViewModel)
+        {
+            ImageAdapter adapter = (ImageAdapter) binding.mosaicoRecyclerView.getAdapter();
+            ItemObservationViewModel viewModel = (ItemObservationViewModel) observable;
+            adapter.setList(viewModel.getImages());
+            binding.mosaicoRecyclerView.getItemAnimator().endAnimations();
+        }
     }
 }

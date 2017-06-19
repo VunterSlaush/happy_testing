@@ -3,6 +3,8 @@ package mota.dev.happytesting.Views.activities;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -33,6 +35,8 @@ public class DetailReportActivity extends BindeableActivity {
     {
         ObservationAdapter adapter = new ObservationAdapter();
         binding.observationList.setAdapter(adapter);
+        binding.observationList.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override

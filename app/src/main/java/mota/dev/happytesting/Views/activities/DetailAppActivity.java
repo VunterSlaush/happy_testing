@@ -47,7 +47,6 @@ public class DetailAppActivity extends BindeableActivity {
     @Override
     public void update(Observable observable, Object o)
     {
-        Log.d("MOTA--->","UPDATEANDO"+o);
         if (observable instanceof DetailAppViewModel)
         {
             binding.swipeContainer.setRefreshing(false);
@@ -59,7 +58,6 @@ public class DetailAppActivity extends BindeableActivity {
             adapt.addAll(viewModel.getEditors());
             adapt.notifyDataSetChanged();
             adapter.setReportList(viewModel.getReports());
-            Log.d("MOTA--->","UPDATEADO TODO");
         }
     }
 

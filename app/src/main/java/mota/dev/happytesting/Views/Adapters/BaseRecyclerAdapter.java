@@ -1,6 +1,7 @@
 package mota.dev.happytesting.Views.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;

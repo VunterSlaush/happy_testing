@@ -3,6 +3,7 @@ package mota.dev.happytesting.ViewModel.detail;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class DetailReportViewModel extends Observable {
     private Context context;
     private List<Observation> observations;
     private ObservableInt reportId;
-    private ObservableField<String> reportName;
-    private ObservableField<String> appName;
+    public ObservableField<String> reportName;
+    public ObservableField<String> appName;
     private ReportDetail detailUseCase;
 
     public DetailReportViewModel(Context context)
@@ -66,7 +67,7 @@ public class DetailReportViewModel extends Observable {
         reportId.set(report_id);
         reportName.set(report_name);
         detailUseCase.getDetails(report_id).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Report>()
+                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Report>()
         {
             @Override
             public void accept(@NonNull Report report) throws Exception
@@ -87,7 +88,9 @@ public class DetailReportViewModel extends Observable {
         reportId.set(report.getId());
         reportName.set(report.getName());
         observations.clear();
+        Log.d("MOTA--->","Obs:"+report.getObservations());
         observations.addAll(report.getObservations());
+        Log.d("MOTA--->","Obs Size:"+observations.size());
         appName.set(report.getAppName());
         setChanged();
         notifyObservers();
