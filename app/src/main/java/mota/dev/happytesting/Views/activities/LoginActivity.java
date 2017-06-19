@@ -5,22 +5,19 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.LoginViewModel;
-import mota.dev.happytesting.Views.interfaces.BindeableActivity;
 import mota.dev.happytesting.databinding.LoginActivityBinding;
 
 /**
  * Created by Slaush on 22/05/2017.
  */
 
-public class LoginActivity extends Activity implements Observer, BindeableActivity
-{
+public class LoginActivity extends BindeableActivity{
     private LoginViewModel loginViewModel;
 
     @Override
@@ -36,11 +33,6 @@ public class LoginActivity extends Activity implements Observer, BindeableActivi
         LoginActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.login_activity);
         loginViewModel = new LoginViewModel(this);
         binding.setViewModel(loginViewModel);
-    }
-
-    @Override public void setupObserver(Observable observable)
-    {
-        observable.addObserver(this);
     }
 
 

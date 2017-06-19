@@ -55,7 +55,15 @@ public class ReportParser
         r.setName(jsonObject.optString("nombre"));
         r.setCreado(jsonObject.optString("createdAt"));
         r.setId(jsonObject.optInt("id"));
-        r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
+        try{
+            r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
+            r.setObservations(ObservationParser.getInstance().generateObservationList(jsonObject));
+            //TODO agregar AUTOR !!
+        }catch (Exception e)
+        {
+
+        }
+
         return r;
     }
 }

@@ -1,6 +1,7 @@
 package mota.dev.happytesting.ViewModel.items;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -14,6 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import mota.dev.happytesting.Views.activities.DetailAppActivity;
+import mota.dev.happytesting.Views.activities.DetailReportActivity;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
@@ -60,5 +63,9 @@ public class ItemReportViewModel extends Observable {
 
     public void abrir(View view)
     {
+        Intent i = new Intent(context, DetailReportActivity.class);
+        i.putExtra("report_id",reportId.get());
+        i.putExtra("report_name",name.get());
+        context.startActivity(i);
     }
 }

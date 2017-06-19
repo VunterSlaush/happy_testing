@@ -46,9 +46,6 @@ public class AppParser
         app.setReports(ReportParser.getInstance().generateReportList(appJson,"Reports"));
         app.setModificar(UserParser.getInstance().generateUsersList(appJson, "canEditMe"));
         app.setApp_owner(UserParser.getInstance().generateUserFromJson(appJson.optJSONObject("User")));
-
-
-
         return app;
     }
 

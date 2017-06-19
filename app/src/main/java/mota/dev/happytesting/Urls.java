@@ -10,5 +10,6 @@ public class Urls
     public static final String URL_APPS = "/user/apps";
     public static final String URL_APP = "/apps";
     public static final String URL_REPORTS = "/user/reports";
+    public static final String URL_REPORT = "/reportes";
     public static String URL_LOGIN = "/login";
 }

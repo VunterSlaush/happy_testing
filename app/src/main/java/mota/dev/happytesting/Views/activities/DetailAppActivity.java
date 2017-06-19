@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,11 +14,9 @@ import java.util.Observer;
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.detail.DetailAppViewModel;
 import mota.dev.happytesting.Views.adapters.ReportAdapter;
-import mota.dev.happytesting.Views.interfaces.BindeableActivity;
 import mota.dev.happytesting.databinding.ActivityDetailAppBinding;
 
-public class DetailAppActivity extends AppCompatActivity implements Observer, BindeableActivity
-{
+public class DetailAppActivity extends BindeableActivity {
     private DetailAppViewModel viewModel;
     private ActivityDetailAppBinding binding;
 
@@ -57,8 +54,6 @@ public class DetailAppActivity extends AppCompatActivity implements Observer, Bi
             ReportAdapter adapter = (ReportAdapter) binding.reportsList.getAdapter();
             DetailAppViewModel viewModel = (DetailAppViewModel) observable;
             binding.reportsList.getItemAnimator().endAnimations();
-
-
             ArrayAdapter<String> adapt = (ArrayAdapter<String>) binding.editorsList.getAdapter();
             adapt.clear();
             adapt.addAll(viewModel.getEditors());
@@ -74,10 +69,5 @@ public class DetailAppActivity extends AppCompatActivity implements Observer, Bi
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_app);
         viewModel = new DetailAppViewModel(this);
         binding.setViewModel(viewModel);
-    }
-
-    @Override
-    public void setupObserver(Observable observable) {
-        observable.addObserver(this);
     }
 }

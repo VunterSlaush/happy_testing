@@ -51,6 +51,13 @@ public class App extends RealmObject
         RealmList<Report> r = new RealmList<>();
         r.addAll(reports);
         this.reports = r;
+        changeReportsAppName();
+    }
+
+    private void changeReportsAppName()
+    {
+        for (Report r: reports)
+                r.setAppName(name);
     }
 
     public void setReports(RealmList<Report> reports) {

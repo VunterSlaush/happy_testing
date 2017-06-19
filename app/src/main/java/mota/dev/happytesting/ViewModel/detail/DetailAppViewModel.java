@@ -43,6 +43,7 @@ public class DetailAppViewModel extends Observable {
         this.useCase = new AppDetail();
     }
 
+    //TODO recibir app name por si la app no esta en server !!!
     public void setApp(int id)
     {
         Log.d("MOTA--->","App Id:"+id);
@@ -96,17 +97,17 @@ public class DetailAppViewModel extends Observable {
 
     public void eliminarApp(View view)
     {
-
+        //TODO!
     }
 
     public void agregarEditor(View view)
     {
-
+        //TODO!
     }
 
     public void agregarReporte(View view)
     {
-
+        //TODO!
     }
 
     public List<Report> getReports()

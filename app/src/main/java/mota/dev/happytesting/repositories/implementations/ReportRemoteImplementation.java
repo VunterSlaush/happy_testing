@@ -53,21 +53,40 @@ public class ReportRemoteImplementation implements ReportRepository
     }
 
     @Override
-    public Observable<Report> get(int id) {
-        return null;
+    public Observable<Report> get(final int id) {
+        return new Observable<Report>() {
+            @Override
+            protected void subscribeActual(final Observer<? super Report> observer)
+            {
+                RequestManager.getInstance().getReport(id).subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(@NonNull JSONObject jsonObject) throws Exception
+                    {
+                        observer.onNext(ReportParser.getInstance()
+                                .generateReportFromJson(jsonObject.optJSONObject("report")));
+                        observer.onComplete();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        observer.onError(throwable);
+                    }
+                });
+            }
+        };
     }
 
-    @Override
+    @Override // TODO!!!
     public Observable<Report> create(Report report) {
         return null;
     }
 
-    @Override
+    @Override // TODO!!!
     public Observable<Report> modifiy(Report report) {
         return null;
     }
 
-    @Override
+    @Override // TODO!!!
     public Observable<Boolean> delete(Report report) {
         return null;
     }

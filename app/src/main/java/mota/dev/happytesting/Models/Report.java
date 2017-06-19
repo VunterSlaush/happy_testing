@@ -1,6 +1,8 @@
 package mota.dev.happytesting.models;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -47,6 +49,13 @@ public class Report extends RealmObject
 
     public void setObservations(RealmList<Observation> observations) {
         this.observations = observations;
+    }
+
+    public void setObservations(List<Observation> observations)
+    {
+        if(this.observations == null)
+            this.observations = new RealmList<>();
+        this.observations.addAll(observations);
     }
 
     public String getAppName() {

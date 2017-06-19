@@ -15,6 +15,8 @@ import mota.dev.happytesting.Urls;
 import mota.dev.happytesting.utils.RxRequestAdapter;
 import mota.dev.happytesting.utils.SingletonRequester;
 
+import static mota.dev.happytesting.Urls.URL_REPORTS;
+
 /**
  * Created by Slaush on 22/05/2017.
  */
@@ -110,11 +112,16 @@ public class RequestManager
 
     public Observable<JSONObject> getReports()
     {
-        return request(Request.Method.GET,urlBase + Urls.URL_REPORTS, null);
+        return request(Request.Method.GET,urlBase + URL_REPORTS, null);
     }
 
     public Observable<JSONObject> getApp(int id)
     {
         return request(Request.Method.GET, urlBase + Urls.URL_APP + "/" + id,null);
+    }
+
+    public Observable<JSONObject> getReport(int id)
+    {
+        return request(Request.Method.GET,urlBase + Urls.URL_REPORT + "/"+id,null);
     }
 }

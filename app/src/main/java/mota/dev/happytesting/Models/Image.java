@@ -9,7 +9,7 @@ import io.realm.RealmObject;
 public class Image extends RealmObject
 {
     private String dir;
-    private String id;
+    private int id;
 
     public String getDir() {
         return dir;
@@ -19,11 +19,11 @@ public class Image extends RealmObject
         this.dir = dir;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,11 +34,8 @@ public class Image extends RealmObject
 
         Image image = (Image) o;
 
-        return id != null ? id.equals(image.id) : image.id == null;
+        return id == image.id;
     }
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+
 }
