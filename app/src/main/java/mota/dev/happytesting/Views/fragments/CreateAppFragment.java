@@ -2,8 +2,6 @@ package mota.dev.happytesting.Views.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -98,7 +96,7 @@ public class CreateAppFragment extends Fragment implements Observer
             UserAdapter adapter = (UserAdapter) binding.userList.getAdapter();
             CreateAppViewModel viewModel = (CreateAppViewModel) observable;
             binding.userList.getItemAnimator().endAnimations();
-            adapter.setUsersList(viewModel.getUsers());
+            adapter.setList(viewModel.getUsers());
         }
     }
 

@@ -10,6 +10,8 @@ import java.util.List;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.items.ItemUserViewModel;
+import mota.dev.happytesting.Views.adapters.viewholders.BaseViewHolder;
+import mota.dev.happytesting.Views.adapters.viewholders.UserViewHolder;
 import mota.dev.happytesting.databinding.UserItemBinding;
 import mota.dev.happytesting.models.User;
 
@@ -17,19 +19,18 @@ import mota.dev.happytesting.models.User;
  * Created by Slaush on 11/06/2017.
  */
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class UserAdapter extends BaseRecyclerAdapter<User> {
 
-    private List<User> users;
     private List<UserViewHolder> holders;
+
     public UserAdapter()
     {
-        users = new ArrayList<>();
+        super();
         holders = new ArrayList<>();
-        this.setHasStableIds(true);
     }
 
     @Override
-    public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         UserItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.user_item,
                 parent, false);
@@ -46,46 +47,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         for (int i = 0; i< holders.size(); i++)
         {
             if(holders.get(i).binding.getViewModel().checked.get())
-                selected.add(users.get(i));
+                selected.add(list.get(i));
         }
         return selected;
-    }
-
-    @Override
-    public void onBindViewHolder(UserViewHolder holder, int position)
-    {
-        holder.bindUser(users.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return users.size();
-    }
-
-    public void setUsersList(List<User> users)
-    {
-        this.users.clear();
-        this.users.addAll(users);
-        notifyDataSetChanged();
-    }
-
-
-    public class UserViewHolder extends RecyclerView.ViewHolder
-    {
-        UserItemBinding binding;
-
-        private UserViewHolder(UserItemBinding binding)
-        {
-            super(binding.itemUser);
-            this.binding = binding;
-        }
-
-        private void bindUser(User user)
-        {
-            if(binding.getViewModel() == null)
-                binding.setViewModel(new ItemUserViewModel(user, itemView.getContext()));
-            else
-                binding.getViewModel().setUser(user);
-        }
     }
 }

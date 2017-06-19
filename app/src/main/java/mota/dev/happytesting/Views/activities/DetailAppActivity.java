@@ -57,7 +57,7 @@ public class DetailAppActivity extends BindeableActivity {
             adapt.clear();
             adapt.addAll(viewModel.getEditors());
             adapt.notifyDataSetChanged();
-            adapter.setReportList(viewModel.getReports());
+            adapter.setList(viewModel.getReports());
         }
     }
 

@@ -2,6 +2,8 @@ package mota.dev.happytesting.ViewModel.items;
 
 import android.content.Context;
 import android.databinding.ObservableField;
+import android.util.Log;
+import android.view.View;
 
 import java.util.List;
 import java.util.Observable;
@@ -19,15 +21,14 @@ public class ItemObservationViewModel extends Observable
     private Observation observation;
     public ObservableField<String> text;
 
-    public ItemObservationViewModel(Observation o, Context context)
+    public ItemObservationViewModel(Context context)
     {
         this.context = context;
-        this.observation = o;
         this.text = new ObservableField<>();
-        updateObservationData();
     }
 
-    private void updateObservationData() {
+    private void updateObservationData(){
+        Log.d("MOTA--->","Observation update images:"+observation.getImages().size());
         this.text.set(observation.getText());
         setChanged();
         notifyObservers();
@@ -41,5 +42,20 @@ public class ItemObservationViewModel extends Observable
 
     public List<Image> getImages() {
         return this.observation.getImages();
+    }
+
+    public void editarTexto(View view)
+    {
+
+    }
+
+    public void removerImagenes(View view)
+    {
+
+    }
+
+    public void seleccionarImagenes(View view)
+    {
+
     }
 }

@@ -104,7 +104,7 @@ public class AppsFragment extends Fragment implements Observer {
             AppAdapter adapter = (AppAdapter) binding.appsList.getAdapter();
             AppsViewModel appViewModel = (AppsViewModel) observable;
             binding.appsList.getItemAnimator().endAnimations();
-            adapter.setAppList(appViewModel.getAppList());
+            adapter.setList(appViewModel.getAppList());
         }
     }
 }

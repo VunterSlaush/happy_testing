@@ -2,6 +2,7 @@ package mota.dev.happytesting.Views.adapters.viewholders;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -40,9 +41,11 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
     public void onBind()
     {
         if(binding.getViewModel() == null) {
-            ItemObservationViewModel viewModel = new ItemObservationViewModel(item, itemView.getContext());
+            ItemObservationViewModel viewModel = new ItemObservationViewModel(itemView.getContext());
             viewModel.addObserver(this);
+            viewModel.setObservation(item);
             binding.setViewModel(viewModel);
+            Log.d("MOTA--->","ON BIND OBservation 1st time");
         }else
         {
             binding.getViewModel().setObservation(item);
@@ -54,6 +57,7 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
     {
         if(observable instanceof ItemObservationViewModel)
         {
+            Log.d("MOTA--->","UPDATE Ob ViewHolder");
             ImageAdapter adapter = (ImageAdapter) binding.mosaicoRecyclerView.getAdapter();
             ItemObservationViewModel viewModel = (ItemObservationViewModel) observable;
             adapter.setList(viewModel.getImages());

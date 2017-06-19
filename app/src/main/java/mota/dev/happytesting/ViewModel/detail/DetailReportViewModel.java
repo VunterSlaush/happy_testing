@@ -88,9 +88,7 @@ public class DetailReportViewModel extends Observable {
         reportId.set(report.getId());
         reportName.set(report.getName());
         observations.clear();
-        Log.d("MOTA--->","Obs:"+report.getObservations());
         observations.addAll(report.getObservations());
-        Log.d("MOTA--->","Obs Size:"+observations.size());
         appName.set(report.getAppName());
         setChanged();
         notifyObservers();

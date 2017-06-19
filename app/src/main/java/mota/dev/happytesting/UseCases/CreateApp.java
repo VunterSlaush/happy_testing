@@ -1,5 +1,6 @@
 package mota.dev.happytesting.useCases;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -107,6 +108,7 @@ public class CreateApp
     {
         Intent i = new Intent(context, MainActivity.class);
         context.startActivity(i);
+        ((Activity) context).finish();
     }
 
     private void saveAppToLocalStorage(App app)

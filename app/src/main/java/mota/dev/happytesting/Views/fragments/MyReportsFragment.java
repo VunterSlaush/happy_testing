@@ -103,7 +103,7 @@ public class MyReportsFragment extends Fragment implements Observer {
             ReportAdapter adapter = (ReportAdapter) binding.reportsList.getAdapter();
             ReportsViewModel reportsViewModel = (ReportsViewModel) observable;
             binding.reportsList.getItemAnimator().endAnimations();
-            adapter.setReportList(reportsViewModel.getReportList());
+            adapter.setList(reportsViewModel.getReportList());
         }
     }
 }

@@ -22,9 +22,8 @@ public class ImageViewHolder extends BaseViewHolder<Image> {
     }
 
     @Override
-    public void onBind()
+    public void onBind() // TODO crear ImageViewModel! para que se pueda seleccionar
     {
-        Log.d("MOTA--->","BIND IMAGE!!!");
         Glide.with(itemView.getContext()).load(item.getDir()).into(binding.imageItem);
     }
 }

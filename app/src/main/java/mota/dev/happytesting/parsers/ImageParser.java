@@ -26,7 +26,7 @@ public class ImageParser
     }
 
     public List<Image> generateImageList(JSONObject jsonObject) throws JSONException {
-        JSONArray array = jsonObject.optJSONArray("Observations");
+        JSONArray array = jsonObject.optJSONArray("images");
 
         if (array.length() > 0)
         {

@@ -1,5 +1,6 @@
 package mota.dev.happytesting.ViewModel.items;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableBoolean;
@@ -53,14 +54,14 @@ public class ItemAppViewModel extends Observable {
         enableButton.set(false);
         AppRepository repo = new AppRemoteImplementation();
         repo.create(appName.get(),new ArrayList<User>())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<App>() {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<App>() {
                     @Override
                     public void accept(@NonNull App app) throws Exception {
                         appId.set(app.getId());
                     }
-                }, new Consumer<Throwable>() {
+             }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         sendText.set("Enviar");

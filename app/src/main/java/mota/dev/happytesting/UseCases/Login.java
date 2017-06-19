@@ -1,5 +1,6 @@
 package mota.dev.happytesting.useCases;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -88,6 +89,7 @@ public class Login
         UserManager.getInstance().saveUserCredentials(context,user);
         Intent i = new Intent(context, MainActivity.class);
         context.startActivity(i);
+        ((Activity) context).finish();
     }
 
     public interface LoginInterface

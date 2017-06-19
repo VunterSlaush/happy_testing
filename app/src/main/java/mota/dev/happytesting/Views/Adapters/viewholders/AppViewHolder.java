@@ -14,7 +14,7 @@ public class AppViewHolder extends BaseViewHolder<App>
 {
     AppItemBinding binding;
 
-    private AppViewHolder(AppItemBinding binding)
+    public AppViewHolder(AppItemBinding binding)
     {
         super(binding.itemApp);
         this.binding = binding;

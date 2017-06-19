@@ -39,5 +39,6 @@ public class SplashActivity extends AppCompatActivity {
                                                                       android.R.anim.fade_in,
                                                                       android.R.anim.fade_out);
         startActivity(i,options.toBundle());
+        finish();
     }
 }
