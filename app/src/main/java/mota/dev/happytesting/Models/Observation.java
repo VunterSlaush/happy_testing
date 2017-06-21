@@ -45,4 +45,14 @@ public class Observation extends RealmObject
     public void setId(int id) {
         this.id = id;
     }
+
+    public void removeImages(List<Image> selected)
+    {
+        int index;
+        for (int i = 0; i < selected.size(); i++)
+        {
+            index = images.indexOf(selected.get(i));
+            images.remove(index);
+        }
+    }
 }

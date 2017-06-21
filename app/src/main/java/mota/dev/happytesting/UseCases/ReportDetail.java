@@ -36,8 +36,8 @@ public class ReportDetail // TODO Finish it!
         ReportRepository repo = new ReportRemoteImplementation();
         repo.get(id).subscribe(new Consumer<Report>() {
             @Override
-            public void accept(@NonNull Report app) throws Exception {
-                observer.onNext(app);
+            public void accept(@NonNull Report report) throws Exception {
+                observer.onNext(report);
                 //AppRepository localRepo = new AppLocalImplementation();
                 //localRepo.modifiy(app).subscribe();
                 observer.onComplete();

@@ -4,23 +4,25 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 
+import java.util.List;
 import java.util.Observable;
 
 import mota.dev.happytesting.R;
 import mota.dev.happytesting.ViewModel.GalleryViewModel;
 import mota.dev.happytesting.Views.adapters.ImageAdapter;
+import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.databinding.ActivityGalleryBinding;
+import mota.dev.happytesting.models.Image;
 
 
 /**
  * Created by Slaush on 07/05/2017.
  */
 
-public class GalleryActivity extends BindeableActivity
+public class GalleryActivity extends BindeableActivity implements Selectable<Image>
 {
     private GalleryViewModel viewModel;
-   // private GalleryActivityBinding binding;
-    ActivityGalleryBinding binding;
+    private ActivityGalleryBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -38,34 +40,6 @@ public class GalleryActivity extends BindeableActivity
         binding.mosaicoRecyclerView.setAdapter(adapter);
     }
 
-    /*public void select()
-    {
-        boolean [] imagesSelected = imageAdapter.getImagesSelected();
-        final int len = imagesSelected.length;
-        int cnt = 0;
-        String selectImages = "";
-        for (int i = 0; i < len; i++) {
-            if (imagesSelected[i]) {
-                cnt++;
-                selectImages = selectImages + strUrls[i] + "|";
-            }
-        }
-        if (cnt == 0)
-        {
-            Toast.makeText(getApplicationContext(), "Please select at least one image", Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-
-            Log.d("SelectedImages", selectImages);
-            Intent i = new Intent();
-            i.putExtra("data", selectImages);
-            setResult(Activity.RESULT_OK, i);
-            finish();
-        }
-    }*/
-
-
     @Override
     public void update(Observable observable, Object o)
     {
@@ -81,7 +55,14 @@ public class GalleryActivity extends BindeableActivity
     public void initDataBinding()
     {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_gallery);
-        viewModel = new GalleryViewModel(this);
+        viewModel = new GalleryViewModel(this,this);
         binding.setViewModel(viewModel);
+    }
+
+    @Override
+    public List<Image> getSelected()
+    {
+        ImageAdapter adapter = (ImageAdapter) binding.mosaicoRecyclerView.getAdapter();
+        return adapter.getSelectedImages();
     }
 }

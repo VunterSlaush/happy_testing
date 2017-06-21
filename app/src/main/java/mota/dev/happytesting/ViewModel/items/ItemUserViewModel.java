@@ -38,4 +38,6 @@ public class ItemUserViewModel extends Observable
         name.set(user.getName());
         checked.set(false);
     }
+
+
 }

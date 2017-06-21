@@ -34,7 +34,7 @@ public class Image extends RealmObject
 
         Image image = (Image) o;
 
-        return id == image.id;
+        return id == image.id || dir.equals(image.dir);
     }
 
 

@@ -51,6 +51,33 @@ public class UserParser
         user.setId(jsonObject.optInt(Consts.USER_ID));
         user.setName(jsonObject.optString(Consts.NAME));
         user.setUsername(jsonObject.optString(Consts.USERNAME));
+        user.setPassword(jsonObject.optString(Consts.PASSWORD));
         return user;
+    }
+
+    public JSONObject generateLoginJson(String username, String password)
+    {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(Consts.USERNAME,username);
+            obj.put(Consts.PASSWORD,password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    public JSONObject generateJSONFromUser(User user)
+    {
+        JSONObject o = new JSONObject();
+        try {
+            o.put(Consts.USERNAME,user.getUsername());
+            o.put(Consts.PASSWORD,user.getPassword());
+            o.put(Consts.NAME,user.getName());
+        } catch (JSONException e)
+        {
+
+        }
+        return o;
     }
 }

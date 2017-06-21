@@ -36,7 +36,8 @@
         </receiver>
 
         <activity android:name=".Views.activities.DetailAppActivity" />
-        <activity android:name=".Views.activities.DetailReportActivity"></activity>
+        <activity android:name=".Views.activities.DetailReportActivity" />
+        <activity android:name=".Views.activities.FullImageActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package mota.dev.happytesting.repositories.implementations;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +34,8 @@ public class UserRemoteImplementation implements UserRepository
             @Override
             protected void subscribeActual(final Observer<? super User> observer)
             {
-                final Observable<JSONObject> loginObservable = RequestManager.getInstance().login(username, password);
+                final JSONObject user = UserParser.getInstance().generateLoginJson(username,password);
+                final Observable<JSONObject> loginObservable = RequestManager.getInstance().login(user);
                 loginObservable.subscribe(new Observer<JSONObject>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -104,7 +107,39 @@ public class UserRemoteImplementation implements UserRepository
         return  observable;
     }
 
+    @Override
+    public Observable<User> modify(final User user) {
+        return new Observable<User>() {
+            @Override
+            protected void subscribeActual(final Observer<? super User> observer)
+            {
+                JSONObject userJson = UserParser.getInstance().generateJSONFromUser(user);
+                RequestManager.getInstance().updateUser(userJson).subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(@NonNull JSONObject jsonObject) throws Exception
+                    {
+                        if(!jsonObject.has("error"))
+                        {
+                            User u = user;
+                            observer.onNext(u);
+                            observer.onComplete();
+                        }
+                        else
+                        {
+                            observer.onError(new Throwable(jsonObject.optString("error")));
+                        }
 
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        observer.onError(throwable);
+                    }
+                });
+            }
+        };
+    }
 
 
 }

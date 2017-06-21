@@ -49,12 +49,12 @@ public class ImagenAndroidImplementation implements ImageRepository {
         cursor.moveToFirst();
         int count = cursor.getCount();
         ArrayList<Image> images = new ArrayList<>();
-
+        int index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         for (int i = 0; i < count; i++)
         {
             cursor.moveToPosition(i);
             Image im = new Image();
-            im.setDir(cursor.getString(3));
+            im.setDir(cursor.getString(index_data));
             images.add(im);
         }
         return images;

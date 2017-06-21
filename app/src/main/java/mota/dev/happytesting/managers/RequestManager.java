@@ -37,25 +37,13 @@ public class RequestManager
         return  instance;
     }
 
-    public Observable<JSONObject> login(String username, String password)
+    public Observable<JSONObject> login(JSONObject obj)
     {
-        JSONObject obj = generateLoginJson(username,password);
         return request(Request.Method.POST,urlBase + Urls.URL_LOGIN,obj);
     }
 
-    private JSONObject generateLoginJson(String username, String password)
-    {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put(Consts.USERNAME,username);
-            obj.put(Consts.PASSWORD,password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        return obj;
-    }
-
+    //TODO mover esto de aqui, no es responsabilidad del RequestManager!
     private JSONObject generateJSONCreateApp(String app_name, int[] ids)
     {
         JSONObject obj = new JSONObject();
@@ -123,5 +111,10 @@ public class RequestManager
     public Observable<JSONObject> getReport(int id)
     {
         return request(Request.Method.GET,urlBase + Urls.URL_REPORT + "/"+id,null);
+    }
+
+    public Observable<JSONObject> updateUser(JSONObject user)
+    {
+        return request(Request.Method.POST,urlBase + Urls.URL_UPDATE_USER ,user);
     }
 }

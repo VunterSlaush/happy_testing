@@ -40,10 +40,8 @@ public class UserManager
     {
         String username = PreferencesHelper.readString(context,Consts.USERNAME,"");
         String password = PreferencesHelper.readString(context,Consts.PASSWORD,"");
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
+        String name = PreferencesHelper.readString(context,Consts.NAME,"");
+        User user = createUser(name,username,password);
 
         if(!username.isEmpty() && !password.isEmpty())
             return user;
@@ -62,5 +60,14 @@ public class UserManager
         PreferencesHelper.deleteKey(MyApplication.getInstance(),Consts.PASSWORD);
         PreferencesHelper.deleteKey(MyApplication.getInstance(), Consts.NAME);
         PreferencesHelper.deleteKey(MyApplication.getInstance(), Consts.USER_ID);
+    }
+
+    public User createUser(String name, String username, String password)
+    {
+        User u = new User();
+        u.setName(name);
+        u.setUsername(username);
+        u.setPassword(password);
+        return  u;
     }
 }

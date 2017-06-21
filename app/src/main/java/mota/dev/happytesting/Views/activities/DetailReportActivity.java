@@ -1,5 +1,6 @@
 package mota.dev.happytesting.Views.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ public class DetailReportActivity extends BindeableActivity {
         ObservationAdapter adapter = new ObservationAdapter();
         binding.observationList.setAdapter(adapter);
         binding.observationList.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     @Override
@@ -59,4 +59,9 @@ public class DetailReportActivity extends BindeableActivity {
         binding.setViewModel(viewModel);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("MOTA--->","data:"+data.getStringExtra("data"));
+    }
 }

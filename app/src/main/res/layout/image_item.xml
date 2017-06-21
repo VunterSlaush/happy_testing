@@ -18,6 +18,8 @@
         android:id="@+id/image_item"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
+        android:onClick="@{viewModel::openImageActivity}"
+
         />
 
     <LinearLayout
@@ -32,6 +34,7 @@
           android:id="@+id/image_check"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:checked="@={viewModel.checked}"
           />
     </LinearLayout>
 

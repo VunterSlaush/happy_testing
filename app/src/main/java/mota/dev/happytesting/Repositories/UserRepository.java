@@ -13,4 +13,5 @@ public interface UserRepository
 {
     Observable<User> login(String username, String password);
     Observable<List<User>> getUsers();
+    Observable<User> modify(User u);
 }

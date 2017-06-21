@@ -5,6 +5,9 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+
+import mota.dev.happytesting.ViewModel.items.ItemImageViewModel;
 import mota.dev.happytesting.databinding.ImageItemBinding;
 import mota.dev.happytesting.models.Image;
 
@@ -14,7 +17,7 @@ import mota.dev.happytesting.models.Image;
 
 public class ImageViewHolder extends BaseViewHolder<Image> {
 
-    private ImageItemBinding binding;
+    public ImageItemBinding binding;
     public ImageViewHolder(ImageItemBinding itemView)
     {
         super(itemView.elementRootView);
@@ -22,8 +25,16 @@ public class ImageViewHolder extends BaseViewHolder<Image> {
     }
 
     @Override
-    public void onBind() // TODO crear ImageViewModel! para que se pueda seleccionar
+    public void onBind()
     {
-        Glide.with(itemView.getContext()).load(item.getDir()).into(binding.imageItem);
+        if(binding.getViewModel() == null)
+            binding.setViewModel(new ItemImageViewModel(item, itemView.getContext()));
+        else
+            binding.getViewModel().setImage(item);
+
+        if(item.getDir().contains("http"))
+            Glide.with(itemView.getContext()).load(item.getDir()).into(binding.imageItem);
+        else
+            Glide.with(itemView.getContext()).load(new File(item.getDir())).into(binding.imageItem);
     }
 }
