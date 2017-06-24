@@ -32,7 +32,7 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
         setupAdapter();
     }
 
-    public void setupAdapter()
+    private void setupAdapter()
     {
         ImageAdapter adapter = new ImageAdapter();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 3);

@@ -2,6 +2,7 @@ package mota.dev.happytesting.Views.adapters;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -22,7 +23,6 @@ import mota.dev.happytesting.models.User;
 public class UserAdapter extends BaseRecyclerAdapter<User> {
 
     private List<UserViewHolder> holders;
-
     public UserAdapter()
     {
         super();
@@ -37,9 +37,23 @@ public class UserAdapter extends BaseRecyclerAdapter<User> {
 
         UserViewHolder holder = new UserViewHolder(binding);
         holders.add(holder);
-
         return holder;
     }
+
+    public void setSelectedUsers(List<User> selected)
+    {
+        Log.d("MOTA--->","setSelectedUsers H:"+holders.size() + " S:"+selected.size());
+        for (int i = 0; i< holders.size(); i++)
+        {
+            if (holders.get(i).binding.getViewModel() != null && selected.contains(holders.get(i).binding.getViewModel().getUser()))
+            {
+                Log.d("MOTA--->","HACIENDO CHECKED:"+i);
+                holders.get(i).binding.getViewModel().checked.set(true);
+            }
+
+        }
+    }
+
 
     public List<User> getSelectedUsers()
     {
@@ -47,7 +61,7 @@ public class UserAdapter extends BaseRecyclerAdapter<User> {
         for (int i = 0; i< holders.size(); i++)
         {
             if(holders.get(i).binding.getViewModel().checked.get())
-                selected.add(list.get(i));
+                selected.add(holders.get(i).binding.getViewModel().getUser());
         }
         return selected;
     }

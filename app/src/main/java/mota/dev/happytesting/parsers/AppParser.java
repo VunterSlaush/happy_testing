@@ -10,6 +10,7 @@ import java.util.List;
 
 import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 13/06/2017.
@@ -64,6 +65,29 @@ public class AppParser
             apps.add(app);
         }
         return apps;
+    }
+
+    public JSONObject appToJson(App app)
+    {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("id",app.getId());
+            obj.put("name",app.getName());
+            obj.put("users",extractUserIdsToJSONArray(app));
+        }catch (Exception e )
+        {
+
+        }
+        return obj;
+    }
+
+    public JSONArray extractUserIdsToJSONArray(App app)
+    {
+        JSONArray array = new JSONArray();
+        int [] ids = Functions.convertToUsersIdsArray(app.getModificar());
+        for (int i = 0; i< ids.length; i++)
+            array.put(ids[i]);
+        return array;
     }
 
 }

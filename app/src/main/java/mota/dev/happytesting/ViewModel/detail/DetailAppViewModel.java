@@ -1,10 +1,13 @@
 package mota.dev.happytesting.ViewModel.detail;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +18,14 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmList;
+import mota.dev.happytesting.Views.dialogs.SelectUsersDialog;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.useCases.AppDetail;
+import mota.dev.happytesting.useCases.DeleteApp;
+import mota.dev.happytesting.useCases.EditEditors;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 12/06/2017.
@@ -33,6 +40,7 @@ public class DetailAppViewModel extends Observable {
     public ObservableField<String> app_owner;
     private ObservableInt app_id;
     private AppDetail useCase;
+    private App app;
 
     public DetailAppViewModel(Context context)
     {
@@ -72,14 +80,13 @@ public class DetailAppViewModel extends Observable {
 
     private void setApp(App app)
     {
-        Log.d("MOTA--->","Entre en el SET!");
+        this.app = app;
         app_name.set(app.getName());
         if(app.getApp_owner() != null)
         app_owner.set("@"+app.getApp_owner().getUsername()+" - "+app.getApp_owner().getName());
         editors = convertirEditorsToStringList(app.getModificar());
         reports = app.getReports();
         if(reports != null)
-        Log.d("MOTA--->","Seteando Apps R:"+reports.size()+" E:"+editors.size());
         setChanged();
         notifyObservers();
 
@@ -97,12 +104,61 @@ public class DetailAppViewModel extends Observable {
 
     public void eliminarApp(View view)
     {
-        //TODO!
+        Functions.showConfirmDialog(context, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                DeleteApp useCase = new DeleteApp();
+                useCase.delete(app).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(@NonNull Boolean result) throws Exception {
+                        if(result)
+                        {
+                            Toast.makeText(context,"Aplicacion Eliminada Satisfactoriamente", Toast.LENGTH_LONG).show();
+                            finalizar();
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"La Aplicacion no pudo ser Eliminada", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void finalizar()
+    {
+        ((Activity)context).finish();
     }
 
     public void agregarEditor(View view)
     {
-        //TODO!
+        SelectUsersDialog dialog = new SelectUsersDialog(context, app.getModificar(), new SelectUsersDialog.OnGetUsers() {
+            @Override
+            public void get(List<User> users)
+            {
+                app.setModificar(users);
+                EditEditors useCase = new EditEditors();
+                useCase.edit(app).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(@NonNull Boolean result) throws Exception
+                    {
+                        if (result)
+                            Toast.makeText(context,"Editores cambiados satisfactoriamente",Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(context,"Ocurrio un Error al cambiar los editores",Toast.LENGTH_SHORT).show();
+                        setApp(app);
+                    }
+                });
+            }
+
+        });
     }
 
     public void agregarReporte(View view)
@@ -117,7 +173,7 @@ public class DetailAppViewModel extends Observable {
 
     public void refreshReports()
     {
-
+        // TODO ????
     }
 
     public List<String> getEditors() {

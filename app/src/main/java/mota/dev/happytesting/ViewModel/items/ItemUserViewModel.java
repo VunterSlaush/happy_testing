@@ -39,5 +39,10 @@ public class ItemUserViewModel extends Observable
         checked.set(false);
     }
 
+    public User getUser()
+    {
+        return user;
+    }
+
 
 }

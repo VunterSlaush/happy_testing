@@ -14,6 +14,7 @@ import mota.dev.happytesting.Views.activities.GalleryActivity;
 import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
+import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
 
 /**
  * Created by Slaush on 18/06/2017.
@@ -52,7 +53,15 @@ public class ItemObservationViewModel extends Observable
 
     public void editarTexto(View view)
     {
-
+        new SimpleInputDialog(context, "Inserta tu Observacion", new SimpleInputDialog.OnGetText() {
+            @Override
+            public void get(String textResult)
+            {
+                text.set(textResult);
+                observation.setText(textResult);
+                // TODO Actualizar en BD!
+            }
+        });
     }
 
     public void removerImagenes(View view)
@@ -66,6 +75,7 @@ public class ItemObservationViewModel extends Observable
     public void seleccionarImagenes(View view)
     {
         Intent i = new Intent(context, GalleryActivity.class);
+        i.putExtra("observation_id",observation.getId());
         ((Activity)context).startActivityForResult(i,1234);
     }
 

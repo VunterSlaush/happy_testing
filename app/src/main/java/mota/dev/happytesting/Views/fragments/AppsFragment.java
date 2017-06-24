@@ -47,6 +47,13 @@ public class AppsFragment extends Fragment implements Observer {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        binding.swipeContainer.setRefreshing(true);
+        viewModel.refresh();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {

@@ -3,6 +3,7 @@ package mota.dev.happytesting.repositories.implementations;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.parsers.AppParser;
 import mota.dev.happytesting.repositories.AppRepository;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 29/05/2017.
@@ -34,7 +36,7 @@ public class AppRemoteImplementation implements AppRepository {
             @Override
             protected void subscribeActual(final Observer<? super App> observer)
             {
-                Observable<JSONObject> ob = RequestManager.getInstance().createApp(name,convertToUsersIdsArray(users));
+                Observable<JSONObject> ob = RequestManager.getInstance().createApp(name, Functions.convertToUsersIdsArray(users));
                 ob.subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(@NonNull JSONObject jsonObject) throws Exception
@@ -61,15 +63,7 @@ public class AppRemoteImplementation implements AppRepository {
 
     }
 
-    private int[] convertToUsersIdsArray(List<User> users)
-    {
-        int [] ids = new int [users.size()];
-        for (int i = 0; i<users.size(); i++)
-        {
-            ids[i] = users.get(i).getId();
-        }
-        return ids;
-    }
+
 
     @Override
     public Observable<List<App>> getAll() {
@@ -106,18 +100,17 @@ public class AppRemoteImplementation implements AppRepository {
 
     @Override
     public Observable<App> get(final int id) {
-        Log.d("MOTA--->","ENTRANDO EN GET");
+
         return new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer)
             {
-                Log.d("MOTA--->","LLAMANDO GET");
+
                 Observable<JSONObject> ob = RequestManager.getInstance().getApp(id);
                 ob.subscribe(new Consumer<JSONObject>() {
                                  @Override
                                  public void accept(@NonNull JSONObject jsonObject) throws Exception
                                  {
-                                     Log.d("MOTA--->","ENTRANDO en ACCEPT del GET!");
                                      try
                                      {
                                          App app = AppParser.getInstance().jsonToApp(jsonObject, "app");
@@ -125,7 +118,7 @@ public class AppRemoteImplementation implements AppRepository {
                                          observer.onComplete();
                                      }catch (Exception e)
                                      {
-                                         Log.d("MOTA--->","ENVIANDO EXCEPTION, QUIZAS DE PARSER!"+e.getMessage());
+
                                          observer.onError(ErrorManager.getInstance().getError(jsonObject));
                                      }
 
@@ -144,13 +137,75 @@ public class AppRemoteImplementation implements AppRepository {
 
 
     @Override
-    public Observable<App> modifiy(App app) {
-        return null;
+    public Observable<App> modifiy(final App app) {
+        return new Observable<App>() {
+            @Override
+            protected void subscribeActual(final Observer<? super App> observer)
+            {
+                JSONObject appJson = AppParser.getInstance().appToJson(app);
+                RequestManager.getInstance().updateApp(appJson).subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(@NonNull JSONObject jsonObject) throws Exception
+                    {
+                        if(jsonObject.optBoolean("success"))
+                        {
+                            observer.onNext(app);
+                            observer.onComplete();
+                        }
+                        else
+                        {
+                            observer.onNext(app);
+                            observer.onComplete();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        observer.onError(throwable);
+                    }
+                });
+            }
+        };
     }
 
     @Override
-    public Observable<Boolean> delete(App app) {
-        return null;
+    public Observable<Boolean> delete(final App app) {
+        return new Observable<Boolean>() {
+            @Override
+            protected void subscribeActual(final Observer<? super Boolean> observer)
+            {
+                JSONObject appId = new JSONObject();
+                try {
+                    appId.put("id",app.getId());
+                    RequestManager.getInstance().deleteApp(appId).subscribe(new Consumer<JSONObject>() {
+                        @Override
+                        public void accept(@NonNull JSONObject jsonObject) throws Exception {
+                            Log.d("MOTA--->","RESPUESTA?"+jsonObject.toString() + "OPT SUCCESS:"+jsonObject.optBoolean("success"));
+                            if (jsonObject.optBoolean("success")) {
+                                observer.onNext(true);
+                                observer.onComplete();
+                            } else {
+                                observer.onNext(false);
+                                observer.onComplete();
+                            }
+                            Log.d("MOTA--->","NO ENTRE EN THROW!");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            Log.d("MOTA--->","ENTRE EN EL THROW?"+throwable.getMessage());
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+                    });
+                } catch (JSONException e)
+                {
+                    observer.onNext(false);
+                    observer.onComplete();
+                }
+            }
+        };
     }
 
     @Override

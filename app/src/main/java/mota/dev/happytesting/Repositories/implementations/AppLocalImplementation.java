@@ -117,15 +117,18 @@ public class AppLocalImplementation implements AppRepository
                 try
                 {
                     Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
                     RealmResults<App> result = realm.where(App.class).equalTo("name",app.getName()).findAll();
                     result.deleteAllFromRealm();
+                    realm.commitTransaction();
                     observer.onNext(true);
-                    observer.onComplete();
+
                 }catch (Exception e)
                 {
+                    Log.d("MOTA--->","LOCAL APP DELETE:"+e.getMessage());
                     observer.onNext(false); // No se Borro la aplicacion
                 }
-
+                observer.onComplete();
             }
         };
     }

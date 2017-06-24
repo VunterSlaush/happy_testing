@@ -25,7 +25,7 @@ public class RouterManager
     private static RouterManager instance;
     private static String TAG = "ROUTER";
 
-    private static final int MAX_IP_ON_FOUR_NUMBER = 25;
+    private static final int MAX_IP_ON_FOUR_NUMBER = 50;
     private static final int TIMEOUT = 5;
     private static final int [] IP_FIRST_NUMBER = {192,10};
     private static final int [] IP_SECOND_NUMBER = {168,0};
@@ -87,10 +87,10 @@ public class RouterManager
                 {
                     if (connected)
                         return;
-                    else if(i <= MAX_IP_ON_FOUR_NUMBER)
+                    else if(i < MAX_IP_ON_FOUR_NUMBER)
                         tryToConnectSocket(makeUrl(first,second,third,i));
                     else
-                        tryToConnectSocket(makeUrl(first,second,third,75 + i));
+                        tryToConnectSocket(makeUrl(first,second,third,50 + i));
 
                     try {
                         Thread.sleep(50);

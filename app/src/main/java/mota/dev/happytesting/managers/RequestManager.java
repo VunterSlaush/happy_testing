@@ -15,6 +15,7 @@ import mota.dev.happytesting.Urls;
 import mota.dev.happytesting.utils.RxRequestAdapter;
 import mota.dev.happytesting.utils.SingletonRequester;
 
+import static mota.dev.happytesting.Urls.URL_APP;
 import static mota.dev.happytesting.Urls.URL_REPORTS;
 
 /**
@@ -88,6 +89,11 @@ public class RequestManager
         return request(Request.Method.POST,urlBase + Urls.URL_CREATE_APP,o);
     }
 
+    public Observable<JSONObject> deleteApp(JSONObject id)
+    {
+        return request(Request.Method.POST,urlBase + Urls.URL_DELETE_APP, id);
+    }
+
     public Observable<JSONObject> getApps()
     {
         return request(Request.Method.GET, urlBase + Urls.URL_APPS, null);
@@ -116,5 +122,9 @@ public class RequestManager
     public Observable<JSONObject> updateUser(JSONObject user)
     {
         return request(Request.Method.POST,urlBase + Urls.URL_UPDATE_USER ,user);
+    }
+
+    public Observable<JSONObject> updateApp(JSONObject app) {
+        return request(Request.Method.POST,urlBase + Urls.URL_UPDATE_APP, app);
     }
 }
