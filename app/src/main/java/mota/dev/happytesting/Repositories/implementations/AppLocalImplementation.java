@@ -66,14 +66,14 @@ public class AppLocalImplementation implements AppRepository
     }
 
     @Override
-    public Observable<App> get(final int id)
+    public Observable<App> get(final int id, final String appName)
     {
         return new Observable<App>() {
             @Override
             protected void subscribeActual(Observer<? super App> observer)
             {
                 Realm realm = Realm.getDefaultInstance();
-                RealmResults<App> results = realm.where(App.class).equalTo("id", id).findAll();
+                RealmResults<App> results = realm.where(App.class).equalTo("id", id).or().equalTo("name",appName).findAll();
                 List<App> list =  realm.copyFromRealm(results);
                 App app = list.get(0);
                 if(app != null)
@@ -99,7 +99,6 @@ public class AppLocalImplementation implements AppRepository
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(app);
-                Log.d("MOTA--->","Modify App :"+app.getModificar().size());
                 realm.commitTransaction();
                 observer.onNext(app);
                 observer.onComplete();

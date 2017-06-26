@@ -1,11 +1,14 @@
 package mota.dev.happytesting.models;
 
+import android.util.Log;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Slaush on 22/05/2017.
@@ -14,10 +17,20 @@ import io.realm.RealmObject;
 public class Report extends RealmObject
 {
     private int id;
+    private String owner_id;
+    @PrimaryKey
     private String name;
     private String appName;
     private String creado;
+    private String username;
     private RealmList<Observation> observations;
+
+    public Report()
+    {
+        name = null;
+        id = -1;
+        observations = new RealmList<>();
+    }
 
     public int getId() {
         return id;
@@ -53,9 +66,15 @@ public class Report extends RealmObject
 
     public void setObservations(List<Observation> observations)
     {
-        if(this.observations == null)
-            this.observations = new RealmList<>();
         this.observations.addAll(observations);
+    }
+
+    public String getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
     }
 
     public String getAppName() {
@@ -64,5 +83,63 @@ public class Report extends RealmObject
 
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+
+    public void copy(Report report)
+    {
+        this.id = report.id;
+        this.name = report.name;
+        this.owner_id = report.owner_id;
+        this.username = report.username;
+        this.creado = report.creado;
+        this.appName = report.appName;
+        this.observations.addAll(report.getObservations());
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String user_name) {
+        this.username = user_name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Report)) return false;
+
+        Report report = (Report) o;
+        if (id != report.id) return false;
+        if (name != null ? !name.equals(report.name) : report.name != null) return false;
+        return true;
+
+
+    }
+
+    public void fillEmptyFields(Report report) { // TODO add more if needed?
+        if(id == -1)
+            id = report.id;
+        for (Observation o : report.observations)
+        {
+            if (!observations.contains(o))
+                observations.add(o);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Report{" +
+                "id=" + id +
+                ", owner_id='" + owner_id + '\'' +
+                ", name='" + name + '\'' +
+                ", appName='" + appName + '\'' +
+                ", creado='" + creado + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
+
+    public void addObservation(Observation observation)
+    {
+        observations.add(observation);
     }
 }

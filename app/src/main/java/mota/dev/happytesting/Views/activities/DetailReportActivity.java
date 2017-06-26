@@ -60,7 +60,8 @@ public class DetailReportActivity extends BindeableActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("MOTA--->","data:"+data.getStringExtra("data"));
     }

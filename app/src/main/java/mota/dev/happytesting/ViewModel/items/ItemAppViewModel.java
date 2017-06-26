@@ -74,6 +74,7 @@ public class ItemAppViewModel extends Observable {
     {
         Intent i = new Intent(context, DetailAppActivity.class);
         i.putExtra("app_id",appId.get());
+        i.putExtra("app_name",appName.get());
         context.startActivity(i);
     }
 }

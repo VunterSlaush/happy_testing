@@ -117,4 +117,9 @@ public class App extends RealmObject
         users.addAll(modificar);
         this.modificar = users;
     }
+
+    public void addReport(Report report)
+    {
+        reports.add(report);
+    }
 }

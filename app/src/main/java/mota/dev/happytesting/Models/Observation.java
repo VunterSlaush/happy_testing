@@ -15,6 +15,12 @@ public class Observation extends RealmObject
     private String text;
     private RealmList<Image> images;
     private int id;
+    private String reportName;
+
+    public Observation()
+    {
+        id = -1;
+    }
 
     public String getText() {
         return text;
@@ -55,4 +61,35 @@ public class Observation extends RealmObject
             images.remove(index);
         }
     }
+
+    public String getReportName()
+    {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Observation)) return false;
+
+        Observation that = (Observation) o;
+
+        if(id != -1 && id == that.id) return true;
+
+        if(text.equals(that.text) && images.size() == that.images.size())
+        {
+            for (Image i : images)
+            {
+                if(!that.images.contains(i))
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

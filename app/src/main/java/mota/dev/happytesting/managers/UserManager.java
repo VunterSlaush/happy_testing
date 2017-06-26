@@ -54,6 +54,11 @@ public class UserManager
         return PreferencesHelper.readString(MyApplication.getInstance(),Consts.USER_ID,"");
     }
 
+    public String getUsername()
+    {
+        return PreferencesHelper.readString(MyApplication.getInstance(),Consts.USERNAME,"");
+    }
+
     public void logout() // esto es todo lo que hay que borrar para cerrar la sesion!
     {
         PreferencesHelper.deleteKey(MyApplication.getInstance(),Consts.USERNAME);

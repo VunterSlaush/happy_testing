@@ -55,10 +55,11 @@ public class ReportParser
         r.setName(jsonObject.optString("nombre"));
         r.setCreado(jsonObject.optString("createdAt"));
         r.setId(jsonObject.optInt("id"));
+        r.setOwner_id(Integer.toString(jsonObject.optInt("owner",-1)));
         try{
             r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
             r.setObservations(ObservationParser.getInstance().generateObservationList(jsonObject));
-            //TODO agregar AUTOR !!
+            r.setUsername(jsonObject.getJSONObject("User").optString("username"));
         }catch (Exception e)
         {
             //Log.d("MOTA--->","OBSERVATIONS LIST EXception:"+jsonObject.toString() + " Ex:"+e.getMessage());

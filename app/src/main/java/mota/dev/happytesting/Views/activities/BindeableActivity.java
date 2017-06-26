@@ -11,14 +11,7 @@ import java.util.Observer;
 
 public abstract class BindeableActivity extends AppCompatActivity implements Observer
 {
-    /* TODO Evaluar si esto es viable ...
-    protected T viewModel;
-    protected Class<T> clazz;
-    public void update(Observable observable, Object o)
-    {
-        if(clazz.isInstance(observable))
-            update();
-    }*/
+
     public abstract  void update(Observable observable, Object o);
     public abstract void initDataBinding();
     void setupObserver(Observable observable)

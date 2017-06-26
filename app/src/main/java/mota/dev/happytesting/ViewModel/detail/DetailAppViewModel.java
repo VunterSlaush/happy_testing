@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 
@@ -19,10 +20,12 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmList;
 import mota.dev.happytesting.Views.dialogs.SelectUsersDialog;
+import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.useCases.AppDetail;
+import mota.dev.happytesting.useCases.CreateReport;
 import mota.dev.happytesting.useCases.DeleteApp;
 import mota.dev.happytesting.useCases.EditEditors;
 import mota.dev.happytesting.utils.Functions;
@@ -51,17 +54,16 @@ public class DetailAppViewModel extends Observable {
         this.useCase = new AppDetail();
     }
 
-    //TODO recibir app name por si la app no esta en server !!!
-    public void setApp(int id)
+    public void setApp(int id, String app_name)
     {
-        Log.d("MOTA--->","App Id:"+id);
         app_id.set(id);
+        this.app_name.set(app_name);
         findAppDetails(id);
     }
 
     private void findAppDetails(int id)
     {
-        useCase.getAppDetails(id)
+        useCase.getAppDetails(id, app_name.get())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<App>() {
             @Override
@@ -163,17 +165,28 @@ public class DetailAppViewModel extends Observable {
 
     public void agregarReporte(View view)
     {
-        //TODO!
+        CreateReport useCase = new CreateReport();
+        useCase.createReport(app)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(@NonNull Boolean result) throws Exception {
+                if(result)
+                {
+                    setApp(app);
+                    Toast.makeText(context,"Reporte Agregado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(context,"Ocurrio un error al agregar el reporte", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public List<Report> getReports()
     {
-        return reports;
-    }
-
-    public void refreshReports()
-    {
-        // TODO ????
+        return app.getReports();
     }
 
     public List<String> getEditors() {

@@ -57,8 +57,6 @@ public class AccountViewModel extends Observable
             return;
         }
 
-
-
         if(password.get().equals(confirm_password.get()))
             callUpdateUserData(view);
         else

@@ -2,14 +2,19 @@ package mota.dev.happytesting.useCases;
 
 import android.util.Log;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.AppRepository;
+import mota.dev.happytesting.repositories.ReportRepository;
 import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 
 /**
  * Created by Slaush on 12/06/2017.
@@ -17,44 +22,64 @@ import mota.dev.happytesting.repositories.implementations.AppRemoteImplementatio
 
 public class AppDetail
 {
-    public Observable<App> getAppDetails(final int id)
+    public Observable<App> getAppDetails(final int id, final String appName)
     {
         return new Observable<App>() {
             @Override
             protected void subscribeActual(Observer<? super App> observer)
             {
-                getRemoteAppDetails(id, observer);
+                getRemoteAppDetails(id,appName, observer);
             }
         };
     }
 
-    private void getRemoteAppDetails(final int id, final Observer<? super App> observer)
+    private void getRemoteAppDetails(final int id, final String app_name, final Observer<? super App> observer)
     {
         AppRepository repo = new AppRemoteImplementation();
-        repo.get(id).subscribe(new Consumer<App>() {
+        repo.get(id, null).subscribe(new Consumer<App>() {
             @Override
-            public void accept(@NonNull App app) throws Exception {
+            public void accept(@NonNull App app) throws Exception {;
+                getLocalAppReports(app,observer);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                getLocalAppDetails(id,app_name,observer);
+            }
+        });
+    }
+
+    private void getLocalAppReports(final App app, final Observer<? super App> observer)
+    {
+        ReportRepository repo = new ReportLocalImplementation();
+        repo.getAppReports(app).subscribe(new Consumer<List<Report>>() {
+            @Override
+            public void accept(@NonNull List<Report> reports) throws Exception
+            {
+                for (Report r : reports)
+                {
+                    if(!app.getReports().contains(r))
+                        app.addReport(r);
+                }
+                new AppLocalImplementation().modifiy(app).subscribe();
                 observer.onNext(app);
-                AppRepository localRepo = new AppLocalImplementation();
-                localRepo.modifiy(app).subscribe();
                 observer.onComplete();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                getLocalAppDetails(id,observer);
+                observer.onError(new Throwable("no se consiguieron los reportes de esta aplicacion"));
             }
         });
     }
 
-    private void getLocalAppDetails(int id, final Observer<? super App> observer)
+    private void getLocalAppDetails(int id,String name, final Observer<? super App> observer)
     {
         AppRepository repo = new AppLocalImplementation();
-        repo.get(id).subscribe(new Consumer<App>() {
+        repo.get(id, name).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception {
-                observer.onNext(app);
-                observer.onComplete();
+                getLocalAppReports(app,observer);
             }
         }, new Consumer<Throwable>() {
             @Override

@@ -13,6 +13,7 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.managers.RequestManager;
+import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.parsers.ReportParser;
 import mota.dev.happytesting.repositories.ReportRepository;
@@ -53,7 +54,12 @@ public class ReportRemoteImplementation implements ReportRepository
     }
 
     @Override
-    public Observable<Report> get(final int id) {
+    public Observable<List<Report>> getAppReports(App app) {
+        return null;
+    }
+
+    @Override
+    public Observable<Report> get(final int id, String name) {
         return new Observable<Report>() {
             @Override
             protected void subscribeActual(final Observer<? super Report> observer)
@@ -86,9 +92,41 @@ public class ReportRemoteImplementation implements ReportRepository
         return null;
     }
 
-    @Override // TODO!!!
-    public Observable<Boolean> delete(Report report) {
-        return null;
+    @Override
+    public Observable<Boolean> delete(final Report report) {
+        return new Observable<Boolean>() {
+            @Override
+            protected void subscribeActual(final Observer<? super Boolean> observer)
+            {
+                JSONObject obj = new JSONObject();
+                try
+                {
+                    obj.put("id",report.getId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RequestManager.getInstance().deleteReport(obj).subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(@NonNull JSONObject jsonObject) throws Exception {
+                        if (jsonObject.optBoolean("success")) {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        } else {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        observer.onNext(false);
+                        observer.onComplete();
+                    }
+                }); // TODO todo este consumer se puede generalizar!
+            }
+        };
     }
 
 

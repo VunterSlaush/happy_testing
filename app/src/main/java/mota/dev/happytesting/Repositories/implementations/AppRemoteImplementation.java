@@ -99,7 +99,7 @@ public class AppRemoteImplementation implements AppRepository {
     }
 
     @Override
-    public Observable<App> get(final int id) {
+    public Observable<App> get(final int id, String appName) {
 
         return new Observable<App>() {
             @Override
@@ -180,7 +180,6 @@ public class AppRemoteImplementation implements AppRepository {
                     RequestManager.getInstance().deleteApp(appId).subscribe(new Consumer<JSONObject>() {
                         @Override
                         public void accept(@NonNull JSONObject jsonObject) throws Exception {
-                            Log.d("MOTA--->","RESPUESTA?"+jsonObject.toString() + "OPT SUCCESS:"+jsonObject.optBoolean("success"));
                             if (jsonObject.optBoolean("success")) {
                                 observer.onNext(true);
                                 observer.onComplete();
@@ -188,13 +187,12 @@ public class AppRemoteImplementation implements AppRepository {
                                 observer.onNext(false);
                                 observer.onComplete();
                             }
-                            Log.d("MOTA--->","NO ENTRE EN THROW!");
+
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(@NonNull Throwable throwable) throws Exception
                         {
-                            Log.d("MOTA--->","ENTRE EN EL THROW?"+throwable.getMessage());
                             observer.onNext(false);
                             observer.onComplete();
                         }

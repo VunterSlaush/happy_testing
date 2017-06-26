@@ -76,7 +76,8 @@ public class ItemObservationViewModel extends Observable
     {
         Intent i = new Intent(context, GalleryActivity.class);
         i.putExtra("observation_id",observation.getId());
-        ((Activity)context).startActivityForResult(i,1234);
+        i.putExtra("report_name",observation.getReportName());
+        ((Activity)context).startActivityForResult(i,1234); // TODO cambiar a interfaz !
     }
 
     public void onActivityResult(Intent result)

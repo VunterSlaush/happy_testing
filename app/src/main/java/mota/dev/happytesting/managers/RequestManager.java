@@ -127,4 +127,9 @@ public class RequestManager
     public Observable<JSONObject> updateApp(JSONObject app) {
         return request(Request.Method.POST,urlBase + Urls.URL_UPDATE_APP, app);
     }
+
+    public Observable<JSONObject> deleteReport(JSONObject report)
+    {
+        return request(Request.Method.POST, urlBase + Urls.URL_DELETE_REPORT, report);
+    }
 }

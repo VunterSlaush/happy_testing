@@ -19,14 +19,23 @@ import mota.dev.happytesting.databinding.ActivityDetailAppBinding;
 public class DetailAppActivity extends BindeableActivity {
     private DetailAppViewModel viewModel;
     private ActivityDetailAppBinding binding;
-
+    private int app_id;
+    private String app_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDataBinding();
         setupObserver(viewModel);
         setupAdapters();
-        viewModel.setApp(getIntent().getIntExtra("app_id",-2));
+        app_id = getIntent().getIntExtra("app_id",-2);
+        app_name = getIntent().getStringExtra("app_name");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.setApp(app_id, app_name);
     }
 
     private void setupAdapters()
@@ -36,12 +45,6 @@ public class DetailAppActivity extends BindeableActivity {
         binding.reportsList.setAdapter(reportAdapter);
         binding.reportsList.setLayoutManager(new LinearLayoutManager(this));
         binding.editorsList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1));
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.refreshReports();
-            }
-        });
     }
 
     @Override

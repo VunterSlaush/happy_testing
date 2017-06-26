@@ -2,69 +2,106 @@ package mota.dev.happytesting.useCases;
 
 import android.util.Log;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.ReportRepository;
 import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
+import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
+
+import static io.reactivex.Observable.concat;
+import static io.reactivex.Observable.merge;
+import static io.reactivex.Observable.mergeDelayError;
 
 /**
  * Created by Slaush on 12/06/2017.
  */
 
-public class ReportDetail // TODO Finish it!
-{
-    public Observable<Report> getDetails(final int id)
-    {
+public class ReportDetail {
+    public Observable<Report> getDetails(final int id, final String name) {
         return new Observable<Report>() {
             @Override
-            protected void subscribeActual(Observer<? super Report> observer)
-            {
-                getRemoteReportDetails(id, observer);
+            protected void subscribeActual(Observer<? super Report> observer) {
+                Log.d("MOTA--->", "get DETAILS!");
+                getReportDetails(id, name, observer);
             }
         };
     }
 
-    private void getRemoteReportDetails(final int id, final Observer<? super Report> observer)
-    {
+    private void getReportDetails(final int id, String name, final Observer<? super Report> observer) {
         ReportRepository repo = new ReportRemoteImplementation();
-        repo.get(id).subscribe(new Consumer<Report>() {
+        ReportRepository repo2 = new ReportLocalImplementation();
+        final Report finalReport = new Report();
+        mergeDelayError(repo2.get(id, name), repo.get(id, name)).subscribe(new Observer<Report>() {
+
             @Override
-            public void accept(@NonNull Report report) throws Exception {
-                observer.onNext(report);
-                //AppRepository localRepo = new AppLocalImplementation();
-                //localRepo.modifiy(app).subscribe();
-                observer.onComplete();
+            public void onSubscribe(@NonNull Disposable d) {
+
             }
-        }, new Consumer<Throwable>() {
+
             @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                //getLocalAppDetails(id,observer);
+            public void onNext(@NonNull Report report) {
+                if (finalReport.getName() == null)
+                    finalReport.copy(report);
+                else
+                    finalReport.fillEmptyFields(report);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                if (finalReport.getName() == null)
+                    observer.onError(e);
+                else if (finalReport.getName() != null)
+                    onComplete();
+
+            }
+
+            @Override
+            public void onComplete() {
+               findLocalObservations(finalReport,observer);
             }
         });
     }
-/*
-    private void getLocalAppDetails(int id, final Observer<? super Report> observer)
+
+    private void findLocalObservations(final Report report, final Observer<? super Report> observer)
     {
-        AppRepository repo = new ReportLocalImplementation();
-        repo.get(id).subscribe(new Consumer<Report>() {
+        new ObservationLocalImplementation().getReportObservations(report).subscribe(new Consumer<List<Observation>>() {
             @Override
-            public void accept(@NonNull Report app) throws Exception {
-                observer.onNext(app);
+            public void accept(@NonNull List<Observation> observations) throws Exception
+            {
+                addObservationsToReport(report,observations);
+                new ReportLocalImplementation().modifiy(report).subscribe();
+                observer.onNext(report);
                 observer.onComplete();
+
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                observer.onError(throwable);
+                observer.onNext(report);
+                observer.onComplete();
             }
         });
     }
-*/
+
+    private void addObservationsToReport(Report report, List<Observation> observations)
+    {
+        for (Observation o : observations)
+        {
+            if(!report.getObservations().contains(o))
+                report.addObservation(o);
+        }
+    }
+
 }
