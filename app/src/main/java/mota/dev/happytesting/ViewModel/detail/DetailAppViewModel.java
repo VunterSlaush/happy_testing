@@ -20,6 +20,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmList;
 import mota.dev.happytesting.Views.dialogs.SelectUsersDialog;
+import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
 import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
@@ -165,8 +166,22 @@ public class DetailAppViewModel extends Observable {
 
     public void agregarReporte(View view)
     {
+
+
+        new SimpleInputDialog(context, "Ingresa el nombre del Reporte", new SimpleInputDialog.OnGetText() {
+            @Override
+            public void get(String text)
+            {
+                callToCreateReport(text);
+            }
+        });
+
+    }
+
+    private void callToCreateReport(String text)
+    {
         CreateReport useCase = new CreateReport();
-        useCase.createReport(app)
+        useCase.createReport(app,text)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
             @Override

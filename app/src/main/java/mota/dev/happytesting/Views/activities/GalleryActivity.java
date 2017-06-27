@@ -1,5 +1,6 @@
 package mota.dev.happytesting.Views.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,6 +31,7 @@ public class GalleryActivity extends BindeableActivity implements Selectable<Ima
         initDataBinding();
         setupObserver(viewModel);
         setupAdapter();
+        viewModel.setParams(getIntent().getExtras());
     }
 
     private void setupAdapter()

@@ -17,8 +17,10 @@ import io.realm.annotations.PrimaryKey;
 public class Report extends RealmObject
 {
     private int id;
-    private String owner_id;
     @PrimaryKey
+    private String key; // es un Compound Key
+
+    private String owner_id;
     private String name;
     private String appName;
     private String creado;
@@ -124,6 +126,9 @@ public class Report extends RealmObject
             if (!observations.contains(o))
                 observations.add(o);
         }
+
+        if(key == null)
+            key = report.key;
     }
 
     @Override

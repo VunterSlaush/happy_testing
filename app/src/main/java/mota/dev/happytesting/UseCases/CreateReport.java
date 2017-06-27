@@ -9,15 +9,11 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
-import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.ReportRepository;
-import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
-import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
 
 /**
  * Created by Slaush on 24/06/2017.
@@ -25,16 +21,16 @@ import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementa
 
 public class CreateReport {
 
-    public Observable<Boolean> createReport(final App app)
+    public Observable<Boolean> createReport(final App app, final String reportName)
     {
         return new Observable<Boolean>() {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer) {
                 Report report = new Report();
                 report.setAppName(app.getName());
-                report.setName(generateReportName());
+                report.setName(reportName);
                 report.setUsername(UserManager.getInstance().getUsername());
-                report.setCreado(generateReportName());
+                report.setCreado(actualDateToString());
                 report.setOwner_id(UserManager.getInstance().getUserId());
                 app.addReport(report);
                 saveOnLocal(report, observer);
@@ -61,7 +57,7 @@ public class CreateReport {
         });
     }
 
-    private String generateReportName() { // TODO ver que nombre asignarles --
+    private String actualDateToString() { // TODO ver que nombre asignarles --
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm");
         Date today = Calendar.getInstance().getTime();
         return df.format(today);

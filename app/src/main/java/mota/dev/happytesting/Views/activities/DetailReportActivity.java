@@ -63,6 +63,7 @@ public class DetailReportActivity extends BindeableActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("MOTA--->","data:"+data.getStringExtra("data"));
+        Log.d("MOTA--->","data:"+data.getExtras().getString("data")+" Report:"+data.getExtras().getString("report_name"));
+        viewModel.onActivityResult(data.getExtras());
     }
 }

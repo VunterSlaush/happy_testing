@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -19,8 +20,10 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Views.activities.DetailReportActivity;
 import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
+import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
+import mota.dev.happytesting.useCases.AddImages;
 import mota.dev.happytesting.useCases.CreateObservation;
 import mota.dev.happytesting.useCases.DeleteReport;
 import mota.dev.happytesting.useCases.ReportDetail;
@@ -146,5 +149,29 @@ public class DetailReportViewModel extends Observable {
     public List<Observation> getObservations()
     {
         return observations;
+    }
+
+    public void onActivityResult(Bundle extras)
+    {
+        final String reportName = extras.getString("report_name");
+        String data = extras.getString("data");
+        int id = extras.getInt("id");
+        String text = extras.getString("text");
+        if(this.report.getName().equals(reportName))
+        {
+            List<Image> dataImages = Functions.generateImageListFromString(data);
+            new AddImages().addImages(dataImages,text,reportName,id)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(@NonNull Boolean result) throws Exception
+                {
+                    if (result)
+                        setReportData(reportId.get(),reportName);
+                    else
+                        Toast.makeText(context,"Error al asignar las imagenes",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

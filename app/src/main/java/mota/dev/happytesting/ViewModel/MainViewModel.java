@@ -31,6 +31,7 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private FragmentManager fragmentManager;
+    private String tag;
     public MainViewModel(Context context)
     {
         this.context = context;
@@ -41,12 +42,11 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
         nvDrawer = (NavigationView) ((Activity)context).findViewById(R.id.nvView);
         fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
         setupDrawerContent(nvDrawer);
-
-        changeFragment(AppsFragment.TAG,AppsFragment.class);
+        goToMainFragment();
     }
 
 
-    public void setupDrawerContent(NavigationView navigationView)
+    private void setupDrawerContent(NavigationView navigationView)
     {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -58,11 +58,10 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
                 });
     }
 
-    public void selectDrawerItem(MenuItem menuItem)
+    private void selectDrawerItem(MenuItem menuItem)
     {
 
         Class fragmentClass = null;
-        String tag = null;
         switch(menuItem.getItemId())
         {
             case R.id.apps:
@@ -83,6 +82,7 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
                 break;
             case R.id.sign_out:
                 MyApplication.getInstance().logout(context);
+                tag = null;
                 break;
             default:
                 fragmentClass = AppsFragment.class;
@@ -111,7 +111,7 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
 
     }
 
-    public void changeFragment(String tag, Class fragmentClass)
+    private void changeFragment(String tag, Class fragmentClass)
     {
         try
         {
@@ -124,5 +124,14 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
         {
             e.printStackTrace();
         }
+    }
+
+    public void goToMainFragment()
+    {
+       selectDrawerItem(nvDrawer.getMenu().getItem(0));
+    }
+
+    public boolean onMainFragment() {
+        return tag.equals(AppsFragment.TAG);
     }
 }

@@ -3,6 +3,7 @@ package mota.dev.happytesting.ViewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ public class GalleryViewModel extends Observable {
     private List<Image> imagenes;
     private GetGalleryImages useCase;
     private Selectable<Image> imageSelectable;
+    private Bundle params;
+
     public GalleryViewModel(Context context, Selectable<Image> selectable)
     {
         this.context = context;
@@ -61,6 +64,11 @@ public class GalleryViewModel extends Observable {
         return imagenes;
     }
 
+    public void setParams(Bundle bundle)
+    {
+        this.params = bundle;
+    }
+
     public void select(View view)
     {
         List<Image> images = imageSelectable.getSelected();
@@ -70,7 +78,8 @@ public class GalleryViewModel extends Observable {
             for (Image i: images)
                 selectedImages+=i.getDir()+"|";
             Intent i = new Intent();
-            i.putExtra("data", selectedImages);
+            params.putString("data", selectedImages);
+            i.putExtras(params);
             Activity a =(Activity) context;
             a.setResult(Activity.RESULT_OK, i);
             a.finish();

@@ -5,6 +5,8 @@ import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 22/05/2017.
@@ -17,9 +19,13 @@ public class Observation extends RealmObject
     private int id;
     private String reportName;
 
+    @PrimaryKey
+    private String localId;
+
     public Observation()
     {
         id = -1;
+        localId = Functions.generateRandomId();
     }
 
     public String getText() {
@@ -90,6 +96,10 @@ public class Observation extends RealmObject
             return true;
         }
         return false;
+    }
+
+    public String getLocalId() {
+        return localId;
     }
 
 }

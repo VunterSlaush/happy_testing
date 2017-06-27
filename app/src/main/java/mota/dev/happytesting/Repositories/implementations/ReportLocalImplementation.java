@@ -8,6 +8,8 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
+import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
@@ -85,14 +87,23 @@ public class ReportLocalImplementation implements ReportRepository
         {
             @Override
             protected void subscribeActual(Observer<? super Report> observer)
-            {
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                Report report1 = realm.createObject(Report.class);
-                report1.copy(report);
-                realm.commitTransaction();
-                observer.onNext(report1);
-                observer.onComplete();
+            {   Realm realm = Realm.getDefaultInstance();
+                try
+                {
+
+                    realm.beginTransaction();
+                    Report report1 = realm.createObject(Report.class,report.getName()+"-"+report.getAppName());
+                    report1.copy(report);
+                    realm.commitTransaction();
+                    observer.onNext(report1);
+                    observer.onComplete();
+                }catch (RealmPrimaryKeyConstraintException e)
+                {
+                    realm.cancelTransaction();
+                    observer.onError(new Throwable("Ya Existe un Reporte con este Nombre"));
+
+                }
+
             }
         };
     }
@@ -118,9 +129,10 @@ public class ReportLocalImplementation implements ReportRepository
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
+                Realm realm = Realm.getDefaultInstance();
                 try
                 {
-                    Realm realm = Realm.getDefaultInstance();
+
                     realm.beginTransaction();
                     RealmResults<Report> result = realm.where(Report.class)
                                                        .equalTo("name",report.getName())
@@ -132,6 +144,7 @@ public class ReportLocalImplementation implements ReportRepository
                     observer.onNext(true);
                 }catch (Exception e)
                 {
+                    realm.cancelTransaction();
                     observer.onNext(false); // No se Borro la aplicacion
                 }
                 observer.onComplete();

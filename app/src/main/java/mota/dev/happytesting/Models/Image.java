@@ -3,6 +3,7 @@ package mota.dev.happytesting.models;
 import java.io.File;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Slaush on 22/05/2017.
@@ -10,8 +11,21 @@ import io.realm.RealmObject;
 
 public class Image extends RealmObject
 {
+    @PrimaryKey
     private String dir;
     private int id;
+    private String observationName;
+
+    public Image()
+    {
+        id = -1;
+    }
+
+    public Image(String dir)
+    {
+        id = -1;
+        this.dir = dir;
+    }
 
     public String getDir() {
         return dir;

@@ -34,4 +34,12 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+        if(viewModel.onMainFragment())
+            super.onBackPressed();
+        else
+            viewModel.goToMainFragment();
+    }
 }

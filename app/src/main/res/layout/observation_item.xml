@@ -107,6 +107,16 @@
                 fab:fab_label="Editar Texto"
                 fab:fab_size="mini"
                 android:onClick="@{viewModel::editarTexto}"/>
+
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/material_design_floating_action_menu_item4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_preferences"
+                fab:fab_label="Eliminar Observacion"
+                fab:fab_size="mini"
+                android:onClick="@{viewModel::eliminar}"/>
         </com.github.clans.fab.FloatingActionMenu>
     </android.support.constraint.ConstraintLayout>
 </layout>

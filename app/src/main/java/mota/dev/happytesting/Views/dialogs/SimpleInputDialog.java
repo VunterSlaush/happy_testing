@@ -20,12 +20,23 @@ public class SimpleInputDialog
     private OnGetText onGet;
     private AlertDialog dialog;
     private String title;
+    private String preText;
 
     public SimpleInputDialog(Context context,String title, OnGetText onGetText)
     {
         this.context = context;
         this.onGet = onGetText;
         this.title = title;
+        this.preText = "";
+        build();
+    }
+
+    public SimpleInputDialog(Context context,String title, String preText, OnGetText onGetText)
+    {
+        this.context = context;
+        this.onGet = onGetText;
+        this.title = title;
+        this.preText = preText;
         build();
     }
 
@@ -37,6 +48,7 @@ public class SimpleInputDialog
         View viewInflated = LayoutInflater.from(context).inflate(R.layout.input_dialog, null);
 
         final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+
 
         builder.setView(viewInflated);
 
@@ -53,7 +65,7 @@ public class SimpleInputDialog
                 dialog.cancel();
             }
         });
-
+        input.setText(preText);
         builder.show();
     }
 

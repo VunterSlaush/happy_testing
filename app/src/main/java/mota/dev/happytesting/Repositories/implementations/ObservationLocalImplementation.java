@@ -50,17 +50,79 @@ public class ObservationLocalImplementation implements ObservationRepository {
     }
 
     @Override
-    public Observable<Observation> get(int id) {
-        return null;
+    public Observable<Observation> get(final int id, final String text, final String reportName)
+    {
+        return new Observable<Observation>() {
+            @Override
+            protected void subscribeActual(Observer<? super Observation> observer)
+            {
+                Realm realm = Realm.getDefaultInstance();
+                try
+                {
+
+                    //realm.beginTransaction();
+                    RealmResults<Observation> result = realm.where(Observation.class)
+                            .equalTo("text",text)
+                            .equalTo("reportName",reportName)
+                            .findAll();
+                    List<Observation> list =  realm.copyFromRealm(result);
+                    Observation o = list.get(0);
+                    //realm.commitTransaction();
+                    observer.onNext(o);
+                    observer.onComplete();
+
+                }catch (Exception e)
+                {
+                    observer.onError(new Throwable("La observacion no existe:"+e.getMessage()));
+                }
+
+            }
+        };
     }
 
     @Override
-    public Observable<Observation> modify(Observation o) {
-        return null;
+    public Observable<Observation> modify(final Observation o)
+    {
+        return new Observable<Observation>() {
+            @Override
+            protected void subscribeActual(Observer<? super Observation> observer)
+            {
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(o);
+                realm.commitTransaction();
+                observer.onNext(o);
+                observer.onComplete();
+            }
+        };
     }
 
     @Override
-    public Observable<Boolean> delete(Observation o) {
-        return null;
+    public Observable<Boolean> delete(final Observation o) {
+        return new Observable<Boolean>() {
+            @Override
+            protected void subscribeActual(Observer<? super Boolean> observer) {
+                Realm realm = Realm.getDefaultInstance();
+                try
+                {
+
+                    realm.beginTransaction();
+                    RealmResults<Observation> result = realm.where(Observation.class)
+                            .equalTo("text",o.getText())
+                            .equalTo("reportName",o.getReportName())
+                            .equalTo("id",o.getId())
+                            .findAll();
+                    result.deleteAllFromRealm();
+                    realm.commitTransaction();
+                    observer.onNext(true);
+
+                }catch (Exception e)
+                {
+                    realm.cancelTransaction();
+                    observer.onNext(false);
+                }
+                observer.onComplete();
+            }
+        };
     }
 }
