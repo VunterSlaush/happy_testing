@@ -124,7 +124,6 @@ public class AppLocalImplementation implements AppRepository
 
                 }catch (Exception e)
                 {
-                    Log.d("MOTA--->","LOCAL APP DELETE:"+e.getMessage());
                     observer.onNext(false); // No se Borro la aplicacion
                 }
                 observer.onComplete();

@@ -42,12 +42,12 @@ public class UserAdapter extends BaseRecyclerAdapter<User> {
 
     public void setSelectedUsers(List<User> selected)
     {
-        Log.d("MOTA--->","setSelectedUsers H:"+holders.size() + " S:"+selected.size());
+
         for (int i = 0; i< holders.size(); i++)
         {
             if (holders.get(i).binding.getViewModel() != null && selected.contains(holders.get(i).binding.getViewModel().getUser()))
             {
-                Log.d("MOTA--->","HACIENDO CHECKED:"+i);
+
                 holders.get(i).binding.getViewModel().checked.set(true);
             }
 

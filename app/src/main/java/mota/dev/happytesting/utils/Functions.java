@@ -3,9 +3,11 @@ package mota.dev.happytesting.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import mota.dev.happytesting.models.Image;
@@ -45,9 +47,14 @@ public class Functions
 
     public static List<Image> generateImageListFromString(String data) {
         List<Image> images = new ArrayList<>();
-        String [] dirs = data.split("|");
-        for (String dir : dirs)
-            images.add(new Image(dir));
+        StringTokenizer token = new StringTokenizer(data, "|");
+        while (token.hasMoreElements())
+        {
+            String d = token.nextToken();
+            Log.d("MOTARRAY","Dir:"+d);
+            images.add(new Image(d));
+        }
+
         return images;
     }
 

@@ -15,6 +15,7 @@ import java.util.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Views.activities.GalleryActivity;
 import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.models.Image;
@@ -89,11 +90,14 @@ public class ItemObservationViewModel extends Observable
                             @Override
                             public void accept(@NonNull Boolean result) throws Exception
                             {
+                                //TODO TOTAL!
                                 if (result)
                                     Toast.makeText(context,"Eliminado Satisfactoriamente",Toast.LENGTH_SHORT).show();
                                 else
                                     Toast.makeText(context,"No pudo ser eliminado", Toast.LENGTH_SHORT).show();
 
+                                setChanged();
+                                notifyObservers();
                             }
                         });
             }
@@ -104,15 +108,24 @@ public class ItemObservationViewModel extends Observable
     {
         List<Image> selected = selectable.getSelected();
         observation.removeImages(selected);
-        setChanged();
-        notifyObservers();
+        new ObservationLocalImplementation()
+                .modify(observation)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Observation>() {
+            @Override
+            public void accept(@NonNull Observation observation) throws Exception
+            {
+                setChanged();
+                notifyObservers();
+            }
+        });
+
     }
 
     public void seleccionarImagenes(View view)
     {
         Intent i = new Intent(context, GalleryActivity.class);
         i.putExtra("observation_id",observation.getLocalId());
-        i.putExtra("text",observation.getText());
         i.putExtra("report_name",observation.getReportName());
         ((Activity)context).startActivityForResult(i,1234); // TODO cambiar a interfaz !
     }

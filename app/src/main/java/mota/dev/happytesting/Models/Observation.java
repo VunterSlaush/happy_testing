@@ -1,5 +1,7 @@
 package mota.dev.happytesting.models;
 
+import android.util.Log;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class Observation extends RealmObject
     public Observation()
     {
         id = -1;
-        localId = Functions.generateRandomId();
+        //localId = Functions.generateRandomId();
+        this.images = new RealmList<>();
     }
 
     public String getText() {
@@ -45,9 +48,15 @@ public class Observation extends RealmObject
     }
 
     public void setImages(List<Image> images) {
-        if(this.images == null)
-            this.images = new RealmList<>();
-        this.images.addAll(images);
+
+        for (Image i: images)
+        {
+            i.setObservationId(localId);
+            Log.d("MOTA--->","SETTING IMAGE:"+i.getDir());
+            if(!this.images.contains(i))
+                this.images.add(i);
+        }
+
     }
 
     public int getId() {

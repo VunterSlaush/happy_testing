@@ -127,7 +127,7 @@ public class AppRemoteImplementation implements AppRepository {
                         new Consumer<Throwable>() {
                             @Override
                             public void accept(@NonNull Throwable throwable) throws Exception {
-                                Log.d("MOTA--->","GET Error:"+throwable.getMessage());
+
                                 observer.onError(throwable);
                             }
                         });

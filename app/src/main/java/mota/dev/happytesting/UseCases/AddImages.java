@@ -21,26 +21,31 @@ import mota.dev.happytesting.repositories.implementations.ObservationLocalImplem
 
 public class AddImages
 {
-    public Observable<Boolean> addImages(final List<Image> images, final String text, final String reportName, final int id)
+    public Observable<Boolean> addImages(final List<Image> images, final String id)
     {
         return new Observable<Boolean>() {
             @Override
             protected void subscribeActual(final Observer<? super Boolean> observer)
             {
                 final ObservationRepository repo = new ObservationLocalImplementation();
-                repo.get(id,text,reportName).subscribe(new Consumer<Observation>() {
+                repo.get(id).subscribe(new Consumer<Observation>() {
                     @Override
                     public void accept(@NonNull Observation observation) throws Exception
                     {
                         observation.setImages(images);
-                        repo.modify(observation).subscribe();
-                        observer.onNext(true);
-                        observer.onComplete();
+                        repo.modify(observation).subscribe(new Consumer<Observation>() {
+                            @Override
+                            public void accept(@NonNull Observation observation) throws Exception {
+                                Log.d("MOTA--->","IMAGES GES GES>"+observation.getImages().size()+ "OB ID:"+observation.getLocalId());
+                                observer.onNext(true);
+                                observer.onComplete();
+                            }
+                        });
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        Log.d("MOTA--->","Error???"+throwable.getMessage());
                         observer.onNext(false);
                         observer.onComplete();
                     }

@@ -68,7 +68,11 @@ public class Report extends RealmObject
 
     public void setObservations(List<Observation> observations)
     {
-        this.observations.addAll(observations);
+        for (Observation o : observations)
+        {
+            if (!this.observations.contains(o))
+                this.observations.add(o);
+        }
     }
 
     public String getOwner_id() {
@@ -121,12 +125,7 @@ public class Report extends RealmObject
     public void fillEmptyFields(Report report) { // TODO add more if needed?
         if(id == -1)
             id = report.id;
-        for (Observation o : report.observations)
-        {
-            if (!observations.contains(o))
-                observations.add(o);
-        }
-
+        setObservations(report.observations);
         if(key == null)
             key = report.key;
     }

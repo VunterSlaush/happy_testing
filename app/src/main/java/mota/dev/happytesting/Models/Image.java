@@ -11,10 +11,13 @@ import io.realm.annotations.PrimaryKey;
 
 public class Image extends RealmObject
 {
-    @PrimaryKey
+
     private String dir;
     private int id;
     private String observationName;
+
+    @PrimaryKey
+    private String key;
 
     public Image()
     {
@@ -57,4 +60,9 @@ public class Image extends RealmObject
     }
 
 
+    public void setObservationId(String observationId) {
+        this.observationName = observationId;
+
+        key = observationName + "-" + dir;
+    }
 }

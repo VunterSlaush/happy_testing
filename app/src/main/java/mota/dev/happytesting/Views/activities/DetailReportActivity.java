@@ -26,8 +26,8 @@ public class DetailReportActivity extends BindeableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_report);
         initDataBinding();
-        setupObserver(viewModel);
         setupAdapters();
+        setupObserver(viewModel);
         viewModel.setReportData(getIntent().getIntExtra("report_id",-1),
                                  getIntent().getStringExtra("report_name"));
     }
@@ -44,10 +44,11 @@ public class DetailReportActivity extends BindeableActivity {
     {
         if (observable instanceof DetailReportViewModel)
         {
+            Log.d("MOTA--->","UPDATE OBSERVATIONS I THINK???");
             ObservationAdapter adapter = (ObservationAdapter)binding.observationList.getAdapter();
             DetailReportViewModel viewModel = (DetailReportViewModel)observable;
             adapter.setList(viewModel.getObservations());
-            binding.observationList.getItemAnimator().endAnimations();
+           // binding.observationList.getItemAnimator().endAnimations();
         }
     }
 
@@ -63,7 +64,7 @@ public class DetailReportActivity extends BindeableActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("MOTA--->","data:"+data.getExtras().getString("data")+" Report:"+data.getExtras().getString("report_name"));
-        viewModel.onActivityResult(data.getExtras());
+        if(data != null)
+            viewModel.onActivityResult(data.getExtras());
     }
 }

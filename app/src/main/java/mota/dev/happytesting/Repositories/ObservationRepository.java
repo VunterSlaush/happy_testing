@@ -14,7 +14,7 @@ public interface ObservationRepository
 {
     Observable<Observation> create(String text, Report report);
     Observable<List<Observation>> getReportObservations(Report report);
-    Observable<Observation> get(int id, String text, String reportName);
+    Observable<Observation> get(String id);
     Observable<Observation> modify(Observation o);
     Observable<Boolean> delete(Observation o);
 }

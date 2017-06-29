@@ -46,7 +46,6 @@ public class ObservationParser
     }
 
     private Observation generateObservationFromJson(JSONObject jsonObject) {
-        Log.d("MOTA--->","OBSERVATIONS ITEM:"+jsonObject.toString());
         Observation r = new Observation();
         r.setText(jsonObject.optString("texto"));
         r.setId(jsonObject.optInt("id"));

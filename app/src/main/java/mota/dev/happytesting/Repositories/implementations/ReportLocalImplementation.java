@@ -32,8 +32,6 @@ public class ReportLocalImplementation implements ReportRepository
                 RealmResults<Report> results = realm.where(Report.class)
                                                 .equalTo("owner_id", UserManager.getInstance().getUserId()).findAll();
                 List<Report> list =  realm.copyFromRealm(results);
-                for (Report r : list)
-                    Log.d("MOTA--->","PASANDO"+r.getName());
                 observer.onNext(list);
                 observer.onComplete();
             }
@@ -138,7 +136,6 @@ public class ReportLocalImplementation implements ReportRepository
                                                        .equalTo("name",report.getName())
                                                        .equalTo("appName",report.getAppName())
                                                        .findAll();
-                    Log.d("MOTA--->","FILAS A BORRAR:"+result.size());
                     result.deleteAllFromRealm();
                     realm.commitTransaction();
                     observer.onNext(true);

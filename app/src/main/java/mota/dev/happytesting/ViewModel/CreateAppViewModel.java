@@ -47,9 +47,7 @@ public class CreateAppViewModel extends Observable
 
     public void create(View view)
     {
-
         List<User> selected = adapter.getSelectedUsers();
-        Log.d("MOTA--->", "Selected Size:"+selected.size());
         useCase.createApp(name.get(),selected);
     }
 

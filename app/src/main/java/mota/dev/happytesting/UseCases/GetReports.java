@@ -40,10 +40,8 @@ public class GetReports
 
                     @Override
                     public void onNext(@NonNull List<Report> reports) {
-                        Log.d("MOTA--->","ON NEXT REPORTES:"+reports.toString());
                         for (Report r: reports)
                         {
-                            Log.d("MOTA--->","ON NEXT REPORTES:"+r.getName());
                             if(!reportes.contains(r))
                                 reportes.add(r);
                         }

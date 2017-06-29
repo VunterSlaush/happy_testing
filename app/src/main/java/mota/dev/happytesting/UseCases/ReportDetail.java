@@ -33,7 +33,7 @@ public class ReportDetail {
         return new Observable<Report>() {
             @Override
             protected void subscribeActual(Observer<? super Report> observer) {
-                Log.d("MOTA--->", "get DETAILS!");
+
                 getReportDetails(id, name, observer);
             }
         };
@@ -81,10 +81,14 @@ public class ReportDetail {
             public void accept(@NonNull List<Observation> observations) throws Exception
             {
                 addObservationsToReport(report,observations);
-                new ReportLocalImplementation().modifiy(report).subscribe();
-                observer.onNext(report);
-                observer.onComplete();
-
+                new ReportLocalImplementation().modifiy(report).subscribe(new Consumer<Report>() {
+                    @Override
+                    public void accept(@NonNull Report report) throws Exception
+                    {
+                        observer.onNext(report);
+                        observer.onComplete();
+                    }
+                });
             }
         }, new Consumer<Throwable>() {
             @Override
@@ -99,6 +103,7 @@ public class ReportDetail {
     {
         for (Observation o : observations)
         {
+            Log.d("MOTA--->","Report Ob:"+o.getLocalId()+" I:"+o.getImages().size());
             if(!report.getObservations().contains(o))
                 report.addObservation(o);
         }
