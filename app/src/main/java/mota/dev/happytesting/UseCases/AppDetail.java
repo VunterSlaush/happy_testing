@@ -35,7 +35,7 @@ public class AppDetail
 
     private void getRemoteAppDetails(final int id, final String app_name, final Observer<? super App> observer)
     {
-        AppRepository repo = new AppRemoteImplementation();
+        AppRepository repo = AppRemoteImplementation.getInstance();
         repo.get(id, null).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception {;
@@ -61,7 +61,7 @@ public class AppDetail
                     if(!app.getReports().contains(r))
                         app.addReport(r);
                 }
-                new AppLocalImplementation().modifiy(app).subscribe();
+                AppLocalImplementation.getInstance().modifiy(app).subscribe();
                 observer.onNext(app);
                 observer.onComplete();
             }
@@ -75,7 +75,7 @@ public class AppDetail
 
     private void getLocalAppDetails(int id,String name, final Observer<? super App> observer)
     {
-        AppRepository repo = new AppLocalImplementation();
+        AppRepository repo = AppLocalImplementation.getInstance();
         repo.get(id, name).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception {

@@ -27,7 +27,7 @@ public class EditEditors
 
     private void editOnServer(final App app, final Observer<? super Boolean> observer)
     {
-        AppRepository repo = new AppRemoteImplementation();
+        AppRepository repo = AppRemoteImplementation.getInstance();
         repo.modifiy(app).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception
@@ -45,7 +45,7 @@ public class EditEditors
 
     private void editOnLocal(final App app, final Observer<? super Boolean> observer)
     {
-        AppRepository repo = new AppLocalImplementation();
+        AppRepository repo = AppLocalImplementation.getInstance();
         repo.modifiy(app).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception

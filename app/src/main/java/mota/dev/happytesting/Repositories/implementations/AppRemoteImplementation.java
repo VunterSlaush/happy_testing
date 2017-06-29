@@ -29,6 +29,17 @@ import mota.dev.happytesting.utils.Functions;
 
 public class AppRemoteImplementation implements AppRepository {
 
+    private static AppRemoteImplementation instance;
+
+    private AppRemoteImplementation() {}
+
+    public static AppRemoteImplementation getInstance()
+    {
+        if(instance == null)
+            instance = new AppRemoteImplementation();
+        return  instance;
+    }
+
     @Override
     public Observable<App> create(final String name, final List<User> users)
     {
@@ -62,8 +73,6 @@ public class AppRemoteImplementation implements AppRepository {
         };
 
     }
-
-
 
     @Override
     public Observable<List<App>> getAll() {
@@ -134,7 +143,6 @@ public class AppRemoteImplementation implements AppRepository {
             }
         };
     }
-
 
     @Override
     public Observable<App> modifiy(final App app) {

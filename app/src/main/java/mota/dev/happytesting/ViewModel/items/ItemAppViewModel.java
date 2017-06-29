@@ -52,7 +52,7 @@ public class ItemAppViewModel extends Observable {
     {
         sendText.set("Enviando");
         enableButton.set(false);
-        AppRepository repo = new AppRemoteImplementation();
+        AppRepository repo = AppRemoteImplementation.getInstance();
         repo.create(appName.get(),new ArrayList<User>())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

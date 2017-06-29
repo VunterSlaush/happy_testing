@@ -6,6 +6,7 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import mota.dev.happytesting.managers.PermissionManager;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.repositories.ImageRepository;
 import mota.dev.happytesting.repositories.implementations.ImagenAndroidImplementation;

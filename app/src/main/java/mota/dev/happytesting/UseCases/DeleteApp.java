@@ -33,7 +33,7 @@ public class DeleteApp
 
     private void deleteOnServer(final App app, final Observer<? super Boolean> observer)
     {
-        AppRepository remote = new AppRemoteImplementation();
+        AppRepository remote = AppRemoteImplementation.getInstance();
         remote.delete(app).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(@NonNull Boolean result) throws Exception
@@ -53,7 +53,7 @@ public class DeleteApp
 
     private void deleteLocal(final App app, final Observer<? super Boolean> observer)
     {
-        AppRepository local = new AppLocalImplementation();
+        AppRepository local = AppLocalImplementation.getInstance();
         local.delete(app).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(@NonNull Boolean result) throws Exception

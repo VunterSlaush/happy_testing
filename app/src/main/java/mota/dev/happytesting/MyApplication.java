@@ -15,6 +15,7 @@ import mota.dev.happytesting.managers.UserManager;
 public class MyApplication extends android.app.Application
 {
     private static MyApplication instance;
+    private Realm realmInstance;
     @Override
     public void onCreate()
     {
@@ -37,15 +38,25 @@ public class MyApplication extends android.app.Application
 
     public void deleteAllDatabase()
     {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.deleteAll();
-        realm.commitTransaction();
+        realmInstance.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        });
     }
 
     private void goToLoginActivity(Context context)
     {
         Intent i = new Intent(context, LoginActivity.class);
         context.startActivity(i);
+    }
+
+    public Realm getRealmInstance()
+    {
+        if(realmInstance == null)
+            realmInstance = Realm.getDefaultInstance();
+
+        return realmInstance;
     }
 }

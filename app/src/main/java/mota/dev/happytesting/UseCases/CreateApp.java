@@ -35,8 +35,8 @@ public class CreateApp
     public CreateApp(Context context)
     {
         this.context = context;
-        remoteRepository = new AppRemoteImplementation();
-        localRepository = new AppLocalImplementation();
+        remoteRepository = AppRemoteImplementation.getInstance();
+        localRepository = AppLocalImplementation.getInstance();
     }
 
     public void createApp(String name, List<User> selected)

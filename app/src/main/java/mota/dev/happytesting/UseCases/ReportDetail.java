@@ -34,12 +34,32 @@ public class ReportDetail {
             @Override
             protected void subscribeActual(Observer<? super Report> observer) {
 
-                getReportDetails(id, name, observer);
+                if (id != -1)
+                    getReportDetailsRemoteAndLocal(id, name, observer);
+                else
+                    getLocalReportDetails(name, observer);
             }
         };
     }
 
-    private void getReportDetails(final int id, String name, final Observer<? super Report> observer) {
+    private void getLocalReportDetails(String name, final Observer<? super Report> observer)
+    {
+        ReportRepository repo = new ReportLocalImplementation();
+        repo.get(-1,name).subscribe(new Consumer<Report>() {
+            @Override
+            public void accept(@NonNull Report report) throws Exception {
+                findLocalObservations(report,observer);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                observer.onError(new Throwable("no se pudo conseguir el reporte"));
+            }
+        });
+
+    }
+
+    private void getReportDetailsRemoteAndLocal(final int id, String name, final Observer<? super Report> observer) {
         ReportRepository repo = new ReportRemoteImplementation();
         ReportRepository repo2 = new ReportLocalImplementation();
         final Report finalReport = new Report();
@@ -64,7 +84,6 @@ public class ReportDetail {
                     observer.onError(e);
                 else if (finalReport.getName() != null)
                     onComplete();
-
             }
 
             @Override

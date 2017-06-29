@@ -28,8 +28,8 @@ public class GetApps
     private AppRepository localRepository, remoteRepository;
     public GetApps()
     {
-        localRepository = new AppLocalImplementation();
-        remoteRepository = new AppRemoteImplementation();
+        localRepository = AppLocalImplementation.getInstance();
+        remoteRepository = AppRemoteImplementation.getInstance();
     }
 
     public Observable<List<App>> fetchAllApps()

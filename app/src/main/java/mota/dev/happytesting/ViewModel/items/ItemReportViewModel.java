@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class ItemReportViewModel extends Observable {
 
     public void abrir(View view)
     {
+        Log.d("MOTA--->","ABRIENDO:"+reportId.get() + " name:"+name.get());
         Intent i = new Intent(context, DetailReportActivity.class);
         i.putExtra("report_id",reportId.get());
         i.putExtra("report_name",name.get());
