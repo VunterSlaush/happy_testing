@@ -17,6 +17,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Views.activities.GalleryActivity;
+import mota.dev.happytesting.Views.interfaces.Hideable;
 import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
@@ -35,12 +36,13 @@ public class ItemObservationViewModel extends Observable
     private Observation observation;
     public ObservableField<String> text;
     private Selectable<Image> selectable;
-
-    public ItemObservationViewModel(Context context, Selectable<Image> selectable)
+    private Hideable hideable;
+    public ItemObservationViewModel(Context context, Selectable<Image> selectable, Hideable hideable)
     {
         this.context = context;
         this.text = new ObservableField<>();
         this.selectable = selectable;
+        this.hideable = hideable;
     }
 
     private void updateObservationData(){
@@ -91,13 +93,17 @@ public class ItemObservationViewModel extends Observable
                             public void accept(@NonNull Boolean result) throws Exception
                             {
                                 //TODO TOTAL!
-                                if (result)
-                                    Toast.makeText(context,"Eliminado Satisfactoriamente",Toast.LENGTH_SHORT).show();
+                                if (result) {
+                                    Toast.makeText(context, "Eliminado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                                    hideable.hide();
+                                }
                                 else
+                                {
                                     Toast.makeText(context,"No pudo ser eliminado", Toast.LENGTH_SHORT).show();
+                                }
 
-                                setChanged();
-                                notifyObservers();
+
+
                             }
                         });
             }

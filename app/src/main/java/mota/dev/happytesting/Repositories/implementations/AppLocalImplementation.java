@@ -1,21 +1,16 @@
 package mota.dev.happytesting.repositories.implementations;
 
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
+import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 29/05/2017.
@@ -40,17 +35,25 @@ public class AppLocalImplementation implements AppRepository {
         return new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
-                    {
+                    public void action(Realm realm) {
                         App app = realm.createObject(App.class, name);
                         app.setUsers(users);
                         observer.onNext(app);
                         observer.onComplete();
                     }
+
+                    @Override
+                    public void error(Exception e)
+                    {
+                        observer.onError(new Throwable("Aplicacion Existente!"));
+                    }
                 });
+
+
+
             }
         };
 
@@ -61,7 +64,7 @@ public class AppLocalImplementation implements AppRepository {
         return new Observable<List<App>>() {
             @Override
             protected void subscribeActual(Observer<? super List<App>> observer) {
-                Realm realm = Realm.getDefaultInstance(); //MyApplication.getInstance().getRealmInstance();
+                Realm realm = Realm.getDefaultInstance();
                 RealmResults<App> results = realm.where(App.class).findAll();
                 List<App> list = realm.copyFromRealm(results);
                 observer.onNext(list);
@@ -97,16 +100,24 @@ public class AppLocalImplementation implements AppRepository {
         return new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm) {
+                    public void action(Realm realm) {
                         realm.copyToRealmOrUpdate(app);
                         observer.onNext(app);
                         observer.onComplete();
-                        
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+                        observer.onError(new Throwable("Error inesperado"));
                     }
                 });
+
+
+
+
             }
         };
     }
@@ -118,26 +129,24 @@ public class AppLocalImplementation implements AppRepository {
             protected void subscribeActual(final Observer<? super Boolean> observer) {
 
 
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
-                    {
+                    public void action(Realm realm) {
                         RealmResults<App> result = realm.where(App.class)
-                                                        .equalTo("name", app.getName())
-                                                        .findAll();
-                        try
-                        {
-                            result.deleteAllFromRealm();
-                            observer.onNext(true);
-                        }catch (Exception e)
-                        {
-                            observer.onNext(false);
-                        }finally {
-                            observer.onComplete();
-                        }
+                                .equalTo("name", app.getName())
+                                .findAll();
+                        result.deleteAllFromRealm();
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+                        observer.onNext(false);
+                        observer.onComplete();
                     }
                 });
+
 
             }
         };

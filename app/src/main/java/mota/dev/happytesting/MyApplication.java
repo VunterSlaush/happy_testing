@@ -7,6 +7,7 @@ import io.realm.Realm;
 import mota.dev.happytesting.Views.activities.LoginActivity;
 import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.managers.UserManager;
+import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 15/05/2017.
@@ -16,6 +17,7 @@ public class MyApplication extends android.app.Application
 {
     private static MyApplication instance;
     private Realm realmInstance;
+    private Realm uiInstance;
     @Override
     public void onCreate()
     {
@@ -38,10 +40,15 @@ public class MyApplication extends android.app.Application
 
     public void deleteAllDatabase()
     {
-        realmInstance.executeTransaction(new Realm.Transaction() {
+        RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
             @Override
-            public void execute(Realm realm) {
+            public void action(Realm realm) {
                 realm.deleteAll();
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
     }
@@ -58,5 +65,12 @@ public class MyApplication extends android.app.Application
             realmInstance = Realm.getDefaultInstance();
 
         return realmInstance;
+    }
+
+    public Realm getRealmUiInstance()
+    {
+        if(uiInstance == null)
+            uiInstance = Realm.getDefaultInstance();
+        return uiInstance;
     }
 }

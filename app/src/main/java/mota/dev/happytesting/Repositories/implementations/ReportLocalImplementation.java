@@ -1,20 +1,17 @@
 package mota.dev.happytesting.repositories.implementations;
 
-import android.util.Log;
-
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import mota.dev.happytesting.MyApplication;
-import mota.dev.happytesting.managers.ErrorManager;
 import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.ReportRepository;
+import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 24/06/2017.
@@ -63,20 +60,30 @@ public class ReportLocalImplementation implements ReportRepository
     public Observable<Report> get(final int id, final String name) {
         return new Observable<Report>() {
             @Override
-            protected void subscribeActual(Observer<? super Report> observer)
+            protected void subscribeActual(final Observer<? super Report> observer)
             {
-                Realm realm = Realm.getDefaultInstance();
-                RealmResults<Report> results = realm.where(Report.class).equalTo("id", id).equalTo("name",name).findAll();
-                List<Report> list =  realm.copyFromRealm(results);
-                if(list.size() <= 0)
-                {
-                    observer.onError(new Throwable("Aplicacion no encontrada"));
-                    return;
-                }
-                Report report = list.get(0);
-                observer.onNext(report);
-                observer.onComplete();
-                realm.close();
+
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
+                    @Override
+                    public void action(Realm realm)
+                    {
+                        RealmResults<Report> results = realm.where(Report.class).equalTo("id", id).equalTo("name",name).findAll();
+                        List<Report> list =  realm.copyFromRealm(results);
+                        if(list.size() <= 0)
+                        {
+                            observer.onError(new Throwable("Aplicacion no encontrada"));
+                            return;
+                        }
+                        Report report = list.get(0);
+                        observer.onNext(report);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+
+                    }
+                });
             }
         };
     }
@@ -88,25 +95,22 @@ public class ReportLocalImplementation implements ReportRepository
             @Override
             protected void subscribeActual(final Observer<? super Report> observer)
             {
-
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
+                    public void action(Realm realm)
                     {
-                        try {
-                            Report report1 = realm.createObject(Report.class,report.getName()+"-"+report.getAppName());
-                            report1.copy(report);
-                            observer.onNext(report1);
-                            observer.onComplete();
-                        }catch (Exception e)
-                        {
-                            observer.onError(new Throwable("Ya Existe un reporte con este nombre"));
-                        }
+                        Report report1 = realm.createObject(Report.class,report.getName()+"-"+report.getAppName());
+                        report1.copy(report);
+                        observer.onNext(report1);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e)
+                    {
+                        observer.onError(new Throwable("Ya Existe un reporte con este nombre"));
                     }
                 });
-
-
 
             }
         };
@@ -117,27 +121,19 @@ public class ReportLocalImplementation implements ReportRepository
         return new Observable<Report>() {
             @Override
             protected void subscribeActual(final Observer<? super Report> observer) {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                realm.executeTransactionAsync(new Realm.Transaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
-                    {
+                    public void action(Realm realm) {
                         realm.copyToRealmOrUpdate(report);
-                    }
-                }, new Realm.Transaction.OnSuccess() {
-                    @Override
-                    public void onSuccess()
-                    {
                         observer.onNext(report);
                         observer.onComplete();
                     }
-                }, new Realm.Transaction.OnError() {
+
                     @Override
-                    public void onError(Throwable error) {
-                        observer.onError(error);
+                    public void error(Exception e) {
+                        observer.onError(new Throwable("Error inesperado"));
                     }
                 });
-
             }
         };
     }

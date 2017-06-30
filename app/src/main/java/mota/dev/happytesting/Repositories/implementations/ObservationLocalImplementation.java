@@ -26,7 +26,7 @@ public class ObservationLocalImplementation implements ObservationRepository {
             @Override
             protected void subscribeActual(final Observer<? super Observation> observer)
             {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
+                Realm realm = MyApplication.getInstance().getRealmUiInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm)
@@ -34,12 +34,10 @@ public class ObservationLocalImplementation implements ObservationRepository {
                         Observation observation = realm.createObject(Observation.class, Functions.generateRandomId());
                         observation.setText(text);
                         observation.setReportName(report.getName());
-                        realm.waitForChange();
                         observer.onNext(observation);
                         observer.onComplete();
                     }
                 });
-
             }
         };
     }
@@ -50,19 +48,21 @@ public class ObservationLocalImplementation implements ObservationRepository {
             @Override
             protected void subscribeActual(final Observer<? super List<Observation>> observer) {
 
-                Log.d("MOTA--->","GET REPORT OBSERVATIONS");
                 Realm realm = Realm.getDefaultInstance();
+
+                try { realm.refresh(); }catch (Exception e) {}
+
                 RealmResults<Observation> results = realm.where(Observation.class)
                         .equalTo("reportName",report.getName())
                         .findAll();
                 List<Observation> list =  realm.copyFromRealm(results);
                 for (Observation o : list) {
                      findObservationImages(realm,o);
-                      Log.d("MOTA--->","Observation:"+o.getLocalId()+" Images:"+o.getImages().size());
                  }
                  observer.onNext(list);
                  observer.onComplete();
                 realm.close();
+
             }
         };
     }
@@ -82,7 +82,7 @@ public class ObservationLocalImplementation implements ObservationRepository {
             @Override
             protected void subscribeActual(Observer<? super Observation> observer)
             {
-                Realm realm = Realm.getDefaultInstance();
+                Realm realm = MyApplication.getInstance().getRealmUiInstance();
                 try
                 {
                     RealmResults<Observation> result = realm.where(Observation.class)
@@ -97,8 +97,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
                 {
                     observer.onError(new Throwable("La observacion no existe:"+e.getMessage()));
                 }
-                realm.close();
-
             }
         };
     }
@@ -111,7 +109,7 @@ public class ObservationLocalImplementation implements ObservationRepository {
             protected void subscribeActual(final Observer<? super Observation> observer)
             {
 
-                Realm realm = MyApplication.getInstance().getRealmInstance();
+                Realm realm = MyApplication.getInstance().getRealmUiInstance();
                 realm.executeTransaction(new Realm.Transaction()
                 {
                     @Override
@@ -120,7 +118,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
                         realm.copyToRealmOrUpdate(o);
                         borrarImagenes(realm, o);
                         realm.copyToRealmOrUpdate(o.getImages());
-                        realm.waitForChange();
                         observer.onNext(o);
                         observer.onComplete();
                     }
@@ -149,7 +146,7 @@ public class ObservationLocalImplementation implements ObservationRepository {
         return new Observable<Boolean>() {
             @Override
             protected void subscribeActual(final Observer<? super Boolean> observer) {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
+                Realm realm = MyApplication.getInstance().getRealmUiInstance();
 
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -159,7 +156,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
                                 .equalTo("localId",o.getLocalId())
                                 .findAll();
                         result.deleteAllFromRealm();
-                        realm.waitForChange();
                         observer.onNext(true);
                         observer.onComplete();
                     }

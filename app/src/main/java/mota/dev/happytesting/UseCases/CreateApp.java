@@ -12,6 +12,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.MainActivity;
 import mota.dev.happytesting.managers.ErrorManager;
@@ -43,66 +44,23 @@ public class CreateApp
     {
         this.app_name = name;
         this.selected_users = selected;
-        remoteRepository.create(name,selected)
+        localRepository.create(name,selected)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(remoteObserver);
+                        .subscribe(new Consumer<App>() {
+                            @Override
+                            public void accept(@NonNull App app) throws Exception {
+                                createAppOnRemote();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                Toast.makeText(context,"La aplicacion no pudo ser creada", Toast.LENGTH_SHORT).show();
+                            }
+                        });
     }
 
 
-    private Observer<? super App> remoteObserver = new Observer<App>() {
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(@NonNull App app) {
-            saveAppToLocalStorage(app);
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-            if(!(e instanceof ErrorManager.Error))
-            {
-                Toast.makeText(context,"La aplicacion no pudo ser creada en el servidor", Toast.LENGTH_LONG).show();
-                createAppOnLocalStorage();
-            }
-            else
-            {
-                Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
-
-    private Observer<? super App> localObserver = new Observer<App>() {
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(@NonNull App app) {
-            Toast.makeText(context,"Aplicacion Creada Satisfactoriamente", Toast.LENGTH_LONG).show();
-            finishCreate();
-            
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-            Toast.makeText(context,"La aplicacion no pudo ser creada", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
 
     private void finishCreate()
     {
@@ -111,21 +69,36 @@ public class CreateApp
         ((Activity) context).finish();
     }
 
-    private void saveAppToLocalStorage(App app)
-    {
-        app.setUsers(selected_users);
-        localRepository.modifiy(app)
-                       .subscribeOn(Schedulers.io())
-                       .observeOn(AndroidSchedulers.mainThread())
-                       .subscribe(localObserver);
-    }
 
-    private void createAppOnLocalStorage()
+    private void createAppOnRemote()
     {
-        localRepository.create(app_name,this.selected_users)
+        remoteRepository.create(app_name,this.selected_users)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(localObserver);
+                        .subscribe(new Consumer<App>() {
+                            @Override
+                            public void accept(@NonNull App app) throws Exception
+                            {
+                                Toast.makeText(context,"Aplicacion enviada al servidor",Toast.LENGTH_SHORT).show();
+                                localRepository.modifiy(app).subscribe(new Consumer<App>() {
+                                    @Override
+                                    public void accept(@NonNull App app) throws Exception {
+                                        finishCreate();
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        Toast.makeText(context,"Error Inesperado",Toast.LENGTH_SHORT).show();
+                                        finishCreate();
+                                    }
+                                });
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                Toast.makeText(context,"La Aplicacion no pudo ser enviada al servidor",Toast.LENGTH_SHORT).show();
+                            }
+                        });
     }
 
 }

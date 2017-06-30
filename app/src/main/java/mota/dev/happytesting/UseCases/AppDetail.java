@@ -61,9 +61,14 @@ public class AppDetail
                     if(!app.getReports().contains(r))
                         app.addReport(r);
                 }
-                AppLocalImplementation.getInstance().modifiy(app).subscribe();
-                observer.onNext(app);
-                observer.onComplete();
+                AppLocalImplementation.getInstance().modifiy(app).subscribe(new Consumer<App>() {
+                    @Override
+                    public void accept(@NonNull App app) throws Exception {
+                        observer.onNext(app);
+                        observer.onComplete();
+                    }
+                });
+
             }
         }, new Consumer<Throwable>() {
             @Override

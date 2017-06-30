@@ -60,6 +60,7 @@ public class AppRemoteImplementation implements AppRepository {
                         }
                         catch (Exception e)
                         {
+                            Log.d("MOTA--->","EXCEPTION CREATE:"+e.getMessage());
                             observer.onError(ErrorManager.getInstance().getError(jsonObject));
                         }
                     }

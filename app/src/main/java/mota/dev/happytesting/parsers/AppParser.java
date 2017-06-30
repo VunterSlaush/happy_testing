@@ -44,9 +44,15 @@ public class AppParser
         app.setId(appJson.optInt("id"));
         app.setName(appJson.optString("nombre"));
 
-        app.setReports(ReportParser.getInstance().generateReportList(appJson,"Reports"));
-        app.setModificar(UserParser.getInstance().generateUsersList(appJson, "canEditMe"));
-        app.setApp_owner(UserParser.getInstance().generateUserFromJson(appJson.optJSONObject("User")));
+        try {
+            app.setReports(ReportParser.getInstance().generateReportList(appJson,"Reports"));
+            app.setModificar(UserParser.getInstance().generateUsersList(appJson, "canEditMe"));
+            app.setApp_owner(UserParser.getInstance().generateUserFromJson(appJson.optJSONObject("User")));
+        }catch (Exception e)
+        {
+
+        }
+
         return app;
     }
 

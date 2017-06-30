@@ -3,6 +3,7 @@ package mota.dev.happytesting.Views.adapters.viewholders;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import java.util.List;
 import java.util.Observable;
@@ -11,6 +12,7 @@ import java.util.Observer;
 import mota.dev.happytesting.ViewModel.items.ItemObservationViewModel;
 import mota.dev.happytesting.Views.adapters.ImageAdapter;
 import mota.dev.happytesting.Views.adapters.ObservationAdapter;
+import mota.dev.happytesting.Views.interfaces.Hideable;
 import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.databinding.ObservationItemBinding;
 import mota.dev.happytesting.models.Image;
@@ -21,7 +23,7 @@ import mota.dev.happytesting.models.Observation;
  */
 
 
-public class ObservationViewHolder extends BaseViewHolder<Observation> implements Observer, Selectable<Image>
+public class ObservationViewHolder extends BaseViewHolder<Observation> implements Observer, Selectable<Image>, Hideable
 {
     private ObservationItemBinding binding;
 
@@ -44,7 +46,7 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
     public void onBind()
     {
         if(binding.getViewModel() == null) {
-            ItemObservationViewModel viewModel = new ItemObservationViewModel(itemView.getContext(),this);
+            ItemObservationViewModel viewModel = new ItemObservationViewModel(itemView.getContext(),this, this);
             viewModel.addObserver(this);
             viewModel.setObservation(item);
             binding.setViewModel(viewModel);
@@ -72,4 +74,17 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
         ImageAdapter adapter = (ImageAdapter) binding.mosaicoRecyclerView.getAdapter();
         return adapter.getSelectedImages();
     }
+
+    @Override
+    public void hide()
+    {
+        binding.getRoot().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void show()
+    {
+        binding.getRoot().setVisibility(View.VISIBLE);
+    }
+
 }
