@@ -33,7 +33,7 @@ public class ReportsViewModel extends Observable
         this.context = context;
         reports = new ArrayList<>();
         useCase = new GetReports();
-        fetchReports();
+
     }
 
     public List<Report> getReportList()
@@ -46,7 +46,7 @@ public class ReportsViewModel extends Observable
         fetchReports();
     }
 
-    private void fetchReports()
+    public void fetchReports()
     {
         useCase.fetchReports()
                 .subscribeOn(Schedulers.io())

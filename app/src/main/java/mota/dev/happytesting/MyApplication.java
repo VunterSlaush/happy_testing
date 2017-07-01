@@ -16,7 +16,6 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
 public class MyApplication extends android.app.Application
 {
     private static MyApplication instance;
-    private Realm realmInstance;
     private Realm uiInstance;
     @Override
     public void onCreate()
@@ -57,14 +56,6 @@ public class MyApplication extends android.app.Application
     {
         Intent i = new Intent(context, LoginActivity.class);
         context.startActivity(i);
-    }
-
-    public Realm getRealmInstance()
-    {
-        if(realmInstance == null)
-            realmInstance = Realm.getDefaultInstance();
-
-        return realmInstance;
     }
 
     public Realm getRealmUiInstance()

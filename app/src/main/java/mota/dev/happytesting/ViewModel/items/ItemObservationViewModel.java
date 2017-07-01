@@ -37,16 +37,17 @@ public class ItemObservationViewModel extends Observable
     public ObservableField<String> text;
     private Selectable<Image> selectable;
     private Hideable hideable;
+
     public ItemObservationViewModel(Context context, Selectable<Image> selectable, Hideable hideable)
     {
         this.context = context;
         this.text = new ObservableField<>();
         this.selectable = selectable;
         this.hideable = hideable;
+        this.observation = new Observation();
     }
 
     private void updateObservationData(){
-        Log.d("MOTA--->","Observation update images:"+observation.getImages().size());
         this.text.set(observation.getText());
         setChanged();
         notifyObservers();

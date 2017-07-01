@@ -1,5 +1,7 @@
 package mota.dev.happytesting.repositories.implementations;
 
+import android.util.Log;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -21,13 +23,13 @@ public class AppLocalImplementation implements AppRepository {
 
     private static AppLocalImplementation instance;
 
-    private AppLocalImplementation() {}
+    private AppLocalImplementation() {
+    }
 
-    public static AppLocalImplementation getInstance()
-    {
-        if(instance == null)
+    public static AppLocalImplementation getInstance() {
+        if (instance == null)
             instance = new AppLocalImplementation();
-        return  instance;
+        return instance;
     }
 
     @Override
@@ -46,12 +48,10 @@ public class AppLocalImplementation implements AppRepository {
                     }
 
                     @Override
-                    public void error(Exception e)
-                    {
+                    public void error(Exception e) {
                         observer.onError(new Throwable("Aplicacion Existente!"));
                     }
                 });
-
 
 
             }
@@ -80,17 +80,15 @@ public class AppLocalImplementation implements AppRepository {
         return new Observable<App>() {
             @Override
             protected void subscribeActual(Observer<? super App> observer) {
-                Realm realm = MyApplication.getInstance().getRealmInstance();
-                RealmResults<App> results = realm.where(App.class).equalTo("id", id).or().equalTo("name", appName).findAll();
-                List<App> list = realm.copyFromRealm(results);
-                App app = list.get(0);
+                Realm realm = Realm.getDefaultInstance();
+                App app = realm.where(App.class).equalTo("id", id).or().equalTo("name", appName).findFirst();
                 if (app != null) {
                     observer.onNext(app);
                     observer.onComplete();
                 } else {
                     observer.onError(new Throwable("Aplicacion no encontrada"));
                 }
-
+                realm.close();
             }
         };
     }
@@ -101,6 +99,7 @@ public class AppLocalImplementation implements AppRepository {
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
 
+                Log.d("MOTA--->", "Modificando App:" + app.getName());
                 RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
                     public void action(Realm realm) {
@@ -114,8 +113,6 @@ public class AppLocalImplementation implements AppRepository {
                         observer.onError(new Throwable("Error inesperado"));
                     }
                 });
-
-
 
 
             }
@@ -154,11 +151,10 @@ public class AppLocalImplementation implements AppRepository {
 
     @Override
     public void updateApps(final List<App> apps) {
-        Realm realm = MyApplication.getInstance().getRealmInstance();
-        realm.executeTransaction(new Realm.Transaction() {
+        RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
             @Override
-            public void execute(Realm realm) {
-
+            public void action(Realm realm)
+            {
                 deleteAppsIfNeeded(realm, apps);
                 for (App app : apps) {
                     try {
@@ -170,11 +166,14 @@ public class AppLocalImplementation implements AppRepository {
                     } catch (Exception e) {
 
                     }
-
                 }
             }
-        });
 
+            @Override
+            public void error(Exception e) {
+
+            }
+        });
     }
 
     private void deleteAppsIfNeeded(Realm realm, List<App> apps) {

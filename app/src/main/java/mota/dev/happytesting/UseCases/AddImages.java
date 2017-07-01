@@ -36,7 +36,6 @@ public class AddImages
                         repo.modify(observation).subscribe(new Consumer<Observation>() {
                             @Override
                             public void accept(@NonNull Observation observation) throws Exception {
-                                Log.d("MOTA--->","IMAGES GES GES>"+observation.getImages().size()+ "OB ID:"+observation.getLocalId());
                                 observer.onNext(true);
                                 observer.onComplete();
                             }
@@ -46,6 +45,7 @@ public class AddImages
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e("MOTA--->","Except>"+throwable.getMessage());
                         observer.onNext(false);
                         observer.onComplete();
                     }

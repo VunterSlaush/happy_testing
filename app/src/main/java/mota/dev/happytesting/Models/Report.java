@@ -102,6 +102,12 @@ public class Report extends RealmObject
         this.observations.addAll(report.getObservations());
     }
 
+    public void copyAll(Report report)
+    {
+        this.copy(report);
+        this.key = report.key;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -115,11 +121,12 @@ public class Report extends RealmObject
         if (!(o instanceof Report)) return false;
 
         Report report = (Report) o;
-        if (id != report.id) return false;
-        if (name != null ? !name.equals(report.name) : report.name != null) return false;
-        return true;
 
-
+        if(report.id != -1 && id == report.id)
+            return true;
+        else if(key != null && report.key != null && report.key.equals(key))
+            return true;
+        return false;
     }
 
     public void fillEmptyFields(Report report) { // TODO add more if needed?

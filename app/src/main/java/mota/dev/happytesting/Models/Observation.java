@@ -1,14 +1,13 @@
 package mota.dev.happytesting.models;
 
-import android.util.Log;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import mota.dev.happytesting.utils.Functions;
+
 
 /**
  * Created by Slaush on 22/05/2017.
@@ -27,7 +26,6 @@ public class Observation extends RealmObject
     public Observation()
     {
         id = -1;
-        //localId = Functions.generateRandomId();
         this.images = new RealmList<>();
     }
 
@@ -39,12 +37,8 @@ public class Observation extends RealmObject
         this.text = text;
     }
 
-    public RealmList<Image> getImages() {
+    public List<Image> getImages() {
         return images;
-    }
-
-    public void setImages(RealmList<Image> images) {
-        this.images = images;
     }
 
     public void setImages(List<Image> images) {
@@ -52,7 +46,6 @@ public class Observation extends RealmObject
         for (Image i: images)
         {
             i.setObservationId(localId);
-            Log.d("MOTA--->","SETTING IMAGE:"+i.getDir());
             if(!this.images.contains(i))
                 this.images.add(i);
         }
@@ -111,4 +104,11 @@ public class Observation extends RealmObject
         return localId;
     }
 
+    public void copy(Observation o)
+    {
+        this.images.addAll(o.getImages());
+        this.localId = o.localId;
+        this.text = o.getText();
+        this.id = o.id;
+    }
 }

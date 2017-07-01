@@ -14,6 +14,7 @@ import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.ObservationRepository;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 25/06/2017.
@@ -24,18 +25,21 @@ public class ObservationLocalImplementation implements ObservationRepository {
     public Observable<Observation> create(final String text, final Report report) {
         return new Observable<Observation>() {
             @Override
-            protected void subscribeActual(final Observer<? super Observation> observer)
-            {
-                Realm realm = MyApplication.getInstance().getRealmUiInstance();
-                realm.executeTransaction(new Realm.Transaction() {
+            protected void subscribeActual(final Observer<? super Observation> observer) {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
-                    {
+                    public void action(Realm realm) {
                         Observation observation = realm.createObject(Observation.class, Functions.generateRandomId());
                         observation.setText(text);
                         observation.setReportName(report.getName());
                         observer.onNext(observation);
                         observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+                        Log.d("MOTA--->","EXCEPT:"+e.getMessage());
+                        observer.onError(new Throwable("no se pudo crear la observacion"));
                     }
                 });
             }
@@ -49,94 +53,87 @@ public class ObservationLocalImplementation implements ObservationRepository {
             protected void subscribeActual(final Observer<? super List<Observation>> observer) {
 
                 Realm realm = Realm.getDefaultInstance();
-
-                try { realm.refresh(); }catch (Exception e) {}
-
                 RealmResults<Observation> results = realm.where(Observation.class)
-                        .equalTo("reportName",report.getName())
+                        .equalTo("reportName", report.getName())
                         .findAll();
-                List<Observation> list =  realm.copyFromRealm(results);
+                List<Observation> list = realm.copyFromRealm(results);
                 for (Observation o : list) {
-                     findObservationImages(realm,o);
-                 }
-                 observer.onNext(list);
-                 observer.onComplete();
-                realm.close();
+                    findObservationImages(realm, o);
+                }
+                observer.onNext(list);
+                observer.onComplete();
+                //realm.close();
 
             }
         };
     }
 
-    private void findObservationImages(Realm realm, Observation o)
-    {
+    private void findObservationImages(Realm realm, Observation o) {
         RealmResults<Image> results = realm.where(Image.class)
-                                           .equalTo("observationName",o.getLocalId())
-                                           .findAll();
+                .equalTo("observationName", o.getLocalId())
+                .findAll();
+
         o.setImages(realm.copyFromRealm(results));
     }
 
     @Override
-    public Observable<Observation> get(final String id)
-    {
+    public Observable<Observation> get(final String id) {
         return new Observable<Observation>() {
             @Override
-            protected void subscribeActual(Observer<? super Observation> observer)
-            {
-                Realm realm = MyApplication.getInstance().getRealmUiInstance();
-                try
-                {
-                    RealmResults<Observation> result = realm.where(Observation.class)
-                            .equalTo("localId",id)
-                            .findAll();
-                    List<Observation> list =  realm.copyFromRealm(result);
-                    Observation o = list.get(0);
+            protected void subscribeActual(Observer<? super Observation> observer) {
+                Realm realm = Realm.getDefaultInstance();
+                try {
+                    Observation o = realm.where(Observation.class)
+                            .equalTo("localId", id)
+                            .findFirst();
+
                     observer.onNext(o);
                     observer.onComplete();
 
-                }catch (Exception e)
-                {
-                    observer.onError(new Throwable("La observacion no existe:"+e.getMessage()));
+                } catch (Exception e) {
+                    Log.e("MOTA--->","Except:"+e.getMessage());
+                    observer.onError(new Throwable("La observacion no existe:" + e.getMessage()));
                 }
+                //realm.close();
             }
         };
     }
 
     @Override
-    public Observable<Observation> modify(final Observation o)
-    {
+    public Observable<Observation> modify(final Observation o) {
         return new Observable<Observation>() {
             @Override
-            protected void subscribeActual(final Observer<? super Observation> observer)
-            {
+            protected void subscribeActual(final Observer<? super Observation> observer) {
 
-                Realm realm = MyApplication.getInstance().getRealmUiInstance();
-                realm.executeTransaction(new Realm.Transaction()
-                {
-                    @Override
-                    public void execute(Realm realm)
-                    {
-                        realm.copyToRealmOrUpdate(o);
-                        borrarImagenes(realm, o);
-                        realm.copyToRealmOrUpdate(o.getImages());
-                        observer.onNext(o);
-                        observer.onComplete();
-                    }
-                });
+            RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
+                @Override
+                public void action(Realm realm) {
+                    realm.copyToRealmOrUpdate(o);
+                    borrarImagenes(realm, o);
+                    realm.copyToRealmOrUpdate(o.getImages());
+                    observer.onNext(o);
+                    observer.onComplete();
+                }
+
+                @Override
+                public void error(Exception e) {
+                    Log.d("MOTA--->","Except>"+e.getMessage());
+                    observer.onError(new Throwable("Ocurrio un error modificando"));
+                }
+            });
 
             }
         };
     }
 
-    private void borrarImagenes(Realm realm, Observation o)
-    {
+    private void borrarImagenes(Realm realm, Observation o) {
         try {
             RealmResults<Image> result = realm.where(Image.class)
-                    .equalTo("observationName",o.getLocalId())
+                    .equalTo("observationName", o.getLocalId())
                     .findAll();
             result.deleteAllFromRealm();
-        }catch (Exception e)
-        {
-            Log.d("MOTA--->","QUEJESTO??");
+        } catch (Exception e) {
+            Log.d("MOTA--->", "QUEJESTO??");
         }
 
     }
@@ -146,17 +143,20 @@ public class ObservationLocalImplementation implements ObservationRepository {
         return new Observable<Boolean>() {
             @Override
             protected void subscribeActual(final Observer<? super Boolean> observer) {
-                Realm realm = MyApplication.getInstance().getRealmUiInstance();
-
-                realm.executeTransaction(new Realm.Transaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
-                    public void execute(Realm realm)
-                    {
+                    public void action(Realm realm) {
                         RealmResults<Observation> result = realm.where(Observation.class)
-                                .equalTo("localId",o.getLocalId())
+                                .equalTo("localId", o.getLocalId())
                                 .findAll();
                         result.deleteAllFromRealm();
                         observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+                        observer.onNext(false);
                         observer.onComplete();
                     }
                 });

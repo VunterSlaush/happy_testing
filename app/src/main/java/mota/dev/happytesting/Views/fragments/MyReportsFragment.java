@@ -58,6 +58,12 @@ public class MyReportsFragment extends Fragment implements Observer {
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.fetchReports();
+    }
+
     private void setupListView()
     {
         ReportAdapter reportAdapter = new ReportAdapter();

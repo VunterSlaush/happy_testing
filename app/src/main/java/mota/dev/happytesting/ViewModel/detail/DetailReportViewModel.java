@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -93,7 +94,7 @@ public class DetailReportViewModel extends Observable {
             @Override
             public void get(String text) {
                 CreateObservation.getInstance().create(report,text)
-                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -151,7 +152,7 @@ public class DetailReportViewModel extends Observable {
 
     public List<Observation> getObservations()
     {
-        return report.getObservations();
+        return observations;
     }
 
     public void onActivityResult(Bundle extras)
@@ -164,7 +165,7 @@ public class DetailReportViewModel extends Observable {
             List<Image> dataImages = Functions.generateImageListFromString(data);
             new AddImages()
                     .addImages(dataImages,id)
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Boolean>() {
                 @Override
