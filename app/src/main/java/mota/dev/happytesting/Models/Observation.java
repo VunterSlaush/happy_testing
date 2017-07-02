@@ -38,7 +38,7 @@ public class Observation extends RealmObject
     }
 
     public List<Image> getImages() {
-        return images;
+        return new ArrayList<>(images);
     }
 
     public void setImages(List<Image> images) {
@@ -47,7 +47,9 @@ public class Observation extends RealmObject
         {
             i.setObservationId(localId);
             if(!this.images.contains(i))
+            {
                 this.images.add(i);
+            }
         }
 
     }
@@ -86,6 +88,8 @@ public class Observation extends RealmObject
 
         Observation that = (Observation) o;
 
+        if(localId.equals(that.localId)) return true;
+
         if(id != -1 && id == that.id) return true;
 
         if(text.equals(that.text) && images.size() == that.images.size())
@@ -110,5 +114,6 @@ public class Observation extends RealmObject
         this.localId = o.localId;
         this.text = o.getText();
         this.id = o.id;
+        this.reportName = o.reportName;
     }
 }

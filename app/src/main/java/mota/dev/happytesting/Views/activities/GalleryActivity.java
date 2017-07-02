@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Observable;
@@ -37,7 +38,9 @@ public class GalleryActivity extends BindeableActivity implements Selectable<Ima
 
     private void setupPermission()
     {
-        PermissionManager.getInstance().requestPermission(GalleryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE,IMAGE_PERMISSION, this);
+        PermissionManager.getInstance()
+                            .requestPermission(GalleryActivity.this,
+                                               Manifest.permission.READ_EXTERNAL_STORAGE,IMAGE_PERMISSION, this);
     }
 
     private void setupAdapter()

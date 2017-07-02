@@ -26,6 +26,8 @@ public class ObservationLocalImplementation implements ObservationRepository {
         return new Observable<Observation>() {
             @Override
             protected void subscribeActual(final Observer<? super Observation> observer) {
+
+
                 RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
                     public void action(Realm realm) {
@@ -57,24 +59,14 @@ public class ObservationLocalImplementation implements ObservationRepository {
                         .equalTo("reportName", report.getName())
                         .findAll();
                 List<Observation> list = realm.copyFromRealm(results);
-                for (Observation o : list) {
-                    findObservationImages(realm, o);
-                }
                 observer.onNext(list);
                 observer.onComplete();
-                //realm.close();
+                realm.close();
 
             }
         };
     }
 
-    private void findObservationImages(Realm realm, Observation o) {
-        RealmResults<Image> results = realm.where(Image.class)
-                .equalTo("observationName", o.getLocalId())
-                .findAll();
-
-        o.setImages(realm.copyFromRealm(results));
-    }
 
     @Override
     public Observable<Observation> get(final String id) {
@@ -94,7 +86,7 @@ public class ObservationLocalImplementation implements ObservationRepository {
                     Log.e("MOTA--->","Except:"+e.getMessage());
                     observer.onError(new Throwable("La observacion no existe:" + e.getMessage()));
                 }
-                //realm.close();
+                realm.close();
             }
         };
     }
@@ -109,8 +101,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
                 @Override
                 public void action(Realm realm) {
                     realm.copyToRealmOrUpdate(o);
-                    borrarImagenes(realm, o);
-                    realm.copyToRealmOrUpdate(o.getImages());
                     observer.onNext(o);
                     observer.onComplete();
                 }
@@ -126,17 +116,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
         };
     }
 
-    private void borrarImagenes(Realm realm, Observation o) {
-        try {
-            RealmResults<Image> result = realm.where(Image.class)
-                    .equalTo("observationName", o.getLocalId())
-                    .findAll();
-            result.deleteAllFromRealm();
-        } catch (Exception e) {
-            Log.d("MOTA--->", "QUEJESTO??");
-        }
-
-    }
 
     @Override
     public Observable<Boolean> delete(final Observation o) {

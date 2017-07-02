@@ -121,12 +121,9 @@ public class Report extends RealmObject
         if (!(o instanceof Report)) return false;
 
         Report report = (Report) o;
-
-        if(report.id != -1 && id == report.id)
-            return true;
-        else if(key != null && report.key != null && report.key.equals(key))
-            return true;
-        return false;
+        return key != null && report.key != null && report.key.equals(key) ||
+                report.id != -1 && id == report.id ||
+                report.name.equals(name) && report.appName.equals(appName);
     }
 
     public void fillEmptyFields(Report report) { // TODO add more if needed?

@@ -49,7 +49,6 @@ public class ReportLocalImplementation implements ReportRepository {
                 observer.onNext(list);
                 observer.onComplete();
                 realm.close();
-
             }
         };
 
@@ -72,9 +71,9 @@ public class ReportLocalImplementation implements ReportRepository {
                 }
                 Report reportCopy = new Report();
                 reportCopy.copy(report);
-                realm.close();
                 observer.onNext(reportCopy);
                 observer.onComplete();
+                realm.close();
 
             }
         };

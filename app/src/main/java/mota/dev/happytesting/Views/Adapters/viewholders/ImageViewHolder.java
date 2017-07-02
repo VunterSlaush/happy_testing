@@ -27,6 +27,7 @@ public class ImageViewHolder extends BaseViewHolder<Image> {
     @Override
     public void onBind()
     {
+        Log.d("MOTA IMAGE--->","I>"+item);
         if(binding.getViewModel() == null)
             binding.setViewModel(new ItemImageViewModel(item, itemView.getContext()));
         else

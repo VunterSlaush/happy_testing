@@ -1,5 +1,6 @@
 package mota.dev.happytesting.utils;
 
+import android.os.Handler;
 import android.util.Log;
 
 import io.realm.Realm;
@@ -16,7 +17,7 @@ public class RealmTransactionHelper {
     public static void executeTransaction(OnTransaction actions)
     {
         Log.d("MOTA--->","Inicio Transaccion");
-        Realm realm = Realm.getDefaultInstance();
+        final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         try
         {
@@ -32,10 +33,9 @@ public class RealmTransactionHelper {
             realm.refresh();
         }catch (Exception e)
         {
-            Log.d("MOTA--->","Error Refrescando");
+
         }
-       realm.close();
-        Log.d("MOTA--->","Finalizo Transaccion");
+        realm.close();
     }
 
     public interface OnTransaction

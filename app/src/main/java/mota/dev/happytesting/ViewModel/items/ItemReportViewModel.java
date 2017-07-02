@@ -64,7 +64,6 @@ public class ItemReportViewModel extends Observable {
 
     public void abrir(View view)
     {
-        Log.d("MOTA--->","ABRIENDO:"+reportId.get() + " name:"+name.get());
         Intent i = new Intent(context, DetailReportActivity.class);
         i.putExtra("report_id",reportId.get());
         i.putExtra("report_name",name.get());

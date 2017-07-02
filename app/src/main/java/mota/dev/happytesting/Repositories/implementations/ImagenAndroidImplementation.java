@@ -30,7 +30,7 @@ public class ImagenAndroidImplementation implements ImageRepository {
     }
 
     @Override
-    public Observable<List<Image>> getObservationImages(int observationId) {
+    public Observable<List<Image>> getObservationImages(String observationId) {
         return null;
     }
 

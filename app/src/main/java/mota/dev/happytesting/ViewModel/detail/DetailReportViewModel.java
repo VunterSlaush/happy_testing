@@ -95,15 +95,18 @@ public class DetailReportViewModel extends Observable {
             public void get(String text) {
                 CreateObservation.getInstance().create(report,text)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Observation>() {
                     @Override
-                    public void accept(@NonNull Boolean result) throws Exception
-                    {
-                        if(result)
-                            updateReportData(report);
-                        else
-                            Toast.makeText(context,"La Observacion no pudo ser creada",Toast.LENGTH_SHORT).show();
+                    public void accept(@NonNull Observation result) throws Exception {
+                        observations.add(result);
+                        report.addObservation(result);
+                        setChanged();
+                        notifyObservers();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -157,6 +160,12 @@ public class DetailReportViewModel extends Observable {
 
     public void onActivityResult(Bundle extras)
     {
+        addImagesToCorrespondObservation(extras);
+    }
+
+    private void addImagesToCorrespondObservation(Bundle extras)
+    {
+
         final String reportName = extras.getString("report_name");
         String data = extras.getString("data");
         String id = extras.getString("observation_id");
@@ -167,16 +176,29 @@ public class DetailReportViewModel extends Observable {
                     .addImages(dataImages,id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(@NonNull final Boolean result) throws Exception
-                {
-                   if (result)
-                     setReportData(reportId.get(),reportName);
-                   else
-                     Toast.makeText(context,"Error al asignar las imagenes",Toast.LENGTH_SHORT).show();
-                }
-            });
+                    .subscribe(new Consumer<Observation>() {
+                        @Override
+                        public void accept(@NonNull final Observation result) throws Exception
+                        {
+                            int i = observations.indexOf(result);
+                            if(i >= 0)
+                            {
+                                observations.remove(i);
+                                observations.add(i,result);
+                                setChanged();
+                                notifyObservers();
+                                Toast.makeText(context,"Imagenes Agregadas Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                                Toast.makeText(context,"No se pudieron Agregar las imagenes", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
     }
 }

@@ -28,25 +28,25 @@ public class CreateObservation
         return instance;
     }
 
-    public Observable<Boolean> create(final Report report, final String text)
+    public Observable<Observation> create(final Report report, final String text)
     {
-        return new Observable<Boolean>() {
+        return new Observable<Observation>() {
             @Override
-            protected void subscribeActual(final Observer<? super Boolean> observer)
+            protected void subscribeActual(final Observer<? super Observation> observer)
             {
                 new ObservationLocalImplementation().create(text,report).subscribe(new Consumer<Observation>() {
                     @Override
                     public void accept(@NonNull Observation observation) throws Exception
                     {
-                        report.addObservation(observation);
-                        observer.onNext(true);
+                        Observation o = new Observation();
+                        o.copy(observation);
+                        observer.onNext(o);
                         observer.onComplete();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        observer.onNext(false);
-                        observer.onComplete();
+                        observer.onError(new Throwable("No se pudo crear la Observacion"));
                     }
                 });
 

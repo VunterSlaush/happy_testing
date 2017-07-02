@@ -10,12 +10,14 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import mota.dev.happytesting.models.App;
+import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.ReportRepository;
 import mota.dev.happytesting.repositories.implementations.AppLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.repositories.implementations.ImageLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
@@ -104,7 +106,9 @@ public class ReportDetail {
                     @Override
                     public void accept(@NonNull Report report) throws Exception
                     {
-                        observer.onNext(report);
+                        Report c = new Report();
+                        c.copyAll(report);
+                        observer.onNext(c);
                         observer.onComplete();
                     }
                 });
@@ -118,11 +122,10 @@ public class ReportDetail {
         });
     }
 
-    private void addObservationsToReport(Report report, List<Observation> observations)
+    private void addObservationsToReport(final Report report, final List<Observation> observations)
     {
-        for (Observation o : observations)
+        for (Observation o: observations)
         {
-            Log.d("MOTA--->","Report Ob:"+o.getLocalId()+" I:"+o.getImages().size());
             if(!report.getObservations().contains(o))
                 report.addObservation(o);
         }

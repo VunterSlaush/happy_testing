@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -22,6 +23,7 @@ import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
+import mota.dev.happytesting.repositories.implementations.ImageLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
 import mota.dev.happytesting.useCases.DeleteObservation;
 import mota.dev.happytesting.utils.Functions;
@@ -34,6 +36,7 @@ public class ItemObservationViewModel extends Observable
 {
     private Context context;
     private Observation observation;
+    private List<Image> images;
     public ObservableField<String> text;
     private Selectable<Image> selectable;
     private Hideable hideable;
@@ -45,22 +48,25 @@ public class ItemObservationViewModel extends Observable
         this.selectable = selectable;
         this.hideable = hideable;
         this.observation = new Observation();
+        this.images = new ArrayList<>();
     }
 
     private void updateObservationData(){
         this.text.set(observation.getText());
+        this.images.clear();
+        this.images.addAll(observation.getImages());
         setChanged();
         notifyObservers();
     }
 
     public void setObservation(Observation o)
     {
-        this.observation = o;
-        updateObservationData();
+        this.observation.copy(o);
+        fetchImagenes();
     }
 
     public List<Image> getImages() {
-        return this.observation.getImages();
+        return images;
     }
 
     public void editarTexto(View view)
@@ -74,7 +80,12 @@ public class ItemObservationViewModel extends Observable
                 new ObservationLocalImplementation().modify(observation)
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe();
+                        .subscribe(new Consumer<Observation>() {
+                            @Override
+                            public void accept(@NonNull Observation observation) throws Exception {
+                                Toast.makeText(context,"Actualizacion Satisfactoria",Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
     }
@@ -93,7 +104,7 @@ public class ItemObservationViewModel extends Observable
                             @Override
                             public void accept(@NonNull Boolean result) throws Exception
                             {
-                                //TODO TOTAL!
+
                                 if (result) {
                                     Toast.makeText(context, "Eliminado Satisfactoriamente", Toast.LENGTH_SHORT).show();
                                     hideable.hide();
@@ -113,20 +124,46 @@ public class ItemObservationViewModel extends Observable
 
     public void removerImagenes(View view)
     {
-        List<Image> selected = selectable.getSelected();
-        observation.removeImages(selected);
-        new ObservationLocalImplementation()
-                .modify(observation)
+        final List<Image> selected = selectable.getSelected();
+        ImageLocalImplementation.getInstance()
+                .deleteObservationImages(selected,observation.getLocalId())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Observation>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
             @Override
-            public void accept(@NonNull Observation observation) throws Exception
+            public void accept(@NonNull Boolean result) throws Exception
             {
-                setChanged();
-                notifyObservers();
+                if(result)
+                {
+                    observation.removeImages(selected);
+                    updateObservationData();
+                }
+                else
+                {
+                    Toast.makeText(context,"No se pudieron eliminar las imagenes",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
+    }
+
+    private void fetchImagenes()
+    {
+        ImageLocalImplementation.getInstance()
+                .getObservationImages(observation.getLocalId())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Image>>() {
+                    @Override
+                    public void accept(@NonNull List<Image> imgs) throws Exception {
+                        observation.setImages(imgs);
+                        updateObservationData();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        // Do Nothing??
+                    }
+                });
     }
 
     public void seleccionarImagenes(View view)
@@ -134,7 +171,7 @@ public class ItemObservationViewModel extends Observable
         Intent i = new Intent(context, GalleryActivity.class);
         i.putExtra("observation_id",observation.getLocalId());
         i.putExtra("report_name",observation.getReportName());
-        ((Activity)context).startActivityForResult(i,1234); // TODO cambiar a interfaz !
+        ((Activity)context).startActivityForResult(i,1234);
     }
 
 }

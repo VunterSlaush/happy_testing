@@ -12,5 +12,5 @@ import mota.dev.happytesting.models.Image;
 public interface ImageRepository
 {
     Observable<List<Image>> getAll();
-    Observable<List<Image>> getObservationImages(int observationId);
+    Observable<List<Image>> getObservationImages(String observationId);
 }

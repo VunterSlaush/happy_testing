@@ -59,10 +59,32 @@ public class Image extends RealmObject
         return str1.equals(str2) ;
     }
 
+    public String getKey()
+    {
+        return key;
+    }
 
     public void setObservationId(String observationId) {
         this.observationName = observationId;
 
         key = observationName + "-" + dir;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "dir='" + dir + '\'' +
+                ", id=" + id +
+                ", observationName='" + observationName + '\'' +
+                ", key='" + key + '\'' +
+                '}';
+    }
+
+    public void copy(Image i)
+    {
+        this.dir = i.dir;
+        this.id = i.id;
+        this.key = i.key;
+        this.observationName = i.observationName;
     }
 }

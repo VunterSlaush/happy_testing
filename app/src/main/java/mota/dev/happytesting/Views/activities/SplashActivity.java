@@ -10,7 +10,7 @@ import mota.dev.happytesting.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long TIME_IN_SPLASH = 2000;
+    private static final long TIME_IN_SPLASH = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
