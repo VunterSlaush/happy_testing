@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -56,6 +59,18 @@ public class Functions
         }
 
         return images;
+    }
+
+
+    public static JSONArray concatJSONArray(JSONArray... arrs)
+            throws JSONException {
+        JSONArray result = new JSONArray();
+        for (JSONArray arr : arrs) {
+            for (int i = 0; i < arr.length(); i++) {
+                result.put(arr.get(i));
+            }
+        }
+        return result;
     }
 
     public static String generateRandomId()

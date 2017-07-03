@@ -27,6 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import mota.dev.happytesting.MyApplication;
+
 /**
  * Created by Slaush on 07/05/2017.
  */
@@ -43,20 +45,19 @@ public class CustomMultipartRequest extends Request<JSONObject> {
 
   private MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
   private HttpEntity mHttpEntity;
-  private Context mContext;
 
 
 
-  public CustomMultipartRequest(int method, Context mContext, String url, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+
+  public CustomMultipartRequest(int method, String url, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
     super(method, url, errorListener);
     mListener = listener;
     this.mFilePartData = new HashMap<>();
     this.mStringPart = new HashMap<>();
     this.mHeaderPart = new HashMap<>();
     this.mJsonPart = new HashMap<>();
-    this.mContext = mContext;
-
   }
+
 
   public static String getMimeType(Context context, String url) {
     Uri uri = Uri.fromFile(new File(url));
@@ -81,7 +82,7 @@ public class CustomMultipartRequest extends Request<JSONObject> {
 
         String key = entry.getKey();
         File file = entry.getValue();
-        String mimeType = getMimeType(mContext, file.toString());
+        String mimeType = getMimeType(MyApplication.getInstance(), file.toString());
         mEntityBuilder.addBinaryBody(key, file, ContentType.create(mimeType), file.getName());
       } catch (Exception e) {
         e.printStackTrace();
@@ -150,6 +151,42 @@ public class CustomMultipartRequest extends Request<JSONObject> {
   protected void deliverResponse(JSONObject response)
   {
     mListener.onResponse(response);
+  }
+
+
+  public void addFiles(Map<String,String> files)
+  {
+    for (Map.Entry<String, String> e : files.entrySet())
+    {
+      addFile(e.getKey(),e.getValue());
+    }
+  }
+
+  public void addDataMap(Map<String,String> files)
+  {
+    for (Map.Entry<String, String> e : files.entrySet())
+    {
+      addData(e.getKey(),e.getValue());
+    }
+  }
+
+  public void addJsons(Map<String,JSONObject> files)
+  {
+    if(files != null)
+    {
+      for (Map.Entry<String, JSONObject> e : files.entrySet())
+      {
+        addJson(e.getKey(),e.getValue());
+      }
+    }
+  }
+
+  public void addJsonsArray(Map<String, JSONArray> files)
+  {
+    for (Map.Entry<String, JSONArray> e : files.entrySet())
+    {
+      addJsonArray(e.getKey(),e.getValue());
+    }
   }
 
   public void addFile(String fileKey, String uri)

@@ -15,5 +15,6 @@ public class Urls
     public static final String URL_UPDATE_USER = "/user/update";
     public static final String URL_UPDATE_APP = "/apps/update";
     public static final String URL_DELETE_REPORT = "/reportes/delete";
+    public static final String URL_CREATE_REPORT = "/reportes/create";
     public static String URL_LOGIN = "/login";
 }

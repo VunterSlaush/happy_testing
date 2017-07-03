@@ -7,11 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import mota.dev.happytesting.Consts;
 import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.Urls;
+import mota.dev.happytesting.utils.CustomMultipartRequest;
 import mota.dev.happytesting.utils.RxRequestAdapter;
 import mota.dev.happytesting.utils.SingletonRequester;
 
@@ -83,6 +86,34 @@ public class RequestManager
         }
     }
 
+    public Observable<JSONObject> multipartRequest(int method, String url, Map<String, String> data,
+                                                    Map<String,String> files, Map<String,JSONArray> arrays,
+                                                    Map<String,JSONObject> jsons)
+    {
+        try
+        {
+            RxRequestAdapter<JSONObject> adapter = new RxRequestAdapter<>();
+            CustomMultipartRequest request = new CustomMultipartRequest(method, url, adapter, adapter);
+            request.addDataMap(data);
+            request.addFiles(files);
+            request.addJsonsArray(arrays);
+            request.addJsons(jsons);
+            request.build();
+            SingletonRequester.getInstance(MyApplication.getInstance()).addToRequestQueue(request);
+            return adapter.getObservable();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+
+            return new Observable<JSONObject>() {
+                @Override
+                protected void subscribeActual(Observer<? super JSONObject> observer) {
+                    observer.onError(new Throwable("Undefined Error!"));
+                }
+            };
+        }
+    }
+
     public Observable<JSONObject> createApp(String name, int [] ids)
     {
         JSONObject o = generateJSONCreateApp(name, ids);
@@ -131,5 +162,12 @@ public class RequestManager
     public Observable<JSONObject> deleteReport(JSONObject report)
     {
         return request(Request.Method.POST, urlBase + Urls.URL_DELETE_REPORT, report);
+    }
+
+    public Observable<JSONObject> sendReport(Map<String, String> data,
+                                             Map<String,String> files, Map<String,JSONArray> arrays,
+                                             Map<String,JSONObject> jsons)
+    {
+        return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_REPORT, data,files, arrays, jsons);
     }
 }

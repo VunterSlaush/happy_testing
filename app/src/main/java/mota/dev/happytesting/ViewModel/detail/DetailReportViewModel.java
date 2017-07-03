@@ -29,6 +29,7 @@ import mota.dev.happytesting.useCases.AddImages;
 import mota.dev.happytesting.useCases.CreateObservation;
 import mota.dev.happytesting.useCases.DeleteReport;
 import mota.dev.happytesting.useCases.ReportDetail;
+import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.Functions;
 
 /**
@@ -39,7 +40,7 @@ public class DetailReportViewModel extends Observable {
 
     private Context context;
     private List<Observation> observations;
-    private ObservableInt reportId;
+    public ObservableInt reportId;
     public ObservableField<String> reportName;
     public ObservableField<String> appName;
     private ReportDetail detailUseCase;
@@ -57,7 +58,21 @@ public class DetailReportViewModel extends Observable {
 
     public void enviar(View view)
     {
-        //TODO!!!
+        report.setObservations(observations);
+        SendReport.getInstance().send(report)
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Consumer<Report>() {
+            @Override
+            public void accept(@NonNull Report report) throws Exception {
+                Toast.makeText(context,"PASO LA PRUEBA!",Toast.LENGTH_SHORT).show();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                Toast.makeText(context,"NO PASO LA PRUEBA!",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void eliminar(View view)
