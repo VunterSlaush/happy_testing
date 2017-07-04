@@ -1,5 +1,7 @@
 package mota.dev.happytesting.useCases;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 
 import org.json.JSONArray;
@@ -23,6 +25,8 @@ import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.parsers.ImageParser;
 import mota.dev.happytesting.parsers.ObservationParser;
+import mota.dev.happytesting.parsers.ReportParser;
+import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 import mota.dev.happytesting.utils.CustomMultipartRequest;
 import mota.dev.happytesting.utils.Functions;
 
@@ -61,12 +65,31 @@ public class SendReport
                 }
                 else
                 {
-                    //TODO CREATEAPP SINGLETON Y QUE RETORNE UN OBSERVABLE!
-                   //new CreateApp(MyApplication.getInstance()).createApp(app.getName(),app.getModificar());
+                    sendAppAndThenSendReport(app, report,observationList, observer);
                 }
 
             }
         };
+    }
+
+    private void sendAppAndThenSendReport(App app, final Report report,
+                                          final List<Observation> observationList,
+                                          final Observer<? super Report> observer)
+    {
+        SendApp.getInstance().send(app).subscribe(new Consumer<App>() {
+            @Override
+            public void accept(@NonNull App app) throws Exception
+            {
+                sendReportCall(app, report,observationList, observer);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                observer.onError(new Throwable("no se pudo enviar el reporte, la aplicacion no se pudo crear"));
+            }
+        });
     }
 
 
@@ -78,11 +101,14 @@ public class SendReport
         HashMap<String, String> data = new HashMap<>();
         HashMap<String, JSONArray> arrays = new HashMap<>();
         HashMap<String, String> files = new HashMap<>();
+
         data.put("aplicacion",app.getId()+"");
         data.put("nombre",report.getName());
         arrays.put("observaciones",ObservationParser.getInstance().generateObservationArray(report.getObservations()));
+
         int imagesCount = 0;
         JSONArray imageArray = new JSONArray();
+
         for (int i = 0; i< observations.size(); i++)
         {
             for (Image im: observations.get(i).getImages())
@@ -95,16 +121,46 @@ public class SendReport
         arrays.put("images",imageArray);
         RequestManager.getInstance().sendReport(data,files,arrays,null).subscribe(new Consumer<JSONObject>() {
             @Override
-            public void accept(@NonNull JSONObject jsonObject) throws Exception {
+            public void accept(@NonNull JSONObject jsonObject) throws Exception
+            {
+
+                Report reportParsed = ReportParser.getInstance()
+                                                  .generateReportFromJson(jsonObject.optJSONObject("res"));
+                if(reportParsed.getId() != -1)
+                {
+                   onReportSuccess(report,reportParsed.getId(), observations,observer);
+                }else
+                    observer.onError(new Throwable("no se pudo enviar el reporte"));
+
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                observer.onError(new Throwable("no se pudo enviar el reporte"));
+            }
+        });
+    }
+
+    private void onReportSuccess(final Report report, int id,
+                                 List<Observation> observations,
+                                 final Observer<? super Report> observer)
+    {
+        report.setId(id);
+        report.setObservations(observations);
+        ReportLocalImplementation.getInstance().modifiy(report).subscribe(new Consumer<Report>() {
+            @Override
+            public void accept(@NonNull Report rep) throws Exception {
                 observer.onNext(report);
                 observer.onComplete();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                observer.onError(new Throwable());
+                observer.onNext(report);
+                observer.onComplete();
             }
         });
+
     }
 
     private List<Observation> findReportObservations(Realm realm,Report report)

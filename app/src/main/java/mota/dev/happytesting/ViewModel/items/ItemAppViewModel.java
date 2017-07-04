@@ -20,6 +20,7 @@ import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.useCases.SendApp;
 
 /**
  * Created by Slaush on 30/05/2017.
@@ -32,6 +33,7 @@ public class ItemAppViewModel extends Observable {
     public ObservableField<String> sendText;
     public ObservableBoolean enableButton;
     private Context context;
+    private App app;
 
     public ItemAppViewModel(App app, Context context)
     {
@@ -46,28 +48,28 @@ public class ItemAppViewModel extends Observable {
     {
         appId.set(app.getId());
         appName.set(app.getName());
+        this.app = app;
     }
 
     public void enviar(View view)
     {
         sendText.set("Enviando");
         enableButton.set(false);
-        AppRepository repo = AppRemoteImplementation.getInstance();
-        repo.create(appName.get(),new ArrayList<User>())
+        SendApp.getInstance().send(app)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<App>() {
-                    @Override
-                    public void accept(@NonNull App app) throws Exception {
-                        appId.set(app.getId());
-                    }
-             }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        sendText.set("Enviar");
-                        enableButton.set(true);
-                    }
-                });
+                @Override
+                public void accept(@NonNull App app) throws Exception {
+                    appId.set(app.getId());
+                }
+            }, new Consumer<Throwable>() {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception {
+                    sendText.set("Enviar");
+                    enableButton.set(true);
+                }
+            });
     }
 
     public void abrir(View view)

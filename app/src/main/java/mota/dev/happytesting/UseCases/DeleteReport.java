@@ -50,7 +50,7 @@ public class DeleteReport
 
     private void deleteOnLocal(Report report, final Observer<? super Boolean> observer)
     {
-        ReportRepository repo = new ReportLocalImplementation();
+        ReportRepository repo = ReportLocalImplementation.getInstance();
         repo.delete(report).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(@NonNull Boolean aBoolean) throws Exception

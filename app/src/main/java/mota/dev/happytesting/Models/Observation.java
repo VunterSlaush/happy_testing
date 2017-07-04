@@ -38,7 +38,7 @@ public class Observation extends RealmObject
     }
 
     public List<Image> getImages() {
-        return new ArrayList<>(images);
+        return images;
     }
 
     public void setImages(List<Image> images) {

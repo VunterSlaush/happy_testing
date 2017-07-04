@@ -51,7 +51,7 @@ public class AppDetail
 
     private void getLocalAppReports(final App app, final Observer<? super App> observer)
     {
-        ReportRepository repo = new ReportLocalImplementation();
+        ReportRepository repo = ReportLocalImplementation.getInstance();
         repo.getAppReports(app).subscribe(new Consumer<List<Report>>() {
             @Override
             public void accept(@NonNull List<Report> reports) throws Exception

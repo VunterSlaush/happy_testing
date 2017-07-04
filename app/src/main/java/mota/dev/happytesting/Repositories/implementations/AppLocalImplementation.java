@@ -34,21 +34,32 @@ public class AppLocalImplementation implements AppRepository {
 
     @Override
     public Observable<App> create(final String name, final List<User> users) {
+
+
         return new Observable<App>() {
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
 
-                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnResultTransaction<App>()
+                {
                     @Override
-                    public void action(Realm realm) {
+                    public App action(Realm realm) {
                         App app = realm.createObject(App.class, name);
                         app.setUsers(users);
+                        final App localApp = new App();
+                        localApp.copy(app);
+                        return localApp;
+                    }
+
+                    @Override
+                    public void onFinalize(App app) {
                         observer.onNext(app);
                         observer.onComplete();
                     }
 
                     @Override
                     public void error(Exception e) {
+                        Log.d("MOTA--->","ERRRO>"+e.getMessage());
                         observer.onError(new Throwable("Aplicacion Existente!"));
                     }
                 });

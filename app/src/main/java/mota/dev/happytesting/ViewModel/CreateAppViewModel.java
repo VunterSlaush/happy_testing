@@ -1,6 +1,8 @@
 package mota.dev.happytesting.ViewModel;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableField;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import mota.dev.happytesting.MainActivity;
 import mota.dev.happytesting.Views.adapters.UserAdapter;
+import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.UserRepository;
 import mota.dev.happytesting.repositories.implementations.UserRemoteImplementation;
@@ -38,7 +43,7 @@ public class CreateAppViewModel extends Observable
     {
         this.context = context;
         name = new ObservableField<>("");
-        useCase = new CreateApp(context);
+        useCase = CreateApp.getInstance();
         repository = new UserRemoteImplementation();
         users = new ArrayList<>();
         adapter = new UserAdapter();
@@ -48,7 +53,33 @@ public class CreateAppViewModel extends Observable
     public void create(View view)
     {
         List<User> selected = adapter.getSelectedUsers();
-        useCase.createApp(name.get(),selected);
+        useCase.createApp(name.get(),selected)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<App>() {
+            @Override
+            public void accept(@NonNull App app) throws Exception
+            {
+                onCreateAppSuccess(app);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void onCreateAppSuccess(App app)
+    {
+        if(app.getId() != -1)
+            Toast.makeText(context,"Aplicacion Creada y enviada al Servidor", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context,"La aplicacion fue creada, pero no enviada al servidor", Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent(context, MainActivity.class);
+        context.startActivity(i);
+        ((Activity) context).finish();
     }
 
     public void refresh()

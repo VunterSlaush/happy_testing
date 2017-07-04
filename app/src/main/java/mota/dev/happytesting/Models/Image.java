@@ -1,5 +1,7 @@
 package mota.dev.happytesting.models;
 
+import android.util.Log;
+
 import java.io.File;
 
 import io.realm.RealmObject;
@@ -47,15 +49,19 @@ public class Image extends RealmObject
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object o) // TODO Arreglar este Equals!
     {
         if (o == null || getClass() != o.getClass()) return false;
 
         Image image = (Image) o;
         if(id != -1 && id == image.id) return true;
 
+        if(image.key != null && key != null && key.equals(image.key)) return true;
+
         String str1 = dir.substring(dir.lastIndexOf("\\")+1, dir.length());
         String str2 = image.dir.substring(image.dir.lastIndexOf("\\")+1, image.dir.length());
+
+        Log.d("MOTA COMP", str1 + " VS " + str2);
         return str1.equals(str2) ;
     }
 

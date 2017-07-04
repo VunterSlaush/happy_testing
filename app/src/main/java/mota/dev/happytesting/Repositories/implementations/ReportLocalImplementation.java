@@ -13,6 +13,7 @@ import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.ReportRepository;
+import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
@@ -20,6 +21,17 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
  */
 
 public class ReportLocalImplementation implements ReportRepository {
+
+    private static ReportLocalImplementation instance;
+    private ReportLocalImplementation(){}
+
+    public static ReportLocalImplementation getInstance()
+    {
+        if(instance == null)
+            instance = new ReportLocalImplementation();
+        return instance;
+    }
+
     @Override
     public Observable<List<Report>> getAll() {
         return new Observable<List<Report>>() {

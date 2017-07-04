@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mota.dev.happytesting.Views.activities.DetailReportActivity">
 <data>
-
+    <import type="android.view.View"/>
     <variable
         name="viewModel"
         type="mota.dev.happytesting.ViewModel.detail.DetailReportViewModel"/>
@@ -108,6 +108,7 @@
                 android:src="@android:drawable/ic_dialog_email"
                 fab:fab_label="Enviar"
                 fab:fab_size="mini"
+                android:visibility="@{viewModel.reportId != -1 ? View.GONE : View.VISIBLE}"
                 android:onClick="@{viewModel::enviar}"/>
 
             <com.github.clans.fab.FloatingActionButton

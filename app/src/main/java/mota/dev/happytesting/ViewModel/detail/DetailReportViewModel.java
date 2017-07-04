@@ -64,13 +64,14 @@ public class DetailReportViewModel extends Observable {
                   .observeOn(AndroidSchedulers.mainThread())
                   .subscribe(new Consumer<Report>() {
             @Override
-            public void accept(@NonNull Report report) throws Exception {
-                Toast.makeText(context,"PASO LA PRUEBA!",Toast.LENGTH_SHORT).show();
+            public void accept(@NonNull Report reportRes) throws Exception {
+                updateReportData(reportRes);
+                Toast.makeText(context,"Reporte Enviado Satisfactoriamente", Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                Toast.makeText(context,"NO PASO LA PRUEBA!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,7 +164,6 @@ public class DetailReportViewModel extends Observable {
         observations.addAll(report.getObservations());
         appName.set(report.getAppName());
         this.report = report;
-        Log.d("MOTA--->","NOTIFICANDO OBSERVADORES?");
         setChanged();
         notifyObservers();
     }

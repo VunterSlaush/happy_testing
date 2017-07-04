@@ -46,7 +46,7 @@ public class ReportDetail {
 
     private void getLocalReportDetails(String name, final Observer<? super Report> observer)
     {
-        ReportRepository repo = new ReportLocalImplementation();
+        ReportRepository repo = ReportLocalImplementation.getInstance();
         repo.get(-1,name).subscribe(new Consumer<Report>() {
             @Override
             public void accept(@NonNull Report report) throws Exception {
@@ -63,7 +63,7 @@ public class ReportDetail {
 
     private void getReportDetailsRemoteAndLocal(final int id, String name, final Observer<? super Report> observer) {
         ReportRepository repo = new ReportRemoteImplementation();
-        ReportRepository repo2 = new ReportLocalImplementation();
+        ReportRepository repo2 = ReportLocalImplementation.getInstance();
         final Report finalReport = new Report();
         mergeDelayError(repo2.get(id, name), repo.get(id, name)).subscribe(new Observer<Report>() {
 
@@ -102,7 +102,7 @@ public class ReportDetail {
             public void accept(@NonNull List<Observation> observations) throws Exception
             {
                 addObservationsToReport(report,observations);
-                new ReportLocalImplementation().modifiy(report).subscribe(new Consumer<Report>() {
+                ReportLocalImplementation.getInstance().modifiy(report).subscribe(new Consumer<Report>() {
                     @Override
                     public void accept(@NonNull Report report) throws Exception
                     {

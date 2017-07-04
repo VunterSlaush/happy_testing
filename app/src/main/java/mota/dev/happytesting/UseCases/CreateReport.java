@@ -40,7 +40,7 @@ public class CreateReport {
 
     private void saveOnLocal(Report report, final Observer<? super Boolean> observer)
     {
-        ReportRepository repo = new ReportLocalImplementation();
+        ReportRepository repo = ReportLocalImplementation.getInstance();
         repo.create(report).subscribe(new Consumer<Report>() {
             @Override
             public void accept(@NonNull Report r) throws Exception
@@ -57,7 +57,7 @@ public class CreateReport {
         });
     }
 
-    private String actualDateToString() { // TODO ver que nombre asignarles --
+    private String actualDateToString() {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm");
         Date today = Calendar.getInstance().getTime();
         return df.format(today);

@@ -23,6 +23,8 @@ public class App extends RealmObject
     public App()
     {
         id = -1;
+        modificar = new RealmList<>();
+        reports = new RealmList<>();
     }
 
     public String getName() {
@@ -89,9 +91,6 @@ public class App extends RealmObject
 
     public void setUsers(List<User> users)
     {
-        if(modificar == null)
-            modificar = new RealmList<>();
-
         modificar.addAll(users);
     }
 
@@ -121,5 +120,14 @@ public class App extends RealmObject
     public void addReport(Report report)
     {
         reports.add(report);
+    }
+
+    public void copy(App app)
+    {
+        this.id = app.id;
+        this.name = app.name;
+        this.app_owner = app.app_owner;
+        this.modificar.addAll(app.modificar);
+        this.reports.addAll(app.reports);
     }
 }

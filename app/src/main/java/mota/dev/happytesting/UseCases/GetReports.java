@@ -25,7 +25,7 @@ public class GetReports
     public Observable<List<Report>> fetchReports()
     {
         final ReportRepository repo = new ReportRemoteImplementation();
-        final ReportRepository repo2 = new ReportLocalImplementation();
+        final ReportRepository repo2 = ReportLocalImplementation.getInstance();
         return new Observable<List<Report>>()
         {
             @Override
