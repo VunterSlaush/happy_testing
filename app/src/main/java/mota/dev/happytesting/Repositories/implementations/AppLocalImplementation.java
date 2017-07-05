@@ -110,7 +110,6 @@ public class AppLocalImplementation implements AppRepository {
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
 
-                Log.d("MOTA--->", "Modificando App:" + app.getName());
                 RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
                     public void action(Realm realm) {

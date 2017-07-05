@@ -50,7 +50,9 @@ public class ReportDetail {
         repo.get(-1,name).subscribe(new Consumer<Report>() {
             @Override
             public void accept(@NonNull Report report) throws Exception {
-                findLocalObservations(report,observer);
+                //findLocalObservations(report,observer);
+                observer.onNext(report);
+                observer.onComplete();
             }
         }, new Consumer<Throwable>() {
             @Override
@@ -90,36 +92,15 @@ public class ReportDetail {
 
             @Override
             public void onComplete() {
-               findLocalObservations(finalReport,observer);
+                observer.onNext(finalReport);
+                observer.onComplete();
             }
         });
     }
 
-    private void findLocalObservations(final Report report, final Observer<? super Report> observer)
+    public Observable<List<Observation>> findLocalObservations(final Report report)
     {
-        new ObservationLocalImplementation().getReportObservations(report).subscribe(new Consumer<List<Observation>>() {
-            @Override
-            public void accept(@NonNull List<Observation> observations) throws Exception
-            {
-                addObservationsToReport(report,observations);
-                ReportLocalImplementation.getInstance().modifiy(report).subscribe(new Consumer<Report>() {
-                    @Override
-                    public void accept(@NonNull Report report) throws Exception
-                    {
-                        Report c = new Report();
-                        c.copyAll(report);
-                        observer.onNext(c);
-                        observer.onComplete();
-                    }
-                });
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                observer.onNext(report);
-                observer.onComplete();
-            }
-        });
+        return new ObservationLocalImplementation().getReportObservations(report);
     }
 
     private void addObservationsToReport(final Report report, final List<Observation> observations)

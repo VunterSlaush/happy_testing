@@ -2,6 +2,7 @@ package mota.dev.happytesting.repositories.implementations;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -26,7 +27,6 @@ public class ObservationLocalImplementation implements ObservationRepository {
         return new Observable<Observation>() {
             @Override
             protected void subscribeActual(final Observer<? super Observation> observer) {
-
 
                 RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
                     @Override
@@ -53,20 +53,22 @@ public class ObservationLocalImplementation implements ObservationRepository {
         return new Observable<List<Observation>>() {
             @Override
             protected void subscribeActual(final Observer<? super List<Observation>> observer) {
-
+                // TODO FIX!
+                Log.d("MOTA_R--->","Get Report Observations");
                 Realm realm = Realm.getDefaultInstance();
                 RealmResults<Observation> results = realm.where(Observation.class)
                         .equalTo("reportName", report.getName())
                         .findAll();
+
                 List<Observation> list = realm.copyFromRealm(results);
                 observer.onNext(list);
                 observer.onComplete();
                 realm.close();
+                Log.d("MOTA_R--->","Se Cerro la instancia de Realm !");
 
             }
         };
     }
-
 
     @Override
     public Observable<Observation> get(final String id) {

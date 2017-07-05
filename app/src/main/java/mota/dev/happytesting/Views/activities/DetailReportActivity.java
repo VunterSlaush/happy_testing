@@ -44,7 +44,6 @@ public class DetailReportActivity extends BindeableActivity {
     {
         if (observable instanceof DetailReportViewModel)
         {
-            Log.d("MOTA--->","UPDATE OBSERVATIONS I THINK???");
             ObservationAdapter adapter = (ObservationAdapter)binding.observationList.getAdapter();
             DetailReportViewModel viewModel = (DetailReportViewModel)observable;
             adapter.setList(viewModel.getObservations());

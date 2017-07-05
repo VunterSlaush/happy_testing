@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.models.Image;
 
 /**
@@ -42,7 +43,7 @@ public class ImageParser {
 
     private Image generateImageFromJson(JSONObject jsonObject) {
         Image r = new Image();
-        r.setDir(jsonObject.optString("direccion"));
+        r.setDir(RouterManager.getInstance().getUrlBase()+jsonObject.optString("direccion"));
         r.setId(jsonObject.optInt("id"));
         return r;
     }

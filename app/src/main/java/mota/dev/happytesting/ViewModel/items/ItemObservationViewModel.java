@@ -98,7 +98,7 @@ public class ItemObservationViewModel extends Observable
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 new DeleteObservation().delete(observation)
-                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<Boolean>() {
                             @Override

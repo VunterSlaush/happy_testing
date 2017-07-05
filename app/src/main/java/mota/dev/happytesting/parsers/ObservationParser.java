@@ -11,6 +11,7 @@ import java.util.List;
 
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 18/06/2017.
@@ -43,14 +44,17 @@ public class ObservationParser {
         return new ArrayList<>();
     }
 
-    private Observation generateObservationFromJson(JSONObject jsonObject) {
+    public Observation generateObservationFromJson(JSONObject jsonObject) {
+        Log.d("MOTAE--->","OBSERVATION JSON:"+jsonObject);
         Observation r = new Observation();
         r.setText(jsonObject.optString("texto"));
         r.setId(jsonObject.optInt("id"));
+        r.setLocalId(Functions.generateRandomId());
+        Log.d("MOTA--->", "Generate Observation!");
         try {
             r.setImages(ImageParser.getInstance().generateImageList(jsonObject));
         } catch (Exception e) {
-            Log.d("MOTA--->", "OBSERVATIONS ITEM EXCEPTION:" + e.getMessage());
+
         }
 
         return r;
@@ -70,5 +74,16 @@ public class ObservationParser {
             array.put(obj);
         }
         return array;
+    }
+
+    public JSONObject generateJSONObservationToSend(String text, Report report)
+    {
+        JSONObject obj = new JSONObject();
+        try
+        {
+            obj.put("reporte", report.getId());
+            obj.put("texto",text);
+        }catch (Exception e){}
+        return obj;
     }
 }

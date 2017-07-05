@@ -68,11 +68,20 @@ public class Report extends RealmObject
 
     public void setObservations(List<Observation> observations)
     {
+        Log.d("MOTA--->","Add Observations:");
         for (Observation o : observations)
         {
-            if (!this.observations.contains(o))
-                this.observations.add(o);
+            try
+            {
+                if (!this.observations.contains(o))
+                    this.observations.add(o);
+            }catch (Exception e)
+            {
+                Log.d("MOTA--->","Exception:"+e);
+            }
+
         }
+        Log.d("MOTA--->", "Added:"+this.observations.size());
     }
 
     public String getOwner_id() {

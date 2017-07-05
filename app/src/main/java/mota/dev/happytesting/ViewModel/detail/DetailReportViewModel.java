@@ -145,13 +145,35 @@ public class DetailReportViewModel extends Observable {
             @Override
             public void accept(@NonNull Report report) throws Exception
             {
-                updateReportData(report);
+                if(report.getId() != -1)
+                    updateReportData(report);
+                else
+                    findObservations(report);
+
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception
             {
                 Toast.makeText(context,"Ocurrio un error",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void findObservations(final Report report)
+    {
+        detailUseCase.findLocalObservations(report).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Observation>>() {
+            @Override
+            public void accept(@NonNull List<Observation> observations) throws Exception
+            {
+                report.setObservations(observations);
+                updateReportData(report);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }

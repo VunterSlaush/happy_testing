@@ -62,7 +62,7 @@ public class ReportParser
             r.setUsername(jsonObject.getJSONObject("User").optString("username"));
         }catch (Exception e)
         {
-            //Log.d("MOTA--->","OBSERVATIONS LIST EXception:"+jsonObject.toString() + " Ex:"+e.getMessage());
+            Log.d("MOTA--->","OBSERVATIONS LIST EXception:"+jsonObject.toString() + " Ex:"+e.getMessage());
         }
 
         return r;

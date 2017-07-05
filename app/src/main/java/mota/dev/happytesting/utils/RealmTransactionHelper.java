@@ -13,14 +13,12 @@ public class RealmTransactionHelper {
 
     public static void executeTransaction(OnTransaction actions)
     {
-        Log.d("MOTA--->","Inicio Transaccion");
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         try
         {
             actions.action(realm);
             realm.commitTransaction();
-            Log.d("MOTA--->","a mediados de transaccion");
         }catch (Exception e)
         {
             realm.cancelTransaction();
@@ -34,7 +32,6 @@ public class RealmTransactionHelper {
 
         }
         realm.close();
-        Log.d("MOTA--->","Finalizo Transaccion");
     }
 
     public static void executeTransaction(OnResultTransaction actions)
@@ -61,7 +58,6 @@ public class RealmTransactionHelper {
         }
         actions.onFinalize(result);
         realm.close();
-        Log.d("MOTA1--->","Finalizo Transaccion");
     }
 
     public interface OnTransaction

@@ -1,5 +1,7 @@
 package mota.dev.happytesting.managers;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
@@ -75,6 +77,7 @@ public class RequestManager
             return adapter.getObservable();
         } catch (Exception e)
         {
+            Log.d("MOTAE--->","Exception>"+e);
             e.printStackTrace();
 
             return new Observable<JSONObject>() {
@@ -169,5 +172,14 @@ public class RequestManager
                                              Map<String,JSONObject> jsons)
     {
         return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_REPORT, data,files, arrays, jsons);
+    }
+
+    public Observable<JSONObject> sendObservation(JSONObject obJson) {
+        Log.d("MOTAE--->", "SEND OBSERVACION");
+        return request(Request.Method.POST, urlBase + Urls.URL_CREATE_OBSERVATION, obJson);
+    }
+
+    public Observable<JSONObject> deleteObservation(JSONObject ob) {
+        return request(Request.Method.POST, urlBase + Urls.URL_DELETE_OBSERVATION, ob);
     }
 }

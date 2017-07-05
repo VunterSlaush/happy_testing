@@ -88,7 +88,7 @@ public class Observation extends RealmObject
 
         Observation that = (Observation) o;
 
-        if(localId.equals(that.localId)) return true;
+        if(localId != null && localId.equals(that.localId)) return true;
 
         if(id != -1 && id == that.id) return true;
 
@@ -115,5 +115,9 @@ public class Observation extends RealmObject
         this.text = o.getText();
         this.id = o.id;
         this.reportName = o.reportName;
+    }
+
+    public void setLocalId(String localId) {
+        this.localId = localId;
     }
 }

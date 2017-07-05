@@ -98,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_dialog_dialer"
                 fab:fab_label="Publicar"
+                android:visibility="@{viewModel.reportId == -1 ? View.GONE : View.VISIBLE}"
                 fab:fab_size="mini"
                 android:onClick="@{viewModel::publicar}"/>
 

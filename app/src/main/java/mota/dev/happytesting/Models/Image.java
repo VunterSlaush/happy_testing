@@ -2,6 +2,9 @@ package mota.dev.happytesting.models;
 
 import android.util.Log;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 
 import io.realm.RealmObject;
@@ -58,11 +61,19 @@ public class Image extends RealmObject
 
         if(image.key != null && key != null && key.equals(image.key)) return true;
 
-        String str1 = dir.substring(dir.lastIndexOf("\\")+1, dir.length());
-        String str2 = image.dir.substring(image.dir.lastIndexOf("\\")+1, image.dir.length());
 
-        Log.d("MOTA COMP", str1 + " VS " + str2);
-        return str1.equals(str2) ;
+        if(dir.equals(image.dir))
+        {
+            return true;
+        }
+        else
+        {
+            String str1 = FilenameUtils.getName(dir);
+            String str2 = FilenameUtils.getName(image.dir);
+            Log.d("MOTA COMP", str1 + " VS " + str2);
+            return str1.equals(str2) ;
+        }
+
     }
 
     public String getKey()
