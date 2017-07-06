@@ -29,6 +29,8 @@ public class ObservationParser {
         return instance;
     }
 
+
+    // TODO SALVAR ESTA LISTA EN ALGUN LUGAR !
     public List<Observation> generateObservationList(JSONObject json) throws JSONException {
         //Log.d("MOTA--->","OBSERVATIONS LIST:"+json.toString());
         JSONArray array = json.optJSONArray("Observations");

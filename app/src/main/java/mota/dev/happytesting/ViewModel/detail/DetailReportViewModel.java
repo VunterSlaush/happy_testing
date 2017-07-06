@@ -206,6 +206,7 @@ public class DetailReportViewModel extends Observable {
         final String reportName = extras.getString("report_name");
         String data = extras.getString("data");
         String id = extras.getString("observation_id");
+        Log.d("MOTA---->","Reporte>"+reportName + " VS "+report.getName());
         if(report.getName().equals(reportName))
         {
             List<Image> dataImages = Functions.generateImageListFromString(data);

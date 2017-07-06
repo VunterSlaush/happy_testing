@@ -41,7 +41,10 @@ public class UserManager
         String username = PreferencesHelper.readString(context,Consts.USERNAME,"");
         String password = PreferencesHelper.readString(context,Consts.PASSWORD,"");
         String name = PreferencesHelper.readString(context,Consts.NAME,"");
+        int id = PreferencesHelper.readInteger(MyApplication.getInstance(),Consts.USER_ID,0);
+
         User user = createUser(name,username,password);
+        user.setId(id);
 
         if(!username.isEmpty() && !password.isEmpty())
             return user;

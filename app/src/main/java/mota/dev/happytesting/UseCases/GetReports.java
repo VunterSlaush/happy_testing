@@ -25,14 +25,16 @@ public class GetReports
     public Observable<List<Report>> fetchReports()
     {
         final ReportRepository repo = new ReportRemoteImplementation();
-        final ReportRepository repo2 = ReportLocalImplementation.getInstance();
+        final ReportLocalImplementation local = ReportLocalImplementation.getInstance();
         return new Observable<List<Report>>()
         {
             @Override
             protected void subscribeActual(final Observer<? super List<Report>> observer)
             {
                 final List<Report> reportes = new ArrayList<>();
-                concat(repo.getAll(),repo2.getAll()).subscribe(new Observer<List<Report>>() {
+                mergeDelayError(repo.getAll(),local.getAll()).subscribe(new Observer<List<Report>>()
+                {
+                    int nextCount = 0;
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
@@ -45,17 +47,37 @@ public class GetReports
                             if(!reportes.contains(r))
                                 reportes.add(r);
                         }
+                        nextCount++;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        observer.onError(e);
+                        if(nextCount == 0)
+                            observer.onError(e);
+                        else
+                            onComplete();
                     }
 
                     @Override
                     public void onComplete() {
-                        observer.onNext(reportes);
-                        observer.onComplete();
+
+                        local.saveList(reportes).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(@NonNull Boolean aBoolean) throws Exception
+                            {
+                                observer.onNext(reportes);
+                                observer.onComplete();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                observer.onNext(reportes);
+                                observer.onComplete();
+                            }
+                        });
+
                     }
                 });
             }

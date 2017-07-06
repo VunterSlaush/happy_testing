@@ -22,6 +22,7 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 public class ReportLocalImplementation implements ReportRepository {
 
+    private static String TAG = ReportLocalImplementation.class.getSimpleName();
     private static ReportLocalImplementation instance;
     private ReportLocalImplementation(){}
 
@@ -38,9 +39,14 @@ public class ReportLocalImplementation implements ReportRepository {
             @Override
             protected void subscribeActual(Observer<? super List<Report>> observer) {
                 Realm realm = Realm.getDefaultInstance();
+                Log.d(TAG,"get All Reports USER ID"+UserManager.getInstance().getUserId());
+
                 RealmResults<Report> results = realm.where(Report.class)
                         .equalTo("owner_id", UserManager.getInstance().getUserId()).findAll();
                 List<Report> list = realm.copyFromRealm(results);
+
+                Log.d(TAG,"get All Reports"+list.size());
+
                 observer.onNext(list);
                 observer.onComplete();
                 realm.close();
@@ -107,7 +113,7 @@ public class ReportLocalImplementation implements ReportRepository {
 
                     @Override
                     public void error(Exception e) {
-                        Log.e("MOTAE--->","Ex:"+e.getMessage());
+                        Log.e(TAG,"Ex:"+e.getMessage());
                         observer.onError(new Throwable("Ya Existe un reporte con este nombre"));
                     }
                 });
@@ -158,6 +164,33 @@ public class ReportLocalImplementation implements ReportRepository {
 
                     @Override
                     public void error(Exception e) {
+                        observer.onNext(false);
+                        observer.onComplete();
+                    }
+                });
+            }
+        };
+    }
+
+    public Observable<Boolean> saveList(final List<Report> reports)
+    {
+        return new Observable<Boolean>() {
+            @Override
+            protected void subscribeActual(final Observer<? super Boolean> observer)
+            {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
+                    @Override
+                    public void action(Realm realm)
+                    {
+                        Log.d(TAG,"SAVE LIST OF REPORTS>"+reports.size());
+                        realm.copyToRealmOrUpdate(reports);
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void error(Exception e) {
+
                         observer.onNext(false);
                         observer.onComplete();
                     }

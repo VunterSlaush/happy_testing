@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -77,7 +78,6 @@ public class RequestManager
             return adapter.getObservable();
         } catch (Exception e)
         {
-            Log.d("MOTAE--->","Exception>"+e);
             e.printStackTrace();
 
             return new Observable<JSONObject>() {
@@ -168,10 +168,9 @@ public class RequestManager
     }
 
     public Observable<JSONObject> sendReport(Map<String, String> data,
-                                             Map<String,String> files, Map<String,JSONArray> arrays,
-                                             Map<String,JSONObject> jsons)
+                                             Map<String,String> files, Map<String,JSONArray> arrays)
     {
-        return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_REPORT, data,files, arrays, jsons);
+        return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_REPORT, data,files, arrays, null);
     }
 
     public Observable<JSONObject> sendObservation(JSONObject obJson) {
@@ -181,5 +180,12 @@ public class RequestManager
 
     public Observable<JSONObject> deleteObservation(JSONObject ob) {
         return request(Request.Method.POST, urlBase + Urls.URL_DELETE_OBSERVATION, ob);
+    }
+
+    public Observable<JSONObject> sendImages(HashMap<String, String> data,
+                           HashMap<String, String> files,
+                           HashMap<String, JSONArray> arrays)
+    {
+        return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_IMAGES, data,files, arrays, null);
     }
 }

@@ -68,11 +68,11 @@ public class Report extends RealmObject
 
     public void setObservations(List<Observation> observations)
     {
-        Log.d("MOTA--->","Add Observations:");
         for (Observation o : observations)
         {
             try
             {
+                o.setReportName(name);
                 if (!this.observations.contains(o))
                     this.observations.add(o);
             }catch (Exception e)
@@ -158,5 +158,9 @@ public class Report extends RealmObject
     public void addObservation(Observation observation)
     {
         observations.add(observation);
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

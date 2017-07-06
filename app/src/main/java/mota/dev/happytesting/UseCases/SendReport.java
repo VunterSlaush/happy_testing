@@ -119,7 +119,7 @@ public class SendReport
             }
         }
         arrays.put("images",imageArray);
-        RequestManager.getInstance().sendReport(data,files,arrays,null).subscribe(new Consumer<JSONObject>() {
+        RequestManager.getInstance().sendReport(data,files,arrays).subscribe(new Consumer<JSONObject>() {
             @Override
             public void accept(@NonNull JSONObject jsonObject) throws Exception
             {

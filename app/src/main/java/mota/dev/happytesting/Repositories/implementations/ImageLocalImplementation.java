@@ -81,15 +81,25 @@ public class ImageLocalImplementation implements ImageRepository {
                     public void action(Realm realm)
                     {
                         List<Image> oBimages = getObservationImages(realm, observationId);
+                        int imageCount = oBimages.size();
                         for (Image i : images)
                         {
                             i.setObservationId(observationId);
                             if(!oBimages.contains(i))
                                 oBimages.add(i);
+                        }
+                        if(imageCount != oBimages.size())
+                        {
                             realm.copyToRealmOrUpdate(oBimages);
                             observer.onNext(true);
                             observer.onComplete();
                         }
+                        else
+                        {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+
                     }
 
                     @Override
