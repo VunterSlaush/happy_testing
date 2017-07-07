@@ -13,13 +13,14 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.repositories.ImageRepository;
+import mota.dev.happytesting.repositories.RealmRepository;
 import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 02/07/2017.
  */
 
-public class ImageLocalImplementation implements ImageRepository {
+public class ImageLocalImplementation extends RealmRepository<Image> implements ImageRepository {
 
     private static ImageLocalImplementation instance;
 
@@ -31,7 +32,6 @@ public class ImageLocalImplementation implements ImageRepository {
             instance = new ImageLocalImplementation();
         return instance;
     }
-
 
     @Override
     public Observable<List<Image>> getAll() {

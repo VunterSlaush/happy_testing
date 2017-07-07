@@ -15,6 +15,7 @@ import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.parsers.ObservationParser;
 import mota.dev.happytesting.repositories.ObservationRepository;
+import mota.dev.happytesting.utils.RxHelper;
 
 /**
  * Created by Slaush on 05/07/2017.
@@ -88,24 +89,10 @@ public class ObservationRemoteImplementation implements ObservationRepository
                     JSONObject json = new JSONObject();
                     json.put("observacion", o.getId());
                     json.put("reporte", o.getReportName());
-                    RequestManager.getInstance().deleteObservation(json).subscribe(new Consumer<JSONObject>()
-                    {
-                        @Override
-                        public void accept(@NonNull JSONObject jsonObject) throws Exception
-                        {
-                            if(jsonObject.has("success") && jsonObject.optBoolean("success"))
-                            {
-                                observer.onNext(true);
-                                observer.onComplete();
-                            }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-                    });
+                    RequestManager.getInstance()
+                                  .deleteObservation(json)
+                                  .subscribe(RxHelper.getSuccessConsumer(observer),
+                                             RxHelper.getErrorThrowable(observer,false));
                 }catch (Exception e)
                 {
                     observer.onError(new Throwable("no se pudo borrar la Observacion"));

@@ -22,6 +22,7 @@ import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.parsers.AppParser;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.RxHelper;
 
 /**
  * Created by Slaush on 29/05/2017.
@@ -186,26 +187,10 @@ public class AppRemoteImplementation implements AppRepository {
                 JSONObject appId = new JSONObject();
                 try {
                     appId.put("id",app.getId());
-                    RequestManager.getInstance().deleteApp(appId).subscribe(new Consumer<JSONObject>() {
-                        @Override
-                        public void accept(@NonNull JSONObject jsonObject) throws Exception {
-                            if (jsonObject.optBoolean("success")) {
-                                observer.onNext(true);
-                                observer.onComplete();
-                            } else {
-                                observer.onNext(false);
-                                observer.onComplete();
-                            }
-
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-                    });
+                    RequestManager.getInstance()
+                                  .deleteApp(appId)
+                                  .subscribe(RxHelper.getSuccessConsumer(observer),
+                                             RxHelper.getErrorThrowable(observer,false));
                 } catch (JSONException e)
                 {
                     observer.onNext(false);

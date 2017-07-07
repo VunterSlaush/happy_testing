@@ -14,6 +14,7 @@ import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.ObservationRepository;
+import mota.dev.happytesting.repositories.RealmRepository;
 import mota.dev.happytesting.utils.Functions;
 import mota.dev.happytesting.utils.RealmTransactionHelper;
 
@@ -21,7 +22,7 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
  * Created by Slaush on 25/06/2017.
  */
 
-public class ObservationLocalImplementation implements ObservationRepository {
+public class ObservationLocalImplementation extends RealmRepository<Observation> implements ObservationRepository {
     @Override
     public Observable<Observation> create(final String text, final Report report) {
         return new Observable<Observation>() {
@@ -144,4 +145,5 @@ public class ObservationLocalImplementation implements ObservationRepository {
             }
         };
     }
+
 }

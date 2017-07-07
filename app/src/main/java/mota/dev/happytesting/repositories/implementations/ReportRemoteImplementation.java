@@ -18,6 +18,7 @@ import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.parsers.ReportParser;
 import mota.dev.happytesting.repositories.ReportRepository;
+import mota.dev.happytesting.utils.RxHelper;
 
 /**
  * Created by user on 12/06/2017.
@@ -106,29 +107,12 @@ public class ReportRemoteImplementation implements ReportRepository
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                RequestManager.getInstance().deleteReport(obj).subscribe(new Consumer<JSONObject>() {
-                    @Override
-                    public void accept(@NonNull JSONObject jsonObject) throws Exception {
-                        if (jsonObject.optBoolean("success")) {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        } else {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-                        observer.onNext(false);
-                        observer.onComplete();
-                    }
-                }); // TODO todo este consumer se puede generalizar!
+                RequestManager.getInstance()
+                              .deleteReport(obj)
+                              .subscribe(RxHelper.getSuccessConsumer(observer),
+                                         RxHelper.getErrorThrowable(observer,false));
             }
         };
     }
-
 
 }

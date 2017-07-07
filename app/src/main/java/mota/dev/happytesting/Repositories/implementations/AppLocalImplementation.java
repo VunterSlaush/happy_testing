@@ -12,19 +12,19 @@ import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
+import mota.dev.happytesting.repositories.RealmRepository;
 import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 /**
  * Created by Slaush on 29/05/2017.
  */
 
-public class AppLocalImplementation implements AppRepository {
+public class AppLocalImplementation extends RealmRepository<App> implements AppRepository {
 
 
     private static AppLocalImplementation instance;
 
-    private AppLocalImplementation() {
-    }
+    private AppLocalImplementation() {}
 
     public static AppLocalImplementation getInstance() {
         if (instance == null)
@@ -160,12 +160,14 @@ public class AppLocalImplementation implements AppRepository {
     }
 
     @Override
-    public void updateApps(final List<App> apps) {
+    public void updateApps(final List<App> apps)
+    {
+        deleteItemsIfNeeded(apps);
         RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
             @Override
             public void action(Realm realm)
             {
-                deleteAppsIfNeeded(realm, apps);
+
                 for (App app : apps) {
                     try {
                         App appSaved = realm.where(App.class).equalTo("name", app.getName()).findFirst();
@@ -186,13 +188,4 @@ public class AppLocalImplementation implements AppRepository {
         });
     }
 
-    private void deleteAppsIfNeeded(Realm realm, List<App> apps) {
-        if (realm.where(App.class).greaterThanOrEqualTo("id", 0).count() != apps.size()) {
-            RealmResults<App> result = realm.where(App.class).greaterThanOrEqualTo("id", 0).findAll();
-            for (int i = 0; i < result.size(); i++) {
-                if (!apps.contains(result.get(i)))
-                    result.deleteFromRealm(i);
-            }
-        }
-    }
 }

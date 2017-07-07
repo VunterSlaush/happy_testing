@@ -6,7 +6,9 @@ import android.content.Intent;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.MainActivity;
 import mota.dev.happytesting.models.User;
@@ -84,9 +86,27 @@ public class Login
             loginSuccess(context,user);
     }
 
-    private void loginSuccess(Context context, User user)
+    private void loginSuccess(final Context context, User user)
     {
         UserManager.getInstance().saveUserCredentials(context,user);
+        GetAllDataToStore.getInstance()
+                .getData()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(@NonNull Boolean result) throws Exception
+            {
+                if(result)
+                    goToMainActivity(context);
+                else
+                    loginInterface.onError("Ocurrio un Error inesperado :(");
+            }
+        });
+
+    }
+
+    private void goToMainActivity(Context context)
+    {
         Intent i = new Intent(context, MainActivity.class);
         context.startActivity(i);
         ((Activity) context).finish();

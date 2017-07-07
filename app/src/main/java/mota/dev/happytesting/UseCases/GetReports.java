@@ -14,6 +14,7 @@ import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.ReportRepository;
 import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
+import mota.dev.happytesting.utils.RxHelper;
 
 /**
  * Created by Slaush on 11/06/2017.
@@ -61,27 +62,13 @@ public class GetReports
                     @Override
                     public void onComplete() {
 
-                        local.saveList(reportes).subscribe(new Consumer<Boolean>()
-                        {
-                            @Override
-                            public void accept(@NonNull Boolean aBoolean) throws Exception
-                            {
-                                observer.onNext(reportes);
-                                observer.onComplete();
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception
-                            {
-                                observer.onNext(reportes);
-                                observer.onComplete();
-                            }
-                        });
+                        RxHelper.nextAndComplete(observer,reportes);
 
                     }
                 });
             }
         };
     }
+
 
 }

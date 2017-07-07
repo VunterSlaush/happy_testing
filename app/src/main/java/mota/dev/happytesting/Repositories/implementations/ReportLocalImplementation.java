@@ -12,6 +12,7 @@ import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.managers.UserManager;
 import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
+import mota.dev.happytesting.repositories.RealmRepository;
 import mota.dev.happytesting.repositories.ReportRepository;
 import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.RealmTransactionHelper;
@@ -20,7 +21,7 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
  * Created by Slaush on 24/06/2017.
  */
 
-public class ReportLocalImplementation implements ReportRepository {
+public class ReportLocalImplementation extends RealmRepository<Report> implements ReportRepository {
 
     private static String TAG = ReportLocalImplementation.class.getSimpleName();
     private static ReportLocalImplementation instance;
@@ -172,30 +173,4 @@ public class ReportLocalImplementation implements ReportRepository {
         };
     }
 
-    public Observable<Boolean> saveList(final List<Report> reports)
-    {
-        return new Observable<Boolean>() {
-            @Override
-            protected void subscribeActual(final Observer<? super Boolean> observer)
-            {
-                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
-                    @Override
-                    public void action(Realm realm)
-                    {
-                        Log.d(TAG,"SAVE LIST OF REPORTS>"+reports.size());
-                        realm.copyToRealmOrUpdate(reports);
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
-
-                    @Override
-                    public void error(Exception e) {
-
-                        observer.onNext(false);
-                        observer.onComplete();
-                    }
-                });
-            }
-        };
-    }
 }
