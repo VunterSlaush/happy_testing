@@ -18,6 +18,7 @@ import mota.dev.happytesting.models.Image;
 public class ImageViewHolder extends BaseViewHolder<Image> {
 
     public ImageItemBinding binding;
+    private static final String TAG = ImageViewHolder.class.getSimpleName();
     public ImageViewHolder(ImageItemBinding itemView)
     {
         super(itemView.elementRootView);
@@ -27,15 +28,21 @@ public class ImageViewHolder extends BaseViewHolder<Image> {
     @Override
     public void onBind()
     {
-        Log.d("MOTA IMAGE--->","I>"+item);
         if(binding.getViewModel() == null)
             binding.setViewModel(new ItemImageViewModel(item, itemView.getContext()));
         else
             binding.getViewModel().setImage(item);
 
-        if(item.getDir().contains("http"))
-            Glide.with(itemView.getContext()).load(item.getDir()).into(binding.imageItem);
-        else
-            Glide.with(itemView.getContext()).load(new File(item.getDir())).into(binding.imageItem);
+        try
+        {
+            if(item.getDir().contains("http"))
+                Glide.with(itemView.getContext()).load(item.getDir()).into(binding.imageItem);
+            else
+                Glide.with(itemView.getContext()).load(new File(item.getDir())).into(binding.imageItem);
+        }catch (Exception e)
+        {
+            Log.d(TAG,"Exception>"+e);
+        }
+
     }
 }

@@ -17,6 +17,7 @@ import mota.dev.happytesting.models.Report;
 
 public class ReportParser
 {
+    private static String TAG = ReportParser.class.getSimpleName();
     private static ReportParser instance;
     private ReportParser(){}
 
@@ -56,16 +57,18 @@ public class ReportParser
         r.setCreado(jsonObject.optString("createdAt"));
         r.setId(jsonObject.optInt("id"));
         r.setOwner_id(Integer.toString(jsonObject.optInt("owner",-1)));
-
-        try{
+        try
+        {
             r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
             r.setObservations(ObservationParser.getInstance().generateObservationList(jsonObject));
             r.setUsername(jsonObject.getJSONObject("User").optString("username"));
         }catch (Exception e)
         {
-            Log.d("MOTA--->","OBSERVATIONS LIST EXception:"+jsonObject.toString() + " Ex:"+e.getMessage());
+            Log.d(TAG,"Exception:"+jsonObject.toString() + " Ex:"+e.getMessage());
         }
         r.setKey( r.getName() + "-" + r.getAppName());
+
+        Log.d(TAG, "Report Created:"+r);
         return r;
     }
 }

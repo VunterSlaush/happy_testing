@@ -2,6 +2,7 @@ package mota.dev.happytesting.useCases;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -21,6 +22,7 @@ import mota.dev.happytesting.repositories.implementations.ImageLocalImplementati
 import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
+import mota.dev.happytesting.utils.RxHelper;
 
 import static io.reactivex.Observable.concat;
 import static io.reactivex.Observable.merge;
@@ -50,7 +52,7 @@ public class ReportDetail {
         repo.get(-1,name).subscribe(new Consumer<Report>() {
             @Override
             public void accept(@NonNull Report report) throws Exception {
-                //findLocalObservations(report,observer);
+
                 observer.onNext(report);
                 observer.onComplete();
             }
@@ -67,7 +69,8 @@ public class ReportDetail {
         ReportRepository repo = new ReportRemoteImplementation();
         ReportRepository repo2 = ReportLocalImplementation.getInstance();
         final Report finalReport = new Report();
-        mergeDelayError(repo2.get(id, name), repo.get(id, name)).subscribe(new Observer<Report>() {
+        mergeDelayError(repo2.get(id, name),repo.get(id, name)).subscribe(new Observer<Report>()
+        {
 
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -91,9 +94,44 @@ public class ReportDetail {
             }
 
             @Override
-            public void onComplete() {
-                observer.onNext(finalReport);
-                observer.onComplete();
+            public void onComplete()
+            {
+                saveObservationsToLocal(finalReport, observer);
+            }
+        });
+    }
+
+    private void saveObservationsToLocal(final Report finalReport, final Observer<? super Report> observer)
+    {
+        new ObservationLocalImplementation().saveAll(finalReport.getObservations()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(@NonNull Boolean aBoolean) throws Exception {
+                saveImagesToLocal(finalReport,observer);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                RxHelper.nextAndComplete(observer, finalReport);
+            }
+        });
+    }
+
+    private void saveImagesToLocal(final Report finalReport, final Observer<? super Report> observer)
+    {
+        List<Image> images = new ArrayList<>();
+        for (Observation o : finalReport.getObservations())
+            images.addAll(o.getImages());
+
+        ImageLocalImplementation.getInstance().saveAll(images).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(@NonNull Boolean aBoolean) throws Exception
+            {
+                RxHelper.nextAndComplete(observer, finalReport);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                RxHelper.nextAndComplete(observer, finalReport);
             }
         });
     }
@@ -101,15 +139,6 @@ public class ReportDetail {
     public Observable<List<Observation>> findLocalObservations(final Report report)
     {
         return new ObservationLocalImplementation().getReportObservations(report);
-    }
-
-    private void addObservationsToReport(final Report report, final List<Observation> observations)
-    {
-        for (Observation o: observations)
-        {
-            if(!report.getObservations().contains(o))
-                report.addObservation(o);
-        }
     }
 
 }

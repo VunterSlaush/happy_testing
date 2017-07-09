@@ -17,7 +17,9 @@ import mota.dev.happytesting.utils.Functions;
  * Created by Slaush on 18/06/2017.
  */
 
-public class ObservationParser {
+public class ObservationParser
+{
+    private static String TAG = ObservationParser.class.getSimpleName();
     private static ObservationParser instance;
 
     private ObservationParser() {
@@ -30,7 +32,6 @@ public class ObservationParser {
     }
 
 
-    // TODO SALVAR ESTA LISTA EN ALGUN LUGAR !
     public List<Observation> generateObservationList(JSONObject json) throws JSONException {
         //Log.d("MOTA--->","OBSERVATIONS LIST:"+json.toString());
         JSONArray array = json.optJSONArray("Observations");
@@ -47,18 +48,18 @@ public class ObservationParser {
     }
 
     public Observation generateObservationFromJson(JSONObject jsonObject) {
-        Log.d("MOTAE--->","OBSERVATION JSON:"+jsonObject);
+        Log.d(TAG,"OBSERVATION JSON:"+jsonObject);
         Observation r = new Observation();
         r.setText(jsonObject.optString("texto"));
         r.setId(jsonObject.optInt("id"));
         r.setLocalId(Functions.generateRandomId());
-        Log.d("MOTA--->", "Generate Observation!");
+
         try {
             r.setImages(ImageParser.getInstance().generateImageList(jsonObject));
         } catch (Exception e) {
-
+            Log.d(TAG, "Excepcion:"+e);
         }
-
+        Log.d(TAG, "Observation Created:"+r);
         return r;
     }
 

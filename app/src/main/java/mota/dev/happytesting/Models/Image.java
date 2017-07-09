@@ -52,7 +52,7 @@ public class Image extends RealmObject
     }
 
     @Override
-    public boolean equals(Object o) // TODO Arreglar este Equals!
+    public boolean equals(Object o)
     {
         if (o == null || getClass() != o.getClass()) return false;
 

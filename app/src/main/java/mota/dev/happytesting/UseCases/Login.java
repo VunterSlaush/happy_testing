@@ -83,26 +83,13 @@ public class Login
         if(RouterManager.getInstance().isConnected() && user != null)
             login(user.getUsername(),user.getPassword());
         else if(user != null)
-            loginSuccess(context,user);
+            goToMainActivity(context);
     }
 
     private void loginSuccess(final Context context, User user)
     {
         UserManager.getInstance().saveUserCredentials(context,user);
-        GetAllDataToStore.getInstance()
-                .getData()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(@NonNull Boolean result) throws Exception
-            {
-                if(result)
-                    goToMainActivity(context);
-                else
-                    loginInterface.onError("Ocurrio un Error inesperado :(");
-            }
-        });
-
+        goToMainActivity(context);
     }
 
     private void goToMainActivity(Context context)

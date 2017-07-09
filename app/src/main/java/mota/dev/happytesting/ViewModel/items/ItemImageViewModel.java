@@ -35,6 +35,11 @@ public class ItemImageViewModel extends Observable
         checked.set(false);
     }
 
+    public Image getImage()
+    {
+        return image;
+    }
+
     public void openImageActivity(View view)
     {
         Intent i = new Intent(context, FullImageActivity.class);

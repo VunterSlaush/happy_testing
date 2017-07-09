@@ -11,6 +11,7 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import mota.dev.happytesting.MyApplication;
 import mota.dev.happytesting.models.Image;
+import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.repositories.ImageRepository;
 
 /**
@@ -30,7 +31,7 @@ public class ImagenAndroidImplementation implements ImageRepository {
     }
 
     @Override
-    public Observable<List<Image>> getObservationImages(String observationId) {
+    public Observable<List<Image>> getObservationImages(Observation o) {
         return null;
     }
 

@@ -3,10 +3,13 @@ package mota.dev.happytesting.ViewModel.detail;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -22,12 +25,15 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Views.activities.DetailReportActivity;
 import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
+import mota.dev.happytesting.managers.RequestManager;
+import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.useCases.AddImages;
 import mota.dev.happytesting.useCases.CreateObservation;
 import mota.dev.happytesting.useCases.DeleteReport;
+import mota.dev.happytesting.useCases.PublishReport;
 import mota.dev.happytesting.useCases.ReportDetail;
 import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.Functions;
@@ -37,6 +43,8 @@ import mota.dev.happytesting.utils.Functions;
  */
 
 public class DetailReportViewModel extends Observable {
+
+    private static final String TAG = DetailReportViewModel.class.getSimpleName();
 
     private Context context;
     private List<Observation> observations;
@@ -129,9 +137,33 @@ public class DetailReportViewModel extends Observable {
         });
     }
 
-    public void publicar(View view)
+    public void publicar(final View view)
     {
-        //TODO!!
+        PublishReport.getInstance().publicarReporte(report).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+        {
+            @Override
+            public void accept(@NonNull final String s) throws Exception
+            {
+                Functions.showAskDialog(context,"¿Desea visualizar el reporte?",  new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        String url = RouterManager.getInstance().getUrlBase()+"/"+s;
+                        Log.d(TAG,"Abriendo URL:"+url);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(url));
+                        context.startActivity(browserIntent);
+                    }
+                });
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                Snackbar.make(view,throwable.getMessage(),Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void setReportData(int report_id, String report_name)
@@ -205,13 +237,14 @@ public class DetailReportViewModel extends Observable {
 
         final String reportName = extras.getString("report_name");
         String data = extras.getString("data");
-        String id = extras.getString("observation_id");
+        int id = extras.getInt("observation_id");
+        String localId = extras.getString("observation_local_id");
         Log.d("MOTA---->","Reporte>"+reportName + " VS "+report.getName());
         if(report.getName().equals(reportName))
         {
             List<Image> dataImages = Functions.generateImageListFromString(data);
             new AddImages()
-                    .addImages(dataImages,id)
+                    .addImages(dataImages,id, localId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Observation>() {

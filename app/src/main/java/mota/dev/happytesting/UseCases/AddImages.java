@@ -29,7 +29,7 @@ import mota.dev.happytesting.repositories.implementations.ObservationLocalImplem
 public class AddImages
 {
     private static  final String TAG = AddImages.class.getSimpleName();
-    public Observable<Observation> addImages(final List<Image> images, final String id)
+    public Observable<Observation> addImages(final List<Image> images, final int id, final String localId)
     {
         Log.d(TAG,"Init");
         return new Observable<Observation>() {
@@ -37,7 +37,7 @@ public class AddImages
             protected void subscribeActual(final Observer<? super Observation> observer)
             {
                 final ObservationRepository repo = new ObservationLocalImplementation();
-                repo.get(id).subscribe(new Consumer<Observation>() {
+                repo.get(id, localId).subscribe(new Consumer<Observation>() {
                     @Override
                     public void accept(@NonNull Observation observation) throws Exception
                     {
@@ -45,7 +45,7 @@ public class AddImages
                         o.copy(observation);
                         ImageLocalImplementation
                                 .getInstance()
-                                .createListOfImagesForObservation(images,observation.getLocalId())
+                                .createListOfImagesForObservation(images,observation)
                                 .subscribe(new Consumer<Boolean>() {
                                     @Override
                                     public void accept(@NonNull Boolean result) throws Exception
@@ -107,10 +107,12 @@ public class AddImages
         }
         arrays.put("images",imageArray);
 
-        RequestManager.getInstance().sendImages(data,files,arrays).subscribe(new Consumer<JSONObject>() {
+        RequestManager.getInstance().sendImages(data,files,arrays).subscribe(new Consumer<JSONObject>()
+        {
             @Override
             public void accept(@NonNull JSONObject jsonObject) throws Exception
             {
+                Log.d(TAG,"send Images:"+jsonObject);
                 if(jsonObject.has("success") && jsonObject.optBoolean("success"))
                 {
                     observer.onNext(o);

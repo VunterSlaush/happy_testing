@@ -26,6 +26,7 @@ import mota.dev.happytesting.Views.dialogs.SimpleInputDialog;
 import mota.dev.happytesting.repositories.implementations.ImageLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
 import mota.dev.happytesting.useCases.DeleteObservation;
+import mota.dev.happytesting.useCases.RemoveImages;
 import mota.dev.happytesting.utils.Functions;
 
 /**
@@ -34,6 +35,8 @@ import mota.dev.happytesting.utils.Functions;
 
 public class ItemObservationViewModel extends Observable
 {
+    private static final String TAG = ItemObservationViewModel.class.getSimpleName();
+
     private Context context;
     private Observation observation;
     private List<Image> images;
@@ -125,36 +128,41 @@ public class ItemObservationViewModel extends Observable
     public void removerImagenes(View view)
     {
         final List<Image> selected = selectable.getSelected();
-        ImageLocalImplementation.getInstance()
-                .deleteObservationImages(selected,observation.getLocalId())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(@NonNull Boolean result) throws Exception
-            {
-                if(result)
-                {
-                    observation.removeImages(selected);
-                    updateObservationData();
-                }
-                else
-                {
-                    Toast.makeText(context,"No se pudieron eliminar las imagenes",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
+        RemoveImages.getInstance().removeImages(selected, observation)
+                                  .subscribeOn(Schedulers.io())
+                                  .observeOn(AndroidSchedulers.mainThread())
+                                  .subscribe(new Consumer<Boolean>()
+                                  {
+                                    @Override
+                                    public void accept(@NonNull Boolean result) throws Exception
+                                    {
+                                        if(result)
+                                        {
+                                            observation.removeImages(selected);
+                                            updateObservationData();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(context,"No se pudieron eliminar las imagenes", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
 
     }
 
     private void fetchImagenes()
     {
         ImageLocalImplementation.getInstance()
-                .getObservationImages(observation.getLocalId())
+                .getObservationImages(observation)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Image>>() {
                     @Override
-                    public void accept(@NonNull List<Image> imgs) throws Exception {
+                    public void accept(@NonNull List<Image> imgs) throws Exception
+                    {
+                        Log.d(TAG, "OB Images:"+observation.getImages().size() + " Imgs:"+imgs.size());
+                        observation.clearImages();
                         observation.setImages(imgs);
                         updateObservationData();
                     }
@@ -169,7 +177,8 @@ public class ItemObservationViewModel extends Observable
     public void seleccionarImagenes(View view)
     {
         Intent i = new Intent(context, GalleryActivity.class);
-        i.putExtra("observation_id",observation.getLocalId());
+        i.putExtra("observation_id",observation.getId());
+        i.putExtra("observation_local_id", observation.getLocalId());
         i.putExtra("report_name",observation.getReportName());
         ((Activity)context).startActivityForResult(i,1234);
     }

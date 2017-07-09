@@ -68,7 +68,7 @@ public class ObservationRemoteImplementation implements ObservationRepository
     }
 
     @Override
-    public Observable<Observation> get(String id) {
+    public Observable<Observation> get(int id, String localId) {
         return null;
     }
 

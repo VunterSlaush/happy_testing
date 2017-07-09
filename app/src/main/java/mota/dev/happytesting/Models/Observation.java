@@ -117,6 +117,11 @@ public class Observation extends RealmObject
         this.reportName = o.reportName;
     }
 
+    public void clearImages()
+    {
+        images.clear();
+    }
+
     public void setLocalId(String localId) {
         this.localId = localId;
     }

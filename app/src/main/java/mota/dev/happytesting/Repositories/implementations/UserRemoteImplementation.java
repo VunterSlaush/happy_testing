@@ -30,50 +30,35 @@ public class UserRemoteImplementation implements UserRepository
 {
     @Override
     public Observable<User> login(final String username, final String password) {
-        Observable<User> observable = new Observable<User>() {
+        return new Observable<User>() {
             @Override
             protected void subscribeActual(final Observer<? super User> observer)
             {
                 final JSONObject user = UserParser.getInstance().generateLoginJson(username,password);
                 final Observable<JSONObject> loginObservable = RequestManager.getInstance().login(user);
-                loginObservable.subscribe(new Observer<JSONObject>() {
+                loginObservable.subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull JSONObject jsonObject) {
-                        if(jsonObject.has("id"))
-                        {
+                    public void accept(@NonNull JSONObject jsonObject) throws Exception {
+                        if (jsonObject.has("id")) {
                             User user = UserParser.getInstance().generateUserFromJson(jsonObject);
                             observer.onNext(user);
                             observer.onComplete();
-                        }
-                        else
-                        {
+                        } else {
                             Throwable throwable = new Throwable("Credenciales Invalidas");
                             observer.onError(throwable);
                         }
 
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onError(@NonNull Throwable e)
-                    {
-                       observer.onError(ErrorManager.getInstance().handleLoginError(e));
-                    }
-
-                    @Override
-                    public void onComplete() {
-
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        observer.onError(ErrorManager.getInstance().handleLoginError(throwable));
                     }
                 });
 
             }
         };
 
-        return observable;
     }
 
     @Override

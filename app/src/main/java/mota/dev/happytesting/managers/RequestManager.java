@@ -188,4 +188,14 @@ public class RequestManager
     {
         return multipartRequest(Request.Method.POST, urlBase + Urls.URL_CREATE_IMAGES, data,files, arrays, null);
     }
+
+    public Observable<JSONObject> deleteImages(JSONObject jsn)
+    {
+        return request(Request.Method.POST, urlBase + Urls.URL_DELETE_IMAGES,jsn);
+    }
+
+    public Observable<JSONObject> publishReport(JSONObject jsn)
+    {
+        return request(Request.Method.POST, urlBase + Urls.URL_PUBLISH_REPORT,jsn);
+    }
 }

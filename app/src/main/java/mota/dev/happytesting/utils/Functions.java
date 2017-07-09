@@ -38,6 +38,21 @@ public class Functions
         alert.show();
     }
 
+    public static void showAskDialog(Context context, String title, DialogInterface.OnClickListener okListener)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(title)
+                .setCancelable(false)
+                .setPositiveButton("Si", okListener)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public static int[] convertToUsersIdsArray(List<User> users)
     {
         int [] ids = new int [users.size()];

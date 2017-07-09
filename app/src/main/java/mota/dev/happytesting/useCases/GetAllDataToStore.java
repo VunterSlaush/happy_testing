@@ -1,18 +1,23 @@
 package mota.dev.happytesting.useCases;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.models.Observation;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.repositories.implementations.ImageLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ObservationLocalImplementation;
 import mota.dev.happytesting.repositories.implementations.ReportLocalImplementation;
+import mota.dev.happytesting.repositories.implementations.ReportRemoteImplementation;
 import mota.dev.happytesting.utils.RxHelper;
 
 /**
@@ -22,6 +27,7 @@ import mota.dev.happytesting.utils.RxHelper;
 public class GetAllDataToStore
 {
     private static GetAllDataToStore instance;
+    private static String TAG = GetAllDataToStore.class.getSimpleName();
 
     private GetAllDataToStore(){}
 
@@ -44,11 +50,42 @@ public class GetAllDataToStore
                    @Override
                    public void accept(@NonNull List<Report> reports) throws Exception
                    {
-                        saveReports(reports, observer);
+                       Log.d(TAG, "Reportes Conseguidos");
+                       getReportsDetails(reports, observer);
                    }
                }, RxHelper.getErrorThrowable(observer,false));
           }
       };
+    }
+
+    private void getReportsDetails(final List<Report> reports, final Observer<? super Boolean> observer)
+    {
+        final List<Report> reports1 = new ArrayList<>();
+        List<Observable<Report>> observables = new ArrayList<>();
+        for (Report r : reports)
+            observables.add(new ReportRemoteImplementation().get(r.getId(),r.getName()));
+
+        Observable.concatDelayError(observables).subscribe(new Observer<Report>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Report report) {
+                reports1.add(report);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                saveReports(reports1,observer);
+            }
+        });
     }
 
     private void saveReports(final List<Report> reports, final Observer<? super Boolean> observer)
@@ -59,6 +96,7 @@ public class GetAllDataToStore
             @Override
             public void accept(@NonNull Boolean result) throws Exception
             {
+                Log.d(TAG, "Reportes Guardados");
                 if(result)
                     generateObservations(reports, observer);
                 else
@@ -69,6 +107,7 @@ public class GetAllDataToStore
 
     private void generateObservations(List<Report> reports, Observer<? super Boolean> observer)
     {
+        Log.d(TAG, "Observaciones Sacadas");
         List<Observation> obs = new ArrayList<>();
         for (Report r : reports)
             obs.addAll(r.getObservations());

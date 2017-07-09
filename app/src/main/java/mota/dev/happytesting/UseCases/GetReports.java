@@ -61,13 +61,26 @@ public class GetReports
 
                     @Override
                     public void onComplete() {
-
-                        RxHelper.nextAndComplete(observer,reportes);
-
+                        saveReportsToLocal(reportes,observer);
                     }
                 });
             }
         };
+    }
+
+    private void saveReportsToLocal(final List<Report> reportes, final Observer<? super List<Report>> observer)
+    {
+        ReportLocalImplementation.getInstance().saveAll(reportes).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(@NonNull Boolean aBoolean) throws Exception {
+                RxHelper.nextAndComplete(observer, reportes);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                RxHelper.nextAndComplete(observer, reportes);
+            }
+        });
     }
 
 

@@ -30,6 +30,7 @@ import mota.dev.happytesting.models.Image;
 
 public class ImageAdapter extends BaseRecyclerAdapter<Image>
 {
+    private static final String TAG = ImageAdapter.class.getSimpleName();
     private List<ImageViewHolder> holders;
     public ImageAdapter()
     {
@@ -50,10 +51,15 @@ public class ImageAdapter extends BaseRecyclerAdapter<Image>
     public List<Image> getSelectedImages()
     {
         List<Image> selected = new ArrayList<>();
+        int image;
         for (int i = 0; i< holders.size(); i++)
         {
-            if(holders.get(i).binding.getViewModel().checked.get())
-                selected.add(list.get(i));
+            image = list.indexOf(holders.get(i).binding.getViewModel().getImage());
+            if(holders.get(i).binding.getViewModel().checked.get() && image != -1)
+            {
+              selected.add(list.get(image));
+            }
+
         }
         return selected;
     }

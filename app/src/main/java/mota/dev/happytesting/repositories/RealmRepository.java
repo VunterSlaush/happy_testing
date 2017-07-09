@@ -1,5 +1,7 @@
 package mota.dev.happytesting.repositories;
 
+import android.util.Log;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -16,7 +18,7 @@ import mota.dev.happytesting.utils.RealmTransactionHelper;
 
 public abstract class RealmRepository<T extends RealmObject>
 {
-
+    private static final String TAG = RealmRepository.class.getSimpleName();
     private Class<T> clazz;
     public RealmRepository()
     {
@@ -26,6 +28,8 @@ public abstract class RealmRepository<T extends RealmObject>
 
     public Observable<Boolean> saveAll(final List<T> items)
     {
+        Log.d(TAG, "Guardando Items del Tipo:"+clazz.getSimpleName());
+
         return new Observable<Boolean>() {
             @Override
             protected void subscribeActual(final Observer<? super Boolean> observer)
@@ -35,7 +39,10 @@ public abstract class RealmRepository<T extends RealmObject>
                     @Override
                     public Object action(Realm realm)
                     {
+                        //Log.d(TAG,"Habian Items:"+ realm.where(clazz).count());
+                        Log.d(TAG,"Se Guardaran:"+items.size() + " Items");
                         realm.copyToRealmOrUpdate(items);
+                        //Log.d(TAG,"Ahora hay Items:"+ realm.where(clazz).count());
                         return true;
                     }
 
@@ -57,6 +64,7 @@ public abstract class RealmRepository<T extends RealmObject>
 
     public void deleteItemsIfNeeded(final List<T> items)
     {
+        Log.d(TAG, "Borrando Items del Tipo:"+clazz.getSimpleName());
         RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
             @Override
             public void action(Realm realm)

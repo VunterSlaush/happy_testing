@@ -62,9 +62,6 @@ public class Report extends RealmObject
         return observations;
     }
 
-    public void setObservations(RealmList<Observation> observations) {
-        this.observations = observations;
-    }
 
     public void setObservations(List<Observation> observations)
     {
@@ -77,11 +74,9 @@ public class Report extends RealmObject
                     this.observations.add(o);
             }catch (Exception e)
             {
-                Log.d("MOTA--->","Exception:"+e);
             }
 
         }
-        Log.d("MOTA--->", "Added:"+this.observations.size());
     }
 
     public String getOwner_id() {
@@ -152,6 +147,7 @@ public class Report extends RealmObject
                 ", appName='" + appName + '\'' +
                 ", creado='" + creado + '\'' +
                 ", username='" + username + '\'' +
+                ", Observations:" + observations.size() + '\''+
                 '}';
     }
 
