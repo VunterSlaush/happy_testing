@@ -78,4 +78,8 @@ public class UserManager
         u.setPassword(password);
         return  u;
     }
+
+    public String getName() {
+        return PreferencesHelper.readString(MyApplication.getInstance(),Consts.NAME,"");
+    }
 }

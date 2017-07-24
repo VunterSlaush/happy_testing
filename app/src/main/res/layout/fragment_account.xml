@@ -14,92 +14,59 @@
         tools:context="mota.dev.happytesting.Views.fragments.AccountFragment"
         android:orientation="vertical"
         android:paddingTop="50dp">
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:background="@drawable/circle"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Datos Personales"
+            android:textColor="@color/accentText"
             android:textSize="35sp"
+            android:padding="10dp"
             android:textAlignment="center"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:text="Nombre:"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
-                android:text="@={viewModel.name}"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:text="Username:"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
-                android:text="@={viewModel.username}"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:text="Contraseña:"/>
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
+                android:hint="Nombre"
+                android:text="@={viewModel.name}"
+                style="@style/inputStyle"
+            />
+
+
+
+            <EditText
+                android:hint="Username"
+                android:text="@={viewModel.username}"
+                style="@style/inputStyle"
+            />
+
+
+            <EditText
                 android:inputType="textPassword"
-                android:text="@={viewModel.password}"/>
-        </LinearLayout>
+                android:hint="Contraseña:"
+                android:text="@={viewModel.password}"
+                style="@style/inputStyle"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="30"
-                android:text="Confirmacion de contraseña:"/>
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="70"
                 android:inputType="textPassword"
-                android:text="@={viewModel.confirm_password}"/>
-        </LinearLayout>
+                android:hint="Confirmacion"
+                android:text="@={viewModel.confirm_password}"
+                style="@style/inputStyle"
+                />
+
 
         <Button
             android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            style="@style/simpleButton"
             android:text="Actualizar"
-            android:onClick="@{viewModel::updateUserData}"/>
+            android:onClick="@{viewModel::updateUserData}"
+            />
 
     </LinearLayout>
 </layout>

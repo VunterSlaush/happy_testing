@@ -10,6 +10,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.Observable;
 
@@ -19,6 +21,7 @@ import mota.dev.happytesting.Views.fragments.AccountFragment;
 import mota.dev.happytesting.Views.fragments.AppsFragment;
 import mota.dev.happytesting.Views.fragments.CreateAppFragment;
 import mota.dev.happytesting.Views.fragments.MyReportsFragment;
+import mota.dev.happytesting.managers.UserManager;
 
 /**
  * Created by Slaush on 28/05/2017.
@@ -30,6 +33,7 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+    private View headerNav;
     private FragmentManager fragmentManager;
     private String tag;
     public MainViewModel(Context context)
@@ -40,6 +44,9 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
         ((AppCompatActivity)context).setSupportActionBar(toolbar);
         mDrawer = (DrawerLayout) ((Activity)context).findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) ((Activity)context).findViewById(R.id.nvView);
+        headerNav = nvDrawer.getHeaderView(0);
+        TextView userName = (TextView)headerNav.findViewById(R.id.user_name);
+        userName.setText(UserManager.getInstance().getName());
         fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
         setupDrawerContent(nvDrawer);
         goToMainFragment();

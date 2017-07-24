@@ -1,55 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
     <data>
 
         <variable
             name="viewModel"
             type="mota.dev.happytesting.ViewModel.LoginViewModel"/>
     </data>
+
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="100"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView2"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Inicia Sesion"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:layout_height="0dp"
+            android:layout_weight="15"
+            android:visibility="invisible"/>
 
-        <TextView
-            android:id="@+id/textView3"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.error}"
+            android:layout_height="0dp"
+            android:layout_weight="85"
+            >
 
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat" />
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:background="@drawable/circle"
+                android:src="@mipmap/ic_launcher"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bienvenido :D"
+                android:textColor="@color/accentText"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:text="@={viewModel.username}"
-            android:hint="Username"
-            android:inputType="textPersonName" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.error}"
 
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:text="@={viewModel.password}"
-            android:hint="Password"
-            android:inputType="textPassword" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{viewModel::onClickLogin}"
-            android:text="Login" />
+            <EditText
+                android:id="@+id/editText"
+                android:ems="10"
+                android:text="@={viewModel.username}"
+                android:hint="Usuario"
+                android:inputType="textPersonName"
+                style="@style/inputStyle"
+                />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:ems="10"
+                android:text="@={viewModel.password}"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                style="@style/inputStyle"/>
+
+            <Button
+                android:id="@+id/button"
+                android:onClick="@{viewModel::onClickLogin}"
+                android:text="Entrar"
+                style="@style/simpleButton"
+                />
+        </LinearLayout>
     </LinearLayout>
+
 </layout>

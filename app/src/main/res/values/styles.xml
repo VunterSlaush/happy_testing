@@ -4,8 +4,9 @@
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
+    <item name="colorPrimaryDark">@color/colorPrimary</item>
+    <item name="colorAccent">@color/colorPrimary</item>
+
   </style>
 
   <style name="AppTheme.NoActionBar">
@@ -19,6 +20,24 @@
 
   <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:windowBackground">@drawable/splash</item>
+  </style>
+
+  <style name="inputStyle" parent="Base.Widget.AppCompat.EditText">
+    <item name="android:background">@drawable/rounded_rectangle</item>
+    <item name="android:layout_marginRight">50dp</item>
+    <item name="android:layout_marginLeft">50dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:padding">10dp</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
+  <style name="simpleButton" parent="Base.Widget.AppCompat.Button">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">125dp</item>
+    <item name="android:layout_marginRight">125dp</item>
+    <item name="android:background">@drawable/rounded_rectangle</item>
   </style>
 
 </resources>

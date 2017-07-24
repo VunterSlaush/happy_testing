@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import mota.dev.happytesting.R;
 
@@ -18,6 +21,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         setTheme(R.style.AppTheme);
+        ImageView spaceshipImage = (ImageView) findViewById(R.id.splashLogo);
+        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
+
+        spaceshipImage.startAnimation(bounce);
         initDelay();
     }
 

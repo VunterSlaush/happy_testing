@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import mota.dev.happytesting.ViewModel.MainViewModel;
 import mota.dev.happytesting.Views.interfaces.FragmentInteractionListener;
+import mota.dev.happytesting.managers.UserManager;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentInteractionListener {

@@ -5,7 +5,8 @@
             android:id="@+id/apps"
             android:icon="@android:drawable/ic_dialog_email"
             android:title="Aplicaciones"
-            android:checked="true"/>
+            android:checked="true"
+            />
         <item
             android:id="@+id/create_app"
             android:icon="@android:drawable/ic_dialog_email"
@@ -23,6 +24,7 @@
         <item
             android:id="@+id/sign_out"
             android:icon="@android:drawable/ic_delete"
-            android:title="Cerrar Sesion" />
+            android:title="Cerrar Sesion"
+            />
     </group>
 </menu>
