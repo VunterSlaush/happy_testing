@@ -30,6 +30,7 @@ import mota.dev.happytesting.useCases.CreateReport;
 import mota.dev.happytesting.useCases.DeleteApp;
 import mota.dev.happytesting.useCases.EditEditors;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 12/06/2017.
@@ -120,12 +121,12 @@ public class DetailAppViewModel extends Observable {
                     public void accept(@NonNull Boolean result) throws Exception {
                         if(result)
                         {
-                            Toast.makeText(context,"Aplicacion Eliminada Satisfactoriamente", Toast.LENGTH_LONG).show();
+                            Pnotify.makeText(context,"Aplicacion Eliminada Satisfactoriamente", Toast.LENGTH_LONG,Pnotify.INFO).show();
                             finalizar();
                         }
                         else
                         {
-                            Toast.makeText(context,"La Aplicacion no pudo ser Eliminada", Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,"La Aplicacion no pudo ser Eliminada", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                         }
                     }
                 });
@@ -153,9 +154,9 @@ public class DetailAppViewModel extends Observable {
                     public void accept(@NonNull Boolean result) throws Exception
                     {
                         if (result)
-                            Toast.makeText(context,"Editores cambiados satisfactoriamente",Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,"Editores cambiados satisfactoriamente",Toast.LENGTH_SHORT,Pnotify.INFO).show();
                         else
-                            Toast.makeText(context,"Ocurrio un Error al cambiar los editores",Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,"Ocurrio un Error al cambiar los editores",Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                         setApp(app);
                     }
                 });
@@ -189,11 +190,11 @@ public class DetailAppViewModel extends Observable {
                 if(result)
                 {
                     setApp(app);
-                    Toast.makeText(context,"Reporte Agregado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                    Pnotify.makeText(context,"Reporte Agregado Satisfactoriamente", Toast.LENGTH_SHORT,Pnotify.INFO).show();
                 }
                 else
                 {
-                    Toast.makeText(context,"Ocurrio un error al agregar el reporte", Toast.LENGTH_SHORT).show();
+                    Pnotify.makeText(context,"Ocurrio un error al agregar el reporte", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                 }
             }
         });

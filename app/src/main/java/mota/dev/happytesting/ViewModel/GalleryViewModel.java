@@ -19,6 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.Views.interfaces.Selectable;
 import mota.dev.happytesting.models.Image;
 import mota.dev.happytesting.useCases.GetGalleryImages;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 18/06/2017.
@@ -87,7 +88,7 @@ public class GalleryViewModel extends Observable {
         }
         else
         {
-            Toast.makeText(context,"selecciona al menos una imagen",Toast.LENGTH_SHORT).show();
+            Pnotify.makeText(context,"selecciona al menos una imagen",Toast.LENGTH_SHORT,Pnotify.WARNING).show();
         }
     }
 }

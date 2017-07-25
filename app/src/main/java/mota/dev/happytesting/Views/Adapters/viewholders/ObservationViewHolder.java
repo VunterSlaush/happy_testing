@@ -37,7 +37,7 @@ public class ObservationViewHolder extends BaseViewHolder<Observation> implement
     private void setupAdapter()
     {
         ImageAdapter adapter = new ImageAdapter();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 5);
         binding.mosaicoRecyclerView.setLayoutManager(gridLayoutManager);
         binding.mosaicoRecyclerView.setAdapter(adapter);
     }

@@ -21,6 +21,7 @@ import mota.dev.happytesting.Views.adapters.UserAdapter;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.UserRepository;
 import mota.dev.happytesting.repositories.implementations.UserRemoteImplementation;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 23/06/2017.
@@ -57,7 +58,7 @@ public class SelectUsersDialog
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        Toast.makeText(context,"No se pudieron consultar los usuarios",Toast.LENGTH_LONG).show();
+                        Pnotify.makeText(context,"No se pudieron consultar los usuarios",Toast.LENGTH_LONG,Pnotify.ERROR).show();
                     }
                 });
     }

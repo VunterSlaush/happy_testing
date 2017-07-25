@@ -28,6 +28,7 @@ import mota.dev.happytesting.repositories.implementations.ObservationLocalImplem
 import mota.dev.happytesting.useCases.DeleteObservation;
 import mota.dev.happytesting.useCases.RemoveImages;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 18/06/2017.
@@ -86,7 +87,7 @@ public class ItemObservationViewModel extends Observable
                         .subscribe(new Consumer<Observation>() {
                             @Override
                             public void accept(@NonNull Observation observation) throws Exception {
-                                Toast.makeText(context,"Actualizacion Satisfactoria",Toast.LENGTH_SHORT).show();
+                                Pnotify.makeText(context,"Actualizacion Satisfactoria",Toast.LENGTH_SHORT,Pnotify.INFO).show();
                             }
                         });
             }
@@ -109,12 +110,12 @@ public class ItemObservationViewModel extends Observable
                             {
 
                                 if (result) {
-                                    Toast.makeText(context, "Eliminado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                                    Pnotify.makeText(context, "Eliminado Satisfactoriamente", Toast.LENGTH_SHORT,Pnotify.INFO).show();
                                     hideable.hide();
                                 }
                                 else
                                 {
-                                    Toast.makeText(context,"No pudo ser eliminado", Toast.LENGTH_SHORT).show();
+                                    Pnotify.makeText(context,"No pudo ser eliminado", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                                 }
 
 
@@ -144,7 +145,7 @@ public class ItemObservationViewModel extends Observable
                                         }
                                         else
                                         {
-                                            Toast.makeText(context,"No se pudieron eliminar las imagenes", Toast.LENGTH_SHORT).show();
+                                            Pnotify.makeText(context,"No se pudieron eliminar las imagenes", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                                         }
                                     }
                                 });

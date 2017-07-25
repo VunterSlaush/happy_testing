@@ -37,6 +37,7 @@ import mota.dev.happytesting.useCases.PublishReport;
 import mota.dev.happytesting.useCases.ReportDetail;
 import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 18/06/2017.
@@ -74,12 +75,12 @@ public class DetailReportViewModel extends Observable {
             @Override
             public void accept(@NonNull Report reportRes) throws Exception {
                 updateReportData(reportRes);
-                Toast.makeText(context,"Reporte Enviado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                Pnotify.makeText(context,"Reporte Enviado Satisfactoriamente", Toast.LENGTH_SHORT,Pnotify.INFO).show();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
             }
         });
     }
@@ -99,12 +100,12 @@ public class DetailReportViewModel extends Observable {
                     {
                         if (result)
                         {
-                            Toast.makeText(context,"Eliminado Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,"Eliminado Satisfactoriamente", Toast.LENGTH_SHORT,Pnotify.INFO).show();
                             ((Activity)context).finish();
                         }
                         else
                         {
-                            Toast.makeText(context,"El reporte no pudo ser eliminado", Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,"El reporte no pudo ser eliminado", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                         }
                     }
                 });
@@ -130,7 +131,7 @@ public class DetailReportViewModel extends Observable {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                        Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                     }
                 });
             }
@@ -187,7 +188,7 @@ public class DetailReportViewModel extends Observable {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception
             {
-                Toast.makeText(context,"Ocurrio un error",Toast.LENGTH_SHORT).show();
+                Pnotify.makeText(context,"Ocurrio un error inesperado D:",Toast.LENGTH_SHORT,Pnotify.ERROR).show();
             }
         });
     }
@@ -205,7 +206,7 @@ public class DetailReportViewModel extends Observable {
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
             }
         });
     }
@@ -258,16 +259,16 @@ public class DetailReportViewModel extends Observable {
                                 observations.add(i,result);
                                 setChanged();
                                 notifyObservers();
-                                Toast.makeText(context,"Imagenes Agregadas Satisfactoriamente", Toast.LENGTH_SHORT).show();
+                                Pnotify.makeText(context,"Imagenes Agregadas Satisfactoriamente", Toast.LENGTH_SHORT, Pnotify.INFO).show();
                             }
                             else
-                                Toast.makeText(context,"No se pudieron Agregar las imagenes", Toast.LENGTH_SHORT).show();
+                                Pnotify.makeText(context,"No se pudieron Agregar las imagenes", Toast.LENGTH_SHORT,Pnotify.ERROR).show();
 
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(@NonNull Throwable throwable) throws Exception {
-                            Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                            Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
                         }
                     });
         }

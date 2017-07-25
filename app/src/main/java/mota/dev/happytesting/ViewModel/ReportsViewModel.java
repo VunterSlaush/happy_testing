@@ -17,6 +17,7 @@ import mota.dev.happytesting.models.App;
 import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.useCases.GetApps;
 import mota.dev.happytesting.useCases.GetReports;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 28/05/2017.
@@ -62,7 +63,7 @@ public class ReportsViewModel extends Observable
                     public void accept(@NonNull Throwable throwable) throws Exception
                     {
                         reports.clear();
-                        Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_LONG).show();
+                        Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_LONG,Pnotify.ERROR).show();
                     }
                 });
     }

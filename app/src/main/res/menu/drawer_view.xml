@@ -3,27 +3,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/apps"
-            android:icon="@android:drawable/ic_dialog_email"
+            android:icon="@mipmap/ic_apps"
             android:title="Aplicaciones"
             android:checked="true"
             />
         <item
             android:id="@+id/create_app"
-            android:icon="@android:drawable/ic_dialog_email"
+            android:icon="@mipmap/ic_desktop"
             android:title="Crear Aplicacion" />
 
         <item
             android:id="@+id/my_reports"
-            android:icon="@android:drawable/ic_dialog_dialer"
+            android:icon="@mipmap/ic_reports"
             android:title="Mis Reportes" />
 
         <item
             android:id="@+id/my_account"
-            android:icon="@android:drawable/ic_menu_preferences"
+            android:icon="@mipmap/ic_user"
             android:title="Mi Cuenta" />
         <item
             android:id="@+id/sign_out"
-            android:icon="@android:drawable/ic_delete"
+            android:icon="@mipmap/ic_logout"
             android:title="Cerrar Sesion"
             />
     </group>

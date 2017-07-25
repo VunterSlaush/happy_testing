@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -36,12 +37,20 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
     private View headerNav;
     private FragmentManager fragmentManager;
     private String tag;
+    private ActionBarDrawerToggle drawerToggle;
     public MainViewModel(Context context)
     {
         this.context = context;
 
         toolbar = (Toolbar) ((Activity)context).findViewById(R.id.toolbar);
         ((AppCompatActivity)context).setSupportActionBar(toolbar);
+        try
+        {
+            ((AppCompatActivity)context).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity)context).getSupportActionBar().setHomeButtonEnabled(true);
+            ((AppCompatActivity)context).getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_menu);
+        }catch (Exception ignored){}
+
         mDrawer = (DrawerLayout) ((Activity)context).findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) ((Activity)context).findViewById(R.id.nvView);
         headerNav = nvDrawer.getHeaderView(0);
@@ -49,6 +58,8 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
         userName.setText(UserManager.getInstance().getName());
         fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
         setupDrawerContent(nvDrawer);
+        drawerToggle = new ActionBarDrawerToggle(((AppCompatActivity)context),mDrawer,toolbar,R.string.app_name,R.string.app_name);
+        mDrawer.setDrawerListener(drawerToggle);
         goToMainFragment();
     }
 

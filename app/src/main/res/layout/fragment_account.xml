@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         tools:context="mota.dev.happytesting.Views.fragments.AccountFragment"
         android:orientation="vertical"
-        android:paddingTop="50dp">
+        android:paddingTop="10dp">
         <ImageView
             android:layout_width="140dp"
             android:layout_height="140dp"

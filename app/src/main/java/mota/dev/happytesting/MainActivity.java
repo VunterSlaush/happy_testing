@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
 
     private MainViewModel viewModel;
-    private ActionBarDrawerToggle drawerToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

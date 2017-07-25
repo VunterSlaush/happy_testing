@@ -13,6 +13,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.useCases.UpdateAccount;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 20/06/2017.
@@ -66,7 +67,7 @@ public class AccountViewModel extends Observable
 
     public void putError(String error)
     {
-        Toast.makeText(context,error,Toast.LENGTH_LONG).show();
+        Pnotify.makeText(context,error,Toast.LENGTH_LONG,Pnotify.ERROR).show();
     }
 
     private void callUpdateUserData(final View view)

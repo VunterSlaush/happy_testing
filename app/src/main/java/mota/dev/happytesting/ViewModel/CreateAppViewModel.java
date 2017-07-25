@@ -25,6 +25,7 @@ import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.UserRepository;
 import mota.dev.happytesting.repositories.implementations.UserRemoteImplementation;
 import mota.dev.happytesting.useCases.CreateApp;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 28/05/2017.
@@ -65,7 +66,7 @@ public class CreateAppViewModel extends Observable
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
             }
         });
     }
@@ -73,9 +74,9 @@ public class CreateAppViewModel extends Observable
     private void onCreateAppSuccess(App app)
     {
         if(app.getId() != -1)
-            Toast.makeText(context,"Aplicacion Creada y enviada al Servidor", Toast.LENGTH_SHORT).show();
+            Pnotify.makeText(context,"Aplicacion Creada y enviada al Servidor", Toast.LENGTH_SHORT,Pnotify.INFO).show();
         else
-            Toast.makeText(context,"La aplicacion fue creada, pero no enviada al servidor", Toast.LENGTH_SHORT).show();
+            Pnotify.makeText(context,"La aplicacion fue creada, pero no enviada al servidor", Toast.LENGTH_SHORT,Pnotify.WARNING).show();
 
         Intent i = new Intent(context, MainActivity.class);
         context.startActivity(i);
@@ -98,7 +99,7 @@ public class CreateAppViewModel extends Observable
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
                 users.clear();
-                Toast.makeText(context,throwable.getMessage(),Toast.LENGTH_LONG).show();
+                Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_LONG,Pnotify.ERROR).show();
             }
         });
     }

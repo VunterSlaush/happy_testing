@@ -4,5 +4,7 @@
   <color name="colorPrimaryDark">#303F9F</color>
   <color name="colorAccent">#1ABB9C</color>
   <color name="accentText">#73879C</color>
-  <color name="white">#F2F5F7</color>
+  <color name="warning">#f4a82e</color>
+  <color name="error">#a94442</color>
+  <color name="white">#E7E7E7</color>
 </resources>

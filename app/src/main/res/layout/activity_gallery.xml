@@ -26,6 +26,7 @@
         android:id="@+id/material_design_android_floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@mipmap/ic_plus"
         android:onClick="@{viewModel::select}"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
