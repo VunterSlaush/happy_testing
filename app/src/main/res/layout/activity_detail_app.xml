@@ -25,23 +25,50 @@
                 android:layout_weight="8"
                 android:text="@{viewModel.app_name}"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4"
-                android:text="@{viewModel.app_owner}"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="@color/colorPrimary"/>
 
-            <TextView
-                android:id="@+id/textView5"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
-                android:text="Editores"
-                android:textAlignment="center"
-                />
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_user_primary"/>
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@{viewModel.app_owner}"
+                    android:padding="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_users_primary"/>
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Editores"
+                    android:textColor="@color/accentText"
+                    android:padding="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+
+            </LinearLayout>
+
+
             <android.support.v4.widget.SwipeRefreshLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipeContainer2"
@@ -56,20 +83,34 @@
                     android:layout_alignParentTop="true"
                     android:id="@+id/editors_list"/>
             </android.support.v4.widget.SwipeRefreshLayout>
-            <TextView
-                android:id="@+id/textView4"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
-                android:text="Reportes"
-                android:textAlignment="center"
-                />
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_book_primary"/>
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:text="Reportes"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/accentText"
+                    android:padding="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+
+            </LinearLayout>
+
             <android.support.v4.widget.SwipeRefreshLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="60"
+                android:layout_weight="54"
                 >
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.Observable;
@@ -35,8 +36,10 @@ public class DetailReportActivity extends BindeableActivity {
     private void setupAdapters()
     {
         ObservationAdapter adapter = new ObservationAdapter();
+        LinearLayoutManager lm = new LinearLayoutManager(this);
+        lm.setOrientation(LinearLayoutManager.HORIZONTAL);
         binding.observationList.setAdapter(adapter);
-        binding.observationList.setLayoutManager(new LinearLayoutManager(this));
+        binding.observationList.setLayoutManager(lm);
     }
 
     @Override

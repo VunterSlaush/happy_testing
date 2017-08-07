@@ -136,6 +136,7 @@ public class Report extends RealmObject
         setObservations(report.observations);
         if(key == null)
             key = report.key;
+        this.username = report.username;
     }
 
     @Override

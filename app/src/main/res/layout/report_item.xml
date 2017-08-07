@@ -12,27 +12,58 @@
         android:layout_height="wrap_content"
         android:weightSum="100"
         android:id="@+id/item_app"
-        android:onClick="@{viewModel::abrir}">
+        android:onClick="@{viewModel::abrir}"
+        android:background="@drawable/rounded_rectangle"
+        android:layout_margin="5dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        android:padding="2dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/reports_icon"
+            android:layout_margin="2dp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/apps_icon"
+            android:layout_margin="2dp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/calendar"
+            android:layout_margin="2dp"/>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="70"
-            android:orientation="vertical">
+            android:layout_weight="60"
+            android:orientation="vertical"
+            android:padding="2dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@{viewModel.name}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:layout_margin="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.appName}"/>
+                android:layout_height="match_parent"
+                android:text="@{viewModel.appName}"
+                android:layout_margin="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.creado}"/>
+                android:layout_height="match_parent"
+                android:text="@{viewModel.creado}"
+                android:layout_margin="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         </LinearLayout>
 

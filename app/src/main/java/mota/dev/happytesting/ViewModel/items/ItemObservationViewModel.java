@@ -75,7 +75,7 @@ public class ItemObservationViewModel extends Observable
 
     public void editarTexto(View view)
     {
-        new SimpleInputDialog(context, "Inserta tu Observacion", new SimpleInputDialog.OnGetText() {
+        new SimpleInputDialog(context, "Editar Observacion", text.get(), new SimpleInputDialog.OnGetText() {
             @Override
             public void get(String textResult)
             {

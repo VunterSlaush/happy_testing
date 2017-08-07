@@ -12,35 +12,70 @@
         android:layout_height="wrap_content"
         android:weightSum="100"
         android:id="@+id/item_app"
-        android:onClick="@{viewModel::abrir}">
+        android:onClick="@{viewModel::abrir}"
+        android:background="@drawable/rounded_rectangle"
+        android:layout_margin="5dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:src="@drawable/apps_icon"
+            android:padding="3dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="70"
-            android:orientation="vertical">
+            android:layout_weight="65"
+            android:orientation="vertical"
+            android:paddingTop="5dp"
+            android:paddingLeft="2dp"
+            android:paddingStart="2dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.appName}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-            <TextView
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.appName}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(viewModel.appId.get())}"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Identificador:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{Integer.toString(viewModel.appId.get())}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            </LinearLayout>
+
+
 
         </LinearLayout>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="30"
+            android:layout_weight="25"
             android:padding="10dp"
+            android:layout_margin="5dp"
             android:text="@{viewModel.sendText}"
             android:enabled="@{viewModel.enableButton}"
             android:visibility="@{viewModel.appId != -1 ? View.GONE : View.VISIBLE}"
-            android:onClick="@{viewModel::enviar}"/>
+            android:onClick="@{viewModel::enviar}"
+            android:background="@drawable/rounded_rectangle"
+            />
 
     </LinearLayout>
 </layout>

@@ -87,7 +87,7 @@ public class ObservationRemoteImplementation implements ObservationRepository
                 try
                 {
                     JSONObject json = new JSONObject();
-                    json.put("observacion", o.getId());
+                    json.put("id", o.getId());
                     json.put("reporte", o.getReportName());
                     RequestManager.getInstance()
                                   .deleteObservation(json)

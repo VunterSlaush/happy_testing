@@ -39,10 +39,8 @@ public abstract class RealmRepository<T extends RealmObject>
                     @Override
                     public Object action(Realm realm)
                     {
-                        //Log.d(TAG,"Habian Items:"+ realm.where(clazz).count());
                         Log.d(TAG,"Se Guardaran:"+items.size() + " Items");
                         realm.copyToRealmOrUpdate(items);
-                        //Log.d(TAG,"Ahora hay Items:"+ realm.where(clazz).count());
                         return true;
                     }
 

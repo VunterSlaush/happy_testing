@@ -52,6 +52,7 @@ public class ReportParser
 
     public Report generateReportFromJson(JSONObject jsonObject) throws JSONException
     {
+        System.out.println("REPORT POT JSON REPORT:"+jsonObject);
         Report r = new Report();
         r.setName(jsonObject.optString("nombre"));
         r.setCreado(jsonObject.optString("createdAt"));
@@ -61,7 +62,7 @@ public class ReportParser
         {
             r.setAppName(jsonObject.getJSONObject("App").optString("nombre"));
             r.setObservations(ObservationParser.getInstance().generateObservationList(jsonObject));
-            r.setUsername(jsonObject.getJSONObject("User").optString("username"));
+            r.setUsername(jsonObject.getJSONObject("User").optString("nombre"));
         }catch (Exception e)
         {
             Log.d(TAG,"Exception:"+jsonObject.toString() + " Ex:"+e.getMessage());

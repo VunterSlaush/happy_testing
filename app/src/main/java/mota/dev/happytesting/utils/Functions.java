@@ -8,7 +8,10 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -91,6 +94,26 @@ public class Functions
     public static String generateRandomId()
     {
         return UUID.randomUUID().toString();
+    }
+
+
+    public static String formatDate(String dateStr)
+    {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(dateStr);
+            return new SimpleDateFormat("dd/MM/yyyy").format(date);
+        } catch (ParseException e)
+        {
+            try {
+                date = new SimpleDateFormat("dd/MM/yyyy-HH:mm").parse(dateStr);
+                return new SimpleDateFormat("dd/MM/yyyy").format(date);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+        return "";
     }
 }
 

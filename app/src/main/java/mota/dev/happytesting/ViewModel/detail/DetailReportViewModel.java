@@ -51,6 +51,7 @@ public class DetailReportViewModel extends Observable {
     private List<Observation> observations;
     public ObservableInt reportId;
     public ObservableField<String> reportName;
+    public ObservableField<String> userName;
     public ObservableField<String> appName;
     private ReportDetail detailUseCase;
     private Report report;
@@ -63,6 +64,7 @@ public class DetailReportViewModel extends Observable {
         reportName = new ObservableField<>();
         appName = new ObservableField<>();
         detailUseCase = new ReportDetail();
+        userName = new ObservableField<>();
     }
 
     public void enviar(View view)
@@ -213,12 +215,14 @@ public class DetailReportViewModel extends Observable {
 
     private void updateReportData(Report report)
     {
+        this.report = report;
         reportId.set(report.getId());
         reportName.set(report.getName());
         observations.clear();
         observations.addAll(report.getObservations());
         appName.set(report.getAppName());
-        this.report = report;
+        userName.set(report.getUsername());
+
         setChanged();
         notifyObservers();
     }

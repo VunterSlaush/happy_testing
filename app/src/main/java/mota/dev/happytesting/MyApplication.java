@@ -1,7 +1,9 @@
 package mota.dev.happytesting;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
 import io.realm.Realm;
 import mota.dev.happytesting.Views.activities.LoginActivity;
@@ -55,6 +57,9 @@ public class MyApplication extends android.app.Application
     {
         Intent i = new Intent(context, LoginActivity.class);
         context.startActivity(i);
+        if(context instanceof Activity)
+            ((Activity)context).finish();
+
     }
 
 }

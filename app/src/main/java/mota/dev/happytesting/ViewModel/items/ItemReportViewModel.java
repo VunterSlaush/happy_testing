@@ -23,6 +23,7 @@ import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.utils.Functions;
 
 /**
  * Created by Slaush on 30/05/2017.
@@ -44,16 +45,17 @@ public class ItemReportViewModel extends Observable {
         reportId = new ObservableInt(report.getId());
         appName = new ObservableField<>(report.getAppName());
         name = new ObservableField<>(report.getName());
-        creado = new ObservableField<>(report.getCreado());
+        creado = new ObservableField<>(Functions.formatDate(report.getCreado()));
         sendText = new ObservableField<>("Enviar");
         enableButton = new ObservableBoolean(true);
     }
 
     public void setReport(Report report)
     {
+        reportId.set(report.getId());
         appName.set(report.getAppName());
         name.set(report.getName());
-        creado.set(report.getCreado());
+        creado.set(Functions.formatDate(report.getCreado()));
     }
 
     public void enviar(View view)

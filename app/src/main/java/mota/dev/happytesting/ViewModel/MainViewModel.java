@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Observable;
 
@@ -22,7 +23,9 @@ import mota.dev.happytesting.Views.fragments.AccountFragment;
 import mota.dev.happytesting.Views.fragments.AppsFragment;
 import mota.dev.happytesting.Views.fragments.CreateAppFragment;
 import mota.dev.happytesting.Views.fragments.MyReportsFragment;
+import mota.dev.happytesting.managers.RouterManager;
 import mota.dev.happytesting.managers.UserManager;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 28/05/2017.
@@ -97,6 +100,12 @@ public class MainViewModel extends Observable // TODO Refactorizar esto?
             case R.id.my_reports:
                 fragmentClass = MyReportsFragment.class;
                 tag = MyReportsFragment.TAG;
+                break;
+            case R.id.web_ip:
+                Pnotify.makeText(context,
+                        "La Direccion de la pagina es:"+ RouterManager.getInstance().getUrlBase(),
+                        Toast.LENGTH_LONG, Pnotify.INFO).show();
+                tag = null;
                 break;
             case R.id.sign_out:
                 MyApplication.getInstance().logout(context);

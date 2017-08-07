@@ -21,6 +21,11 @@
             android:id="@+id/my_account"
             android:icon="@mipmap/ic_user"
             android:title="Mi Cuenta" />
+
+        <item
+            android:id="@+id/web_ip"
+            android:icon="@mipmap/ic_web_empty"
+            android:title="Web" />
         <item
             android:id="@+id/sign_out"
             android:icon="@mipmap/ic_logout"

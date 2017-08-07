@@ -25,32 +25,80 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:text="@{viewModel.reportName}"
-                android:textSize="24sp"
                 android:layout_height="0dp"
-                android:layout_weight="6"/>
+                android:layout_weight="8"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"/>
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:text="@{viewModel.appName}"
-                android:textSize="16sp"
-                android:layout_height="0dp"
-                android:layout_weight="4"/>
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/swipeContainer"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="90"
-                >
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_desktop_primary"/>
+                <TextView
+                    android:id="@+id/textView6"
+                    android:text="@{viewModel.appName}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:textColor="@color/accentText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_user_primary"/>
+                <TextView
+                    android:id="@+id/textView9"
+                    android:text="@{viewModel.userName}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:textColor="@color/accentText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_eye_primary"/>
+                <TextView
+                    android:id="@+id/textView10"
+                    android:text="Observaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:textColor="@color/accentText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="75"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:id="@+id/observation_list"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
+
         </LinearLayout>
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/material_design_android_floating_action_menu"

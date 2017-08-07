@@ -26,59 +26,64 @@ public class GetReports
     public Observable<List<Report>> fetchReports()
     {
         final ReportRepository repo = new ReportRemoteImplementation();
-        final ReportLocalImplementation local = ReportLocalImplementation.getInstance();
-        return new Observable<List<Report>>()
-        {
+        final ReportLocalImplementation localRepo = ReportLocalImplementation.getInstance();
+
+        return new Observable<List<Report>>() {
             @Override
-            protected void subscribeActual(final Observer<? super List<Report>> observer)
-            {
-                final List<Report> reportes = new ArrayList<>();
-                mergeDelayError(repo.getAll(),local.getAll()).subscribe(new Observer<List<Report>>()
+            protected void subscribeActual(final Observer<? super List<Report>> observer) {
+                repo.getAll().subscribe(new Consumer<List<Report>>()
                 {
-                    int nextCount = 0;
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
+                    public void accept(@NonNull List<Report> ReportsRemote) throws Exception
+                    {
+                        saveReportsToLocal(ReportsRemote, observer);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onNext(@NonNull List<Report> reports) {
-                        for (Report r: reports)
-                        {
-                            if(!reportes.contains(r))
-                                reportes.add(r);
-                        }
-                        nextCount++;
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        if(nextCount == 0)
-                            observer.onError(e);
-                        else
-                            onComplete();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        saveReportsToLocal(reportes,observer);
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        saveReportsToLocal(null, observer);
                     }
                 });
             }
         };
     }
 
+
+
     private void saveReportsToLocal(final List<Report> reportes, final Observer<? super List<Report>> observer)
     {
-        ReportLocalImplementation.getInstance().saveAll(reportes).subscribe(new Consumer<Boolean>() {
+        ReportLocalImplementation.getInstance().deleteItemsIfNeeded(reportes);
+        ReportLocalImplementation.getInstance().saveAll(reportes).subscribe(new Consumer<Boolean>()
+        {
             @Override
-            public void accept(@NonNull Boolean aBoolean) throws Exception {
-                RxHelper.nextAndComplete(observer, reportes);
+            public void accept(@NonNull Boolean aBoolean) throws Exception
+            {
+                //RxHelper.nextAndComplete(observer, reportes);
+                returnLocalReports(observer);
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                RxHelper.nextAndComplete(observer, reportes);
+                //RxHelper.nextAndComplete(observer, reportes);
+                returnLocalReports(observer);
+            }
+        });
+    }
+
+    private void returnLocalReports(final Observer<? super List<Report>> observer)
+    {
+        ReportLocalImplementation.getInstance().getAll().subscribe(new Consumer<List<Report>>()
+        {
+            @Override
+            public void accept(@NonNull List<Report> reports) throws Exception {
+                observer.onNext(reports);
+                observer.onComplete();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                observer.onError(new Throwable("Error Al Consultar los Reportes"));
             }
         });
     }
