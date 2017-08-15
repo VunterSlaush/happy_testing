@@ -40,7 +40,8 @@
             android:layout_below="@+id/textView2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="100dp" />
+            android:layout_marginTop="100dp"
+            android:layout_alignParentBottom="true" />
 
             <ImageButton
                 android:id="@+id/material_design_floating_action_menu_item1"
@@ -51,11 +52,11 @@
                 style="@style/simpleButton2"
                 fab:fab_size="mini"
                 android:onClick="@{viewModel::removerImagenes}"
+                android:layout_marginLeft="19dp"
+                android:layout_marginStart="19dp"
                 android:layout_alignTop="@+id/material_design_floating_action_menu_item2"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="23dp"
-                android:layout_marginStart="23dp" />
+                android:layout_alignParentStart="true" />
 
             <ImageButton
                 android:id="@+id/material_design_floating_action_menu_item2"
@@ -66,9 +67,10 @@
                 style="@style/simpleButton2"
                 fab:fab_size="mini"
                 android:onClick="@{viewModel::seleccionarImagenes}"
+                android:layout_marginTop="24dp"
                 android:layout_below="@+id/textView2"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp" />
+                android:layout_centerInParent="true"/>
 
             <ImageButton
                 android:id="@+id/material_design_floating_action_menu_item3"
@@ -79,11 +81,9 @@
                 style="@style/simpleButton2"
                 fab:fab_size="mini"
                 android:onClick="@{viewModel::editarTexto}"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
                 android:layout_alignTop="@+id/material_design_floating_action_menu_item2"
-                android:layout_toRightOf="@+id/material_design_floating_action_menu_item2"
-                android:layout_toEndOf="@+id/material_design_floating_action_menu_item2" />
+                android:layout_alignRight="@+id/material_design_floating_action_menu_item4"
+                android:layout_alignEnd="@+id/material_design_floating_action_menu_item4" />
 
         <ImageButton
             android:id="@+id/material_design_floating_action_menu_item4"

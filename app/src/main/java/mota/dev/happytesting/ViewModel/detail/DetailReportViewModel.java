@@ -127,6 +127,7 @@ public class DetailReportViewModel extends Observable {
                     public void accept(@NonNull Observation result) throws Exception {
                         observations.add(result);
                         report.addObservation(result);
+                        Pnotify.makeText(context,"Observacion Agregada Satisfactoriamente",Toast.LENGTH_SHORT,Pnotify.INFO).show();
                         setChanged();
                         notifyObservers();
                     }

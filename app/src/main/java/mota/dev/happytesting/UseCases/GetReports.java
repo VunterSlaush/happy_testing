@@ -54,36 +54,44 @@ public class GetReports
     private void saveReportsToLocal(final List<Report> reportes, final Observer<? super List<Report>> observer)
     {
         ReportLocalImplementation.getInstance().deleteItemsIfNeeded(reportes);
+        ReportLocalImplementation.getInstance().getAll().subscribe(new Consumer<List<Report>>()
+        {
+            @Override
+            public void accept(@NonNull List<Report> reports) throws Exception
+            {
+                for (Report r : reports)
+                {
+                    if (!reportes.contains(r))
+                         reportes.add(r);
+                }
+                saveAndReturn(reportes, observer);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                saveAndReturn(reportes,observer);
+            }
+        });
+
+    }
+
+    private void saveAndReturn(final List<Report> reportes, final Observer<? super List<Report>> observer)
+    {
         ReportLocalImplementation.getInstance().saveAll(reportes).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(@NonNull Boolean aBoolean) throws Exception
             {
-                //RxHelper.nextAndComplete(observer, reportes);
-                returnLocalReports(observer);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                //RxHelper.nextAndComplete(observer, reportes);
-                returnLocalReports(observer);
-            }
-        });
-    }
-
-    private void returnLocalReports(final Observer<? super List<Report>> observer)
-    {
-        ReportLocalImplementation.getInstance().getAll().subscribe(new Consumer<List<Report>>()
-        {
-            @Override
-            public void accept(@NonNull List<Report> reports) throws Exception {
-                observer.onNext(reports);
+                observer.onNext(reportes);
                 observer.onComplete();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                observer.onError(new Throwable("Error Al Consultar los Reportes"));
+                //RxHelper.nextAndComplete(observer, reportes);
+                observer.onNext(reportes);
+                observer.onComplete();
             }
         });
     }

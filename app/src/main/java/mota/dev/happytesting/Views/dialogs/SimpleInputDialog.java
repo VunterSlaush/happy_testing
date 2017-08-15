@@ -18,7 +18,6 @@ public class SimpleInputDialog
 {
     private Context context;
     private OnGetText onGet;
-    private AlertDialog dialog;
     private String title;
     private String preText;
 

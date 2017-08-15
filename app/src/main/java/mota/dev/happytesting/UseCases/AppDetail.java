@@ -30,6 +30,8 @@ public class AppDetail
             {
                 getRemoteAppDetails(id,appName, observer);
             }
+
+
         };
     }
 
@@ -38,12 +40,13 @@ public class AppDetail
         AppRepository repo = AppRemoteImplementation.getInstance();
         repo.get(id, null).subscribe(new Consumer<App>() {
             @Override
-            public void accept(@NonNull App app) throws Exception {;
+            public void accept(@NonNull App app) throws Exception {
                 getLocalAppReports(app,observer);
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
+                Log.i("MOTA--","PASO UNA EXCEPCION ????"+throwable.getMessage());
                 getLocalAppDetails(id,app_name,observer);
             }
         });
@@ -56,14 +59,31 @@ public class AppDetail
             @Override
             public void accept(@NonNull List<Report> reports) throws Exception
             {
-                for (Report r : reports)
+                Log.i("MOTA--","CONSEGUI LOS REPORTES!");
+                try {
+                    for (Report r : reports)
+                    {
+                        if(!app.getReports().contains(r))
+                            app.addReport(r);
+                    }
+
+                }catch (Exception e)
                 {
-                    if(!app.getReports().contains(r))
-                        app.addReport(r);
+                    Log.i("MOTA--","Exception añadiendo reportes?:"+e.getMessage());
                 }
+
+                Log.i("MOTA--","Voy a modificar la app?");
                 AppLocalImplementation.getInstance().modifiy(app).subscribe(new Consumer<App>() {
                     @Override
                     public void accept(@NonNull App app) throws Exception {
+                        Log.i("MOTA--", "Modifique la App y voy a NEXT");
+                        observer.onNext(app);
+                        observer.onComplete();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.i("MOTA--", "Error modificando la App? Que paso?:"+throwable.getMessage());
                         observer.onNext(app);
                         observer.onComplete();
                     }
@@ -84,11 +104,13 @@ public class AppDetail
         repo.get(id, name).subscribe(new Consumer<App>() {
             @Override
             public void accept(@NonNull App app) throws Exception {
+                Log.i("MOTA--","PASE POR EL GET:"+app);
                 getLocalAppReports(app,observer);
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
+                Log.i("MOTA--","ERROR EN LOCAL APPS? .. ");
                 observer.onError(throwable);
             }
         });

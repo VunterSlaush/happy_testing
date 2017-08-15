@@ -32,13 +32,13 @@ public class Login
     private Observer<User> userObserver = new Observer<User>()
     {
         @Override
-        public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d)
+        public void onSubscribe(@NonNull Disposable d)
         {
 
         }
 
         @Override
-        public void onNext(@io.reactivex.annotations.NonNull User user)
+        public void onNext(@NonNull User user)
         {
             user.setUsername(username);
             user.setPassword(password);
@@ -46,7 +46,7 @@ public class Login
         }
 
         @Override
-        public void onError(@io.reactivex.annotations.NonNull Throwable e)
+        public void onError(@NonNull Throwable e)
         {
             loginInterface.onError(e.getMessage());
         }
@@ -79,11 +79,9 @@ public class Login
     public void tryAutoLogin()
     {
         User user = UserManager.getInstance().getUserIfExist(context);
-
-        if(RouterManager.getInstance().isConnected() && user != null)
-            login(user.getUsername(),user.getPassword());
-        else if(user != null)
-            goToMainActivity(context);
+        login(user.getUsername(),user.getPassword());
+        //if(RouterManager.getInstance().isConnected() && user != null)
+        // estas lineas iban a ser para que la app funcionara sin internet ..
     }
 
     private void loginSuccess(final Context context, User user)

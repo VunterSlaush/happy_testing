@@ -92,14 +92,21 @@ public class AppLocalImplementation extends RealmRepository<App> implements AppR
             @Override
             protected void subscribeActual(Observer<? super App> observer) {
                 Realm realm = Realm.getDefaultInstance();
-                App app = realm.where(App.class).equalTo("id", id).or().equalTo("name", appName).findFirst();
+                App app = realm.where(App.class)
+                               .equalTo("id", id)
+                               .or().equalTo("name", appName)
+                               .findFirst();
+                App aux = new App();
+                aux.copy(app);
+                realm.close();
                 if (app != null) {
-                    observer.onNext(app);
+                    observer.onNext(aux);
                     observer.onComplete();
+                    Log.i("MOTA","App Conseguida!");
                 } else {
                     observer.onError(new Throwable("Aplicacion no encontrada"));
                 }
-                realm.close();
+                //
             }
         };
     }
@@ -110,16 +117,24 @@ public class AppLocalImplementation extends RealmRepository<App> implements AppR
             @Override
             protected void subscribeActual(final Observer<? super App> observer) {
 
-                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnTransaction() {
+                RealmTransactionHelper.executeTransaction(new RealmTransactionHelper.OnResultTransaction<App>() {
                     @Override
-                    public void action(Realm realm) {
+                    public App action(Realm realm) {
                         realm.copyToRealmOrUpdate(app);
+                        App aux = new App();
+                        aux.copy(app); //hate to make copies .. x_x hate realm at all ..
+                        return app;
+                    }
+
+                    @Override
+                    public void onFinalize(App app) {
                         observer.onNext(app);
                         observer.onComplete();
                     }
 
                     @Override
                     public void error(Exception e) {
+                        Log.i("MOTA--","Error on Modify:"+e.getMessage());
                         observer.onError(new Throwable("Error inesperado"));
                     }
                 });

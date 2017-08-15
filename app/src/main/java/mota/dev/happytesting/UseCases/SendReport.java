@@ -53,6 +53,7 @@ public class SendReport
             @Override
             protected void subscribeActual(final Observer<? super Report> observer)
             {
+
                 Realm realm = Realm.getDefaultInstance();
                 App app = realm.where(App.class)
                                .equalTo("name",report.getAppName())

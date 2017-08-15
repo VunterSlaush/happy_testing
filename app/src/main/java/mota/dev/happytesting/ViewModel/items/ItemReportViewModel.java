@@ -23,7 +23,9 @@ import mota.dev.happytesting.models.Report;
 import mota.dev.happytesting.models.User;
 import mota.dev.happytesting.repositories.AppRepository;
 import mota.dev.happytesting.repositories.implementations.AppRemoteImplementation;
+import mota.dev.happytesting.useCases.SendReport;
 import mota.dev.happytesting.utils.Functions;
+import mota.dev.happytesting.utils.Pnotify;
 
 /**
  * Created by Slaush on 30/05/2017.
@@ -38,10 +40,12 @@ public class ItemReportViewModel extends Observable {
     public ObservableBoolean enableButton;
     public ObservableField<String> creado;
     private Context context;
+    private Report report;
 
     public ItemReportViewModel(Report report, Context context)
     {
         this.context = context;
+        this.report = report;
         reportId = new ObservableInt(report.getId());
         appName = new ObservableField<>(report.getAppName());
         name = new ObservableField<>(report.getName());
@@ -52,6 +56,8 @@ public class ItemReportViewModel extends Observable {
 
     public void setReport(Report report)
     {
+        Log.i("MOTA--","REPORT ES NULL00??:"+ (report == null));
+        this.report = report;
         reportId.set(report.getId());
         appName.set(report.getAppName());
         name.set(report.getName());
@@ -62,6 +68,23 @@ public class ItemReportViewModel extends Observable {
     {
         sendText.set("Enviando");
         enableButton.set(false);
+        SendReport.getInstance().send(report)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Report>() {
+                    @Override
+                    public void accept(@NonNull Report reportRes) throws Exception
+                    {
+                        setReport(reportRes);
+                        Pnotify.makeText(context,"Reporte Enviado Satisfactoriamente", Toast.LENGTH_SHORT,Pnotify.INFO).show();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        enableButton.set(true);
+                        Pnotify.makeText(context,throwable.getMessage(),Toast.LENGTH_SHORT,Pnotify.ERROR).show();
+                    }
+                });
     }
 
     public void abrir(View view)

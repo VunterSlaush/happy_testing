@@ -28,7 +28,7 @@ public abstract class RealmRepository<T extends RealmObject>
 
     public Observable<Boolean> saveAll(final List<T> items)
     {
-        Log.d(TAG, "Guardando Items del Tipo:"+clazz.getSimpleName());
+
 
         return new Observable<Boolean>() {
             @Override
